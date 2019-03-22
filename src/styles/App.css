@@ -3,3 +3,7 @@
   color: white;
   min-height: 100vh;
 };
+
+h1 {
+  font-family: 'Sedgwick Ave Display', cursive;
+}
