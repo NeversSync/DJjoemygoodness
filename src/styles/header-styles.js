@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ImageWrapper } from '../components/Helpers';
+import { ImageWrapper, Title } from '../components/Helpers';
 
 const HeaderContainer = styled.div`
   display: grid;
@@ -36,18 +36,13 @@ const Logo = styled.img`
   max-height: 115px;
 `;
 
-const LogoText = styled.h1`
+const LogoText = styled(Title)`
   display: grid;
   align-self: center;
   justify-self: start;
   grid-column: 2 / 3;
   grid-row: 1 / 2;
   text-align: center;
-  font-size: 1em;
-
-  @media(min-width: 900px) {
-    font-size: 1.4em;
-  }
 `;
 
 const NavContainer = styled.div`

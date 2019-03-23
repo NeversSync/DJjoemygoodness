@@ -8,15 +8,16 @@ const Wrapper = styled.div`
 `;
 
 const Copy = styled.p`
-  font-size: 20px;
+  font-family: 'Rubik', sans-serif; 
+  font-size: 1em;
   line-height: 32px;
   letter-spacing: 1.75px;
   font-weight: 300;
 
-  @media (max-width: 1100px) {
-    font-size: 16px;
+  @media (min-width: 900px) {
+    font-size: 1.2em;
   }
-  `;
+`;
 
 const Card = styled.div`
   box-shadow: 0 5px 15px rgba(50, 50, 93, 0.1), 0 3px 8px rgba(0, 0, 0, 0.07);
@@ -29,12 +30,12 @@ const ImageWrapper = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 52px;
-  letter-spacing: 4px;
-  font-weight: 300;
+  font-size: 1em;
+  letter-spacing: 3px;
+  font-family: 'Sedgwick Ave Display', cursive;
 
-  @media (max-width: 1100px) {
-    font-size: 30px;
+  @media (min-width: 1100px) {
+    font-size: 1.4em;
   }
 `;
 
