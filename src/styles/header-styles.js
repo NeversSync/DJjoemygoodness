@@ -58,20 +58,4 @@ const NavContainer = styled.div`
     z-index: -1;
 `;
 
-const MenuIconWrapper = styled.div`
-    display: grid;
-    grid-column: 3 / 4;
-    grid-row: 1 / 2;
-    z-index: 10;
-`;
-
-const MenuIcon = styled.div`
-  align-self: center;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-  transform: rotate(0deg);
-  transition: 0.5s ease-in-out;
-`;
-
-export { HeaderContainer, LogoContainer, Logo, LogoText, NavContainer, MenuIconWrapper, MenuIcon };
+export { HeaderContainer, LogoContainer, Logo, LogoText, NavContainer };

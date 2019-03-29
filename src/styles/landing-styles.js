@@ -22,7 +22,7 @@ const LandingImage = styled.img`
   width: 100%;
 `;
 
-const KnobNav = styled.div`
+const LandingKnobNavWrapper = styled.div`
   display: grid;
   grid-column: 1 / -1;
   grid-row: 2 / 3;
@@ -74,11 +74,13 @@ const Knob = styled.div`
 
 const KnobNavLink = styled.a`
   position: absolute;
-
+  
   h3 {
+    transition: all 200ms ease-in-out;
     font-size: .7em;
     &:hover, &:active {
       color: #a8d8f8;
+      transform: scale(1.1);
     }
     @media(min-width: 1200px) {
     font-size: .8em
@@ -141,4 +143,4 @@ const KnobNavLink5= styled(KnobNavLink)`
 `;
 
 
-export { LandingWrapper, LandingImageWrapper, LandingImage, KnobNav, Knob, KnobNavLink, KnobNavLink1, KnobNavLink2, KnobNavLink3, KnobNavLink4, KnobNavLink5 };
+export { LandingWrapper, LandingImageWrapper, LandingImage, LandingKnobNavWrapper, Knob, KnobNavLink, KnobNavLink1, KnobNavLink2, KnobNavLink3, KnobNavLink4, KnobNavLink5 };
