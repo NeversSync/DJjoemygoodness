@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { slide as Menu } from 'react-burger-menu';
 
@@ -60,29 +60,14 @@ const MenuKnobNavWrapper = styled.div`
   display: grid;
   grid-column: 1 / -1;
   justify-content: center;
-  /* grid-row: 2 / 3; */
-  /* background-color: hsla(0, 0%, 16%, 1); */
-
-  /* @media(min-width: 1200px) {
-   grid-column: 2 / 3; 
-   grid-row: 1 / 2;
-  } */
 `;
 
-class Nav extends Component {
-
-  render () {
-    return (
-      <Menu right width={ '100%' } styles={styles}>
-        <MenuKnobNavWrapper>
-          <KnobNav/>
-        </MenuKnobNavWrapper>
-        {/* <a id="home" className="menu-item" href="/">Home</a>
-        <a id="about" className="menu-item" href="/about">About</a>
-        <a id="contact" className="menu-item" href="/contact">Contact</a> */}
-      </Menu>
-    );
-  }
-}
+const Nav = () => (
+  <Menu right width={'100%'} styles={styles}>
+    <MenuKnobNavWrapper>
+      <KnobNav />
+    </MenuKnobNavWrapper>
+  </Menu>
+);
 
 export default Nav;
