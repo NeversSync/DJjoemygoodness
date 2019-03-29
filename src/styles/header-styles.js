@@ -47,9 +47,22 @@ const LogoText = styled(Title)`
 
 const NavContainer = styled.div`
     display: grid;
+    grid-column: 1 / -1;
+    grid-row: 1 / 2;
+    /* justify-self: center; */
+    height: 0vh;
+    /* width: 100vw; */
+    /* visibility: hidden; */
+    background: white;
+    transition: background .5s ease-in-out, height .5s ease-in-out;
+    z-index: -1;
+`;
+
+const MenuIconWrapper = styled.div`
+    display: grid;
     grid-column: 3 / 4;
     grid-row: 1 / 2;
-    justify-self: center;
+    z-index: 10;
 `;
 
 const MenuIcon = styled.div`
@@ -61,4 +74,4 @@ const MenuIcon = styled.div`
   transition: 0.5s ease-in-out;
 `;
 
-export { HeaderContainer, LogoContainer, Logo, LogoText, NavContainer, MenuIcon };
+export { HeaderContainer, LogoContainer, Logo, LogoText, NavContainer, MenuIconWrapper, MenuIcon };
