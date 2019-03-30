@@ -2,9 +2,11 @@ import styled from 'styled-components';
 import { ImageWrapper, Wrapper } from '../components/Helpers';
 
 const LandingWrapper = styled(Wrapper)`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
   grid-template-rows: auto 65vh;
+  
+  @media(min-width: 1200px) {
+    grid-template-rows: 80vh;
+  }  
 `;
 
 const LandingImageWrapper = styled(ImageWrapper)`
@@ -15,11 +17,6 @@ const LandingImageWrapper = styled(ImageWrapper)`
   @media(min-width: 1200px) {
    grid-column: 1 / 2; 
   }
-`;
-
-const LandingImage = styled.img`
-  display: grid;
-  width: 100%;
 `;
 
 const LandingKnobNavWrapper = styled.div`
@@ -143,4 +140,4 @@ const KnobNavLink5= styled(KnobNavLink)`
 `;
 
 
-export { LandingWrapper, LandingImageWrapper, LandingImage, LandingKnobNavWrapper, Knob, KnobNavLink, KnobNavLink1, KnobNavLink2, KnobNavLink3, KnobNavLink4, KnobNavLink5 };
+export { LandingWrapper, LandingImageWrapper, LandingKnobNavWrapper, Knob, KnobNavLink, KnobNavLink1, KnobNavLink2, KnobNavLink3, KnobNavLink4, KnobNavLink5 };

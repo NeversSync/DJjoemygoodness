@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   display: grid;
+  grid-template-columns: 1fr 1fr;
   background: white;
 `;
 
@@ -13,23 +14,32 @@ const Copy = styled.p`
   line-height: 32px;
   letter-spacing: 1.75px;
   font-weight: 300;
+  margin: 0;
 
   @media (min-width: 900px) {
-    font-size: 1.2em;
+    font-size: .8em;
+    line-height: 26px;
   }
 `;
 
 const Card = styled.div`
   box-shadow: 0 5px 15px rgba(50, 50, 93, 0.1), 0 3px 8px rgba(0, 0, 0, 0.07);
-  background: white;
+  /* background: white; */
   border-radius: 4px;
   `;
 
-const ImageWrapper = styled.div`
+const ImageWrapper = styled(Card)`
   display: grid;
 `;
 
+const Image = styled.img`
+  display: grid;
+  width: 100%;
+  border-radius: 4px;
+`;
+
 const Title = styled.h1`
+  display: grid;
   font-size: 1em;
   letter-spacing: 3px;
   font-family: 'Sedgwick Ave Display', cursive;
@@ -40,12 +50,13 @@ const Title = styled.h1`
 `;
 
 const SubTitle = styled.h3`
-  font-size: 42px;
-  letter-spacing: 20px;
-  font-weight: 200;
+  font-family: 'rubik', sans-serif;
+  font-size: .9em;
+  letter-spacing: 4px;
+  font-weight: 300;
 
-  @media (max-width: 1100px) {
-    font-size: 20px;
+  @media (min-width: 1100px) {
+    font-size: 1em;
   }
 `;
 
@@ -152,4 +163,4 @@ const HomeButton = () => (
 //   </Scrollchor>
 // );
 
-export { Wrapper, Title, SubTitle, Copy, Card, CTAButton, Testimonial, SVGArrowRight, HomeButton, ImageWrapper, Spacer };
+export { Wrapper, Title, SubTitle, Copy, Card, CTAButton, Testimonial, SVGArrowRight, HomeButton, Image, ImageWrapper, Spacer };
