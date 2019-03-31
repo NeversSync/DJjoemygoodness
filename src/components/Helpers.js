@@ -10,13 +10,14 @@ const Wrapper = styled.div`
 
 const Copy = styled.p`
   font-family: 'Rubik', sans-serif; 
-  font-size: 1em;
-  line-height: 32px;
-  letter-spacing: 1.75px;
+  font-size: .6em;
+  line-height: 22px;
+  letter-spacing: 1.5px;
   font-weight: 300;
   margin: 0;
-
+  
   @media (min-width: 900px) {
+    letter-spacing: 1.75px;
     font-size: .8em;
     line-height: 26px;
   }
