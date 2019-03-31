@@ -1,19 +1,25 @@
+/* eslint-disable no-use-before-define */
 import styled from 'styled-components';
-import { ImageWrapper, Title } from '../components/Helpers';
+import { Title } from '../components/Helpers';
 
 const HeaderContainer = styled.div`
   display: grid;
+  background-color: var(--dark-background);
+  z-index: 9999;
   grid-template-columns: 3.5fr 2fr 2fr;
-  grid-template-rows: 150px;
+  grid-template-rows: 100px;
   align-content: center;
-  border-bottom: 1px solid white;
+  border-bottom: 1.5px solid hsla(360, 100%, 100%, .3);
+  position: sticky;
+  top: 0px;
 
   @media(min-width: 900px) {
     grid-template-columns: 1.75fr 4fr .5fr;
+    grid-template-rows: 125px;
   }
 `;
 
-const LogoContainer = styled(ImageWrapper)`
+const LogoContainer = styled.a`
   display: grid; 
   grid-column: 1 / 2;
   grid-row: 1 / 2;
@@ -21,9 +27,14 @@ const LogoContainer = styled(ImageWrapper)`
   grid-template-columns: 2fr .5fr;
   padding: 10px;
   
+
   @media(min-width: 900px) {
     grid-gap: 15px;
     grid-template-columns: .5fr 1fr;
+
+    &:hover ${LogoText} {
+    color: var(--hover-color);
+    }
   }
   `;
 
@@ -32,8 +43,8 @@ const Logo = styled.img`
   display: grid;
   grid-column: 1 / 2;
   align-self: center;
-  max-width: 115px;
-  max-height: 115px;
+  max-width: 100px;
+  max-height: 100px;
 `;
 
 const LogoText = styled(Title)`
@@ -43,16 +54,14 @@ const LogoText = styled(Title)`
   grid-column: 2 / 3;
   grid-row: 1 / 2;
   text-align: center;
+  transition: all 150ms ease-in-out;
 `;
 
 const NavContainer = styled.div`
     display: grid;
     grid-column: 1 / -1;
     grid-row: 1 / 2;
-    /* justify-self: center; */
     height: 0vh;
-    /* width: 100vw; */
-    /* visibility: hidden; */
     background: white;
     transition: background .5s ease-in-out, height .5s ease-in-out;
     z-index: -1;

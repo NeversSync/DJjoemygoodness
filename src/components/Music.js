@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { ImageWrapper, Image, Wrapper, Card, Copy, SubTitle } from '../components/Helpers';
 
 const MusicWrapper = styled(Wrapper)`
-  background-color: #12123B;
+  background-color: var(--dark-purple-background);
   grid-template-rows: 25vh 25vh 25vh 25vh;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-gap: 1em;
@@ -63,7 +63,7 @@ const Music = () => (
     <MusicTitle>MUSIC</MusicTitle>
     {/* <MusicCopy>Music. </MusicCopy> */}
     <SoundcloudWrapper>
-      <iframe width="100%" height="100%" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/501989763&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
+      <iframe width="100%" height="100%" scrolling="no" frameBorder="no" title="soundcloud mix" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/501989763&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
     </SoundcloudWrapper>
   </MusicWrapper>
 );

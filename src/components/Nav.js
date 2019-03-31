@@ -11,13 +11,15 @@ const styles = {
     height: '30px',
     left: 'initial',
     right: '36px',
-    top: '56px'
+    top: '35px',
+    transform: 'scaleY(.85)'
   },
   bmBurgerBars: {
-    background: '#eee'
+    background: '#eee',
+    borderRadius: '2px',
+    height: '5px',
   },
   bmBurgerBarsHover: {
-    color: '#a8d8f8',
     background: '#a8d8f8'
   },
   bmCrossButton: {

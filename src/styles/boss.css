@@ -31,7 +31,6 @@ audio:not([controls]) {
 html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
-  color: #221C26;
   overflow-x: hidden;
 }
 a {
@@ -345,16 +344,6 @@ ul {
 
 .page-image { 
   border-radius: 4px; 
-}
-
-
-.custom-link {
-  color: black; 
-  text-decoration: underline;
-}
-
-.custom-link:hover {
-  color: hsl(276, 70%, 59%);
 }
 
 input:focus, textarea:focus {
