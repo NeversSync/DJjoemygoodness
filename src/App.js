@@ -4,6 +4,8 @@ import Header from './components/Header';
 import Landing from './components/Landing';
 import About from './components/About';
 import Music from './components/Music';
+import SideProjects from './components/SideProjects';
+// import SideProjects from './components/SideProjects2';
 
 class App extends Component {
   render() {
@@ -13,6 +15,7 @@ class App extends Component {
         <Landing/>
         <About/>
         <Music/>
+        <SideProjects/>
       </div>
     );
   }
