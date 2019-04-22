@@ -38,6 +38,26 @@
 }
 
 // KNOB STYLES
+.home-rotate:after {
+  transform: rotate(-90deg);
+}
+
+.about-rotate:after {
+  transform: rotate(-70deg);
+}
+
+.music-rotate:after {
+  transform: rotate(-50deg);
+}
+
+.sideprojects-rotate:after {
+  transform: rotate(-33deg);
+}
+
+.booking-rotate:after {
+  transform: rotate(-15deg);
+}
+
 .min,
 .max {
   display: block;

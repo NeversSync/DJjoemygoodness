@@ -2,15 +2,31 @@
 import React from 'react';
 
 import Nav from './Nav';
-import { HeaderContainer, LogoContainer, Logo, LogoText } from '../styles/header-styles';
+import {
+  HeaderContainer,
+  LogoContainer,
+  Logo,
+  LogoText
+} from '../styles/header-styles';
 
-const Header = () => (
+const Header = props => (
   <HeaderContainer>
-    <LogoContainer href="/">
-      <Logo src='https://res.cloudinary.com/nicky-cloudinary/image/upload/f_auto,q_auto,r_500/v1553276016/joe-good/CartoonJoe.jpg' alt="logo" />
-      <LogoText>Joe My<br /> Goodness</LogoText>
+    <LogoContainer href='/'>
+      <Logo
+        src='https://res.cloudinary.com/nicky-cloudinary/image/upload/f_auto,q_auto,r_500/v1553276016/joe-good/CartoonJoe.jpg'
+        alt='logo'
+      />
+      <LogoText>
+        Joe My
+        <br /> Goodness
+      </LogoText>
     </LogoContainer>
-    <Nav />
+    <Nav
+      hoverLink={props.hoverLink}
+      activeLink={props.activeLink}
+      handleKnobLinkHover={props.handleKnobLinkHover}
+      handleKnobClick={props.handleKnobClick}
+    />
   </HeaderContainer>
 );
 

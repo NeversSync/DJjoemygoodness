@@ -12,18 +12,14 @@ class App extends Component {
     super(props);
     this.state = {
       hoverLink: 'HOME',
-      activeLink: 'HOME',
-      currentRotation: 'rotate(-90deg)'
+      activeLink: 'HOME'
     };
     this.handleKnobClick = this.handleKnobClick.bind(this);
+    this.handleKnobLinkHover = this.handleKnobLinkHover.bind(this);
   }
 
-  handleKnobLinkHover = link => {
-    // on link hover trigger event that changes activehoverlink in app state
-    // Pass activelink down to both knob components
-    // Change rotation of knob based on activelink in css
-    console.log('hover', link);
-    this.setState({ hoverLink: link.current.text});
+  handleKnobLinkHover = hoveredLink => {
+    this.setState({ hoverLink: hoveredLink.current.text});
   }
 
   handleKnobClick = event => {
@@ -41,8 +37,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Header activeLink={this.state.activeLink} currentRotation={this.state.currentRotation} handleKnobClick={this.handleKnobClick} />
-        <Landing hoverLink={this.state.hoverLink} activeLink={this.state.activeLink} currentRotation={this.state.currentRotation} handleKnobLinkHover={this.handleKnobLinkHover} handleKnobClick={this.handleKnobClick}/>
+        <Header hoverLink={this.state.hoverLink} activeLink={this.state.activeLink} handleKnobLinkHover={this.handleKnobLinkHover} handleKnobClick={this.handleKnobClick} />
+        <Landing hoverLink={this.state.hoverLink} activeLink={this.state.activeLink} handleKnobLinkHover={this.handleKnobLinkHover} handleKnobClick={this.handleKnobClick}/>
         <About/>
         <Music/>
         <SideProjects/>

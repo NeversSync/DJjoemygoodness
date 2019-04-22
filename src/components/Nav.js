@@ -64,10 +64,14 @@ const MenuKnobNavWrapper = styled.div`
   justify-content: center;
 `;
 
-const Nav = () => (
+
+const Nav = props => (
   <Menu right width={'100%'} styles={styles}>
     <MenuKnobNavWrapper>
-      <KnobNav />
+      <KnobNav 
+        hoverLink={props.hoverLink} 
+        activeLink={props.activeLink} 
+        handleKnobLinkHover={props.handleKnobLinkHover} handleKnobClick={props.handleKnobClick}/>
     </MenuKnobNavWrapper>
   </Menu>
 );

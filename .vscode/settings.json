@@ -1,5 +1,9 @@
 {
   "cSpell.words": [
-    "Sidenav"
-  ]
+    "Sidenav",
+    "sideprojects"
+  ],
+  "javascript.preferences.quoteStyle": "single",
+  "prettier.jsxSingleQuote": true,
+  "prettier.singleQuote": true
 }
