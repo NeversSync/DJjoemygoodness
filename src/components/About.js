@@ -4,7 +4,7 @@ import { AboutCopy, AboutImageWrapper, AboutTitle, AboutWrapper } from '../style
 import { Image } from '../components/Helpers';
 
 const About = () => (
-  <AboutWrapper>
+  <AboutWrapper id='about'>
     <AboutTitle>ABOUT</AboutTitle>
     <AboutCopy>
       Music. Entertainment. Fun.<br/>

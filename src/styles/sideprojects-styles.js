@@ -21,10 +21,10 @@ const SideProjectsWrapper = styled(Wrapper)`
     grid-row: 1 / -1;
   }
 
-  @media (min-width: 900px) {
-    grid-template-rows: 10vh auto 10vh;
+  @media (min-width: 1200px) {
+    grid-template-rows: 15vh auto 15vh;
     /* grid-template-columns: repeat(auto-fill, minmax(100px, 250px)); */
-    grid-template-rows: 10vh 50vh 10vh;
+    /* grid-template-rows: 10vh 50vh 10vh; */
   }
 `;
 
@@ -32,7 +32,7 @@ const SideProjectsTitle = styled(SubTitle)`
   grid-column: 1 / 2;
   grid-row: 2 / 3;
   justify-self: end;
-  margin-top: 40px;
+  margin-top: 80px;
   margin-right: -30px;
   align-self: start;
   height: fit-content;

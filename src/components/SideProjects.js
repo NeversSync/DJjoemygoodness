@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { SideProjectsCopy, SideProjectsImageWrapper, SideProjectsTitle, SideProjectsWrapper } from '../styles/sideprojects-styles';
 import { Image } from '../components/Helpers';
 
@@ -8,7 +7,7 @@ Cuddlefish
 atomic-flow.com link */}
 
 const SideProjects = () => (
-  <SideProjectsWrapper>
+  <SideProjectsWrapper id='side-projects'>
     <SideProjectsTitle>SideProjects</SideProjectsTitle>
     <SideProjectsCopy>
 

@@ -39,132 +39,122 @@ const Knob = styled.div`
     border-radius: 2px;
     transition: all 200ms ease-in-out;
     transform-origin: -100% 50%;
-    content: "";
+    content: '';
   }
 `;
 
 class KnobNav extends Component {
-  constructor(props) {
-    super(props);
-    this.navLinkHome = React.createRef();
-    this.navLinkAbout = React.createRef();
-    this.navLinkMusic = React.createRef();
-    this.navLinkSideProjects = React.createRef();
-    this.navLinkBooking = React.createRef();
-  }
-
   render() {
-    let currentClass;
+    let currentKnobClass;
     let activeTickGroup = [];
     activeTickGroup.length = 12;
 
     if (this.props.hoverLink === 'HOME') {
-      currentClass = 'home-rotate';
+      currentKnobClass = 'home-rotate';
       activeTickGroup.length = 12;
     } else if (this.props.hoverLink === 'ABOUT') {
-      currentClass = 'about-rotate';
+      currentKnobClass = 'about-rotate';
       activeTickGroup.length = 14;
     } else if (this.props.hoverLink === 'MUSIC') {
-      currentClass = 'music-rotate';
+      currentKnobClass = 'music-rotate';
       activeTickGroup.length = 16;
     } else if (this.props.hoverLink === 'SIDE PROJECTS') {
-      currentClass = 'sideprojects-rotate';
+      currentKnobClass = 'sideprojects-rotate';
       activeTickGroup.length = 18;
     } else if (this.props.hoverLink === 'BOOKING') {
-      currentClass = 'booking-rotate';
+      currentKnobClass = 'booking-rotate';
       activeTickGroup.length = 20;
     }
 
     return (
-      <Knob
-        hoverLink={this.props.hoverLink}
-        activeLink={this.props.activeLink}
-        className={currentClass}
-      >
-        <KnobNavLink1
-          href="/"
-          ref={this.navLinkHome}
-          onMouseOver={e => this.props.handleKnobLinkHover(this.navLinkHome)}
-          onClick={this.props.handleKnobClick}
-        >
-          <h3>HOME</h3>
+      <Knob className={currentKnobClass}>
+        <KnobNavLink1 smooth to='/#home' onClick={this.props.handleKnobClick} className={this.props.activeLink === 'HOME' ? 'active-link' : ''}>
+          <h3 onMouseOver={this.props.handleKnobLinkHover}>HOME</h3>
         </KnobNavLink1>
-        <KnobNavLink2
-          href="/"
-          ref={this.navLinkAbout}
-          onMouseOver={e => this.props.handleKnobLinkHover(this.navLinkAbout)}
-          onClick={this.props.handleKnobClick}
-        >
-          <h3>ABOUT</h3>
+        <KnobNavLink2 smooth to='/#about' onClick={this.props.handleKnobClick} className={this.props.activeLink === 'ABOUT' ? 'active-link' : ''}>
+          <h3 onMouseOver={this.props.handleKnobLinkHover}>ABOUT</h3>
         </KnobNavLink2>
-        <KnobNavLink3
-          href="/"
-          ref={this.navLinkMusic}
-          onMouseOver={e => this.props.handleKnobLinkHover(this.navLinkMusic)}
-          onClick={this.props.handleKnobClick}
-        >
-          <h3>MUSIC</h3>
+        <KnobNavLink3 smooth to='/#music' onClick={this.props.handleKnobClick} className={this.props.activeLink === 'MUSIC' ? 'active-link' : ''}>
+          <h3 onMouseOver={this.props.handleKnobLinkHover}>MUSIC</h3>
         </KnobNavLink3>
-        <KnobNavLink4
-          href="/"
-          ref={this.navLinkSideProjects}
-          onMouseOver={e =>
-            this.props.handleKnobLinkHover(this.navLinkSideProjects)
-          }
-        >
-          <h3>SIDE PROJECTS</h3>
+        <KnobNavLink4 smooth to='/#side-projects' onClick={this.props.handleKnobClick} className={this.props.activeLink === 'SIDE PROJECTS' ? 'active-link' : ''}>
+          <h3 onMouseOver={this.props.handleKnobLinkHover}>SIDE PROJECTS</h3>
         </KnobNavLink4>
-        <KnobNavLink5
-          href="/"
-          ref={this.navLinkBooking}
-          onMouseOver={e => this.props.handleKnobLinkHover(this.navLinkBooking)}
-        >
-          <h3>BOOKING</h3>
+        <KnobNavLink5 smooth to='/#booking' onClick={this.props.handleKnobClick} className={this.props.activeLink === 'BOOKING' ? 'active-link' : ''}>
+          <h3 onMouseOver={this.props.handleKnobLinkHover}>BOOKING</h3>
         </KnobNavLink5>
-        <span className="min">Min</span>
-        <span className="max">Max</span>
-        <div className="ticks">
+        <span className='min'>Min</span>
+        <span className='max'>Max</span>
+        <div className='ticks'>
           <div
-            className={activeTickGroup.length === !12 ? 'tick' : 'tick activetick'}
+            className={
+              activeTickGroup.length === !12 ? 'tick' : 'tick activetick'
+            }
           />
           <div
-            className={activeTickGroup.length === !12 ? 'tick' : 'tick activetick'}
+            className={
+              activeTickGroup.length === !12 ? 'tick' : 'tick activetick'
+            }
           />
           <div
-            className={activeTickGroup.length === !12 ? 'tick' : 'tick activetick'}
+            className={
+              activeTickGroup.length === !12 ? 'tick' : 'tick activetick'
+            }
           />
           <div
-            className={activeTickGroup.length === !12 ? 'tick' : 'tick activetick'}
+            className={
+              activeTickGroup.length === !12 ? 'tick' : 'tick activetick'
+            }
           />
           <div
-            className={activeTickGroup.length === !12 ? 'tick' : 'tick activetick'}
+            className={
+              activeTickGroup.length === !12 ? 'tick' : 'tick activetick'
+            }
           />
           <div
-            className={activeTickGroup.length === !12 ? 'tick' : 'tick activetick'}
+            className={
+              activeTickGroup.length === !12 ? 'tick' : 'tick activetick'
+            }
           />
           <div
-            className={activeTickGroup.length === !12 ? 'tick' : 'tick activetick'}
+            className={
+              activeTickGroup.length === !12 ? 'tick' : 'tick activetick'
+            }
           />
           <div
-            className={activeTickGroup.length === !12 ? 'tick' : 'tick activetick'}
+            className={
+              activeTickGroup.length === !12 ? 'tick' : 'tick activetick'
+            }
           />
           <div
-            className={activeTickGroup.length === !12 ? 'tick' : 'tick activetick'}
+            className={
+              activeTickGroup.length === !12 ? 'tick' : 'tick activetick'
+            }
           />
           <div
-            className={activeTickGroup.length === !12 ? 'tick' : 'tick activetick'}
+            className={
+              activeTickGroup.length === !12 ? 'tick' : 'tick activetick'
+            }
           />
           <div
-            className={activeTickGroup.length === !12 ? 'tick' : 'tick activetick'}
+            className={
+              activeTickGroup.length === !12 ? 'tick' : 'tick activetick'
+            }
           />
           <div
-            className={activeTickGroup.length === !12 ? 'tick' : 'tick activetick'}
+            className={
+              activeTickGroup.length === !12 ? 'tick' : 'tick activetick'
+            }
           />
           <div
-            className={activeTickGroup.length === !12 ? 'tick' : 'tick activetick'}
+            className={
+              activeTickGroup.length === !12 ? 'tick' : 'tick activetick'
+            }
           />
           <div
-            className={activeTickGroup.length === !12 ? 'tick' : 'tick activetick'}
+            className={
+              activeTickGroup.length === !12 ? 'tick' : 'tick activetick'
+            }
           />
           <div
             className={activeTickGroup.length < 14 ? 'tick' : 'tick activetick'}
@@ -178,10 +168,18 @@ class KnobNav extends Component {
           <div
             className={activeTickGroup.length < 16 ? 'tick' : 'tick activetick'}
           />
-          <div className={activeTickGroup.length < 18 ? 'tick' : 'tick activetick'} />
-          <div className={activeTickGroup.length < 18 ? 'tick' : 'tick activetick'} />
-          <div className={activeTickGroup.length < 20 ? 'tick' : 'tick activetick'} />
-          <div className={activeTickGroup.length < 20 ? 'tick' : 'tick activetick'} />
+          <div
+            className={activeTickGroup.length < 18 ? 'tick' : 'tick activetick'}
+          />
+          <div
+            className={activeTickGroup.length < 18 ? 'tick' : 'tick activetick'}
+          />
+          <div
+            className={activeTickGroup.length < 20 ? 'tick' : 'tick activetick'}
+          />
+          <div
+            className={activeTickGroup.length < 20 ? 'tick' : 'tick activetick'}
+          />
           <div className='tick' />
           <div className='tick' />
           <div className='tick' />

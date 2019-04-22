@@ -11,7 +11,7 @@ const MusicWrapper = styled(Wrapper)`
   
   @media(min-width: 1200px) {
     grid-gap: 1.5em;
-    grid-template-rows: 10vh auto auto 10vh;
+    grid-template-rows: 15vh auto auto 15vh;
   }  
 `;
 

@@ -38,6 +38,10 @@
 }
 
 // KNOB STYLES
+.active-link {
+  color: var(--link-color);
+}
+
 .home-rotate:after {
   transform: rotate(-90deg);
 }

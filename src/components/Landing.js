@@ -10,7 +10,7 @@ import { Image } from './Helpers';
 class Landing extends Component {
   render() {
     return (
-      <LandingWrapper>
+      <LandingWrapper id='home'>
         <LandingImageWrapper>
           <Image
             src="https://res.cloudinary.com/nicky-cloudinary/image/upload/f_auto,q_100/v1553989428/joe-good/djjoemygoodnesssticker-transparent.png"

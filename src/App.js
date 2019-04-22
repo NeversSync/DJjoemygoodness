@@ -7,6 +7,10 @@ import Music from './components/Music';
 import SideProjects from './components/SideProjects';
 // import SideProjects from './components/SideProjects2';
 
+// TODO
+// CHange color of active link in both knob navs
+// Close nav page when click happens
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -19,18 +23,14 @@ class App extends Component {
   }
 
   handleKnobLinkHover = hoveredLink => {
-    this.setState({ hoverLink: hoveredLink.current.text});
+    this.setState({ hoverLink: hoveredLink.target.textContent});
   }
-
+  
   handleKnobClick = event => {
     event.preventDefault();
-
-    //TODO:  Make event target become active link in state, change color, change rotation on the transform. Pass this as props to both nav knobs. 
-
-    // STEPS
-    // On click, scroll down page to section. 
-    // Pushstate with history and router to change url
-
+    console.log('event', event, 'state', this.state.activeLink);
+    this.setState({ activeLink: event.target.textContent});
+    //TODO:  
 
   };
 
@@ -39,9 +39,9 @@ class App extends Component {
       <div className="App">
         <Header hoverLink={this.state.hoverLink} activeLink={this.state.activeLink} handleKnobLinkHover={this.handleKnobLinkHover} handleKnobClick={this.handleKnobClick} />
         <Landing hoverLink={this.state.hoverLink} activeLink={this.state.activeLink} handleKnobLinkHover={this.handleKnobLinkHover} handleKnobClick={this.handleKnobClick}/>
-        <About/>
-        <Music/>
-        <SideProjects/>
+        <About />
+        <Music />
+        <SideProjects />
       </div>
     );
   }

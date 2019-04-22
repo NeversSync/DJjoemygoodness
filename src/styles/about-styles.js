@@ -22,7 +22,7 @@ const AboutWrapper = styled(Wrapper)`
   }
 
   @media(min-width: 1200px) {
-    grid-template-rows: 10vh auto 10vh;
+    grid-template-rows: 15vh auto 15vh;
   }  
   `;
 

@@ -3,7 +3,7 @@ import React from 'react';
 import { MusicCopy, MusicImageWrapper, MusicTitle, MusicWrapper, SoundcloudWrapper, YoutubeWrapper } from '../styles/music-styles';
 
 const Music = () => (
-  <MusicWrapper>
+  <MusicWrapper id='music'>
     <MusicTitle>MUSIC</MusicTitle>
     {/* <MusicCopy>Music. </MusicCopy> */}
     <SoundcloudWrapper>

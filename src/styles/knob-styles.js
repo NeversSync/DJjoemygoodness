@@ -1,45 +1,7 @@
-// import React from 'react';
+import { HashLink as Link } from 'react-router-hash-link';
 import styled from 'styled-components';
 
-// const Knob = styled.div`
-//   display: grid;
-//   justify-self: center;
-//   align-self: center;
-//   position: relative;
-//   width: 150px;
-//   height: 150px;
-//   background-color: #6b6b6b;
-//   border-radius: 50%;
-//   box-shadow: inset -2px 2px 0px 0px rgba(255, 255, 255, .1),
-//               inset 2px -2px 0px 0px rgba(17, 17, 17, .2),
-//               -5px 5px 5px 0px #111,
-//               -10px 10px 10px -5px #111,
-//               -20px 20px 20px -10px #111,
-//               -25px 25px 25px -10px #111;
-  
-//   @media(min-width: 1200px) {
-//     width: 250px;
-//     height: 250px;
-//   }            
-
-//   &::after {
-//     position: absolute;
-//     top: 50%;
-//     left: 75%;
-//     width: 25%;
-//     height: 4px;
-//     margin-top: -2px;
-//     background-color: var(--link-color);
-//     box-shadow: 0 0 5px 5px hsla(204, 45%, 62%, .15);
-//     border-radius: 2px;
-//     transition: all 200ms ease-in-out;
-//     transform: rotate(-90deg);
-//     transform-origin: -100% 50%;
-//     content: "";
-//   }
-// `;
-
-const KnobNavLink = styled.a`
+const KnobNavLink = styled(Link)`
   position: absolute;
   
   h3 {
