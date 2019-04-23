@@ -8,8 +8,6 @@ import SideProjects from './components/SideProjects';
 // import SideProjects from './components/SideProjects2';
 
 // TODO
-// CHange color of active link in both knob navs
-// Close nav page when click happens
 
 class App extends Component {
   constructor(props) {
@@ -28,10 +26,7 @@ class App extends Component {
   
   handleKnobClick = event => {
     event.preventDefault();
-    console.log('event', event, 'state', this.state.activeLink);
-    this.setState({ activeLink: event.target.textContent});
-    //TODO:  
-
+    this.setState({ activeLink: event.target.textContent });
   };
 
   render() {

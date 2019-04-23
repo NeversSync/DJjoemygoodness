@@ -1,47 +1,12 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import {
+  Knob,
   KnobNavLink1,
   KnobNavLink2,
   KnobNavLink3,
   KnobNavLink4,
   KnobNavLink5
 } from '../styles/knob-styles';
-
-const Knob = styled.div`
-  display: grid;
-  justify-self: center;
-  align-self: center;
-  position: relative;
-  width: 150px;
-  height: 150px;
-  background-color: #6b6b6b;
-  border-radius: 50%;
-  box-shadow: inset -2px 2px 0px 0px rgba(255, 255, 255, 0.1),
-    inset 2px -2px 0px 0px rgba(17, 17, 17, 0.2), -5px 5px 5px 0px #111,
-    -10px 10px 10px -5px #111, -20px 20px 20px -10px #111,
-    -25px 25px 25px -10px #111;
-
-  @media (min-width: 1200px) {
-    width: 250px;
-    height: 250px;
-  }
-
-  &::after {
-    position: absolute;
-    top: 50%;
-    left: 75%;
-    width: 25%;
-    height: 4px;
-    margin-top: -2px;
-    background-color: var(--link-color);
-    box-shadow: 0 0 5px 5px hsla(204, 45%, 62%, 0.15);
-    border-radius: 2px;
-    transition: all 200ms ease-in-out;
-    transform-origin: -100% 50%;
-    content: '';
-  }
-`;
 
 class KnobNav extends Component {
   render() {
@@ -68,19 +33,61 @@ class KnobNav extends Component {
 
     return (
       <Knob className={currentKnobClass}>
-        <KnobNavLink1 smooth to='/#home' onClick={this.props.handleKnobClick} className={this.props.activeLink === 'HOME' ? 'active-link' : ''}>
+        <KnobNavLink1
+          smooth
+          to='/#home'
+          onClick={event => {
+            this.props.handleKnobClick(event);
+            this.props.closeMenu(event);
+          }}
+          className={this.props.activeLink === 'HOME' ? 'active-link' : ''}
+        >
           <h3 onMouseOver={this.props.handleKnobLinkHover}>HOME</h3>
         </KnobNavLink1>
-        <KnobNavLink2 smooth to='/#about' onClick={this.props.handleKnobClick} className={this.props.activeLink === 'ABOUT' ? 'active-link' : ''}>
+        <KnobNavLink2
+          smooth
+          to='/#about'
+          onClick={event => {
+            this.props.handleKnobClick(event);
+            this.props.closeMenu(event);
+          }}
+          className={this.props.activeLink === 'ABOUT' ? 'active-link' : ''}
+        >
           <h3 onMouseOver={this.props.handleKnobLinkHover}>ABOUT</h3>
         </KnobNavLink2>
-        <KnobNavLink3 smooth to='/#music' onClick={this.props.handleKnobClick} className={this.props.activeLink === 'MUSIC' ? 'active-link' : ''}>
+        <KnobNavLink3
+          smooth
+          to='/#music'
+          onClick={event => {
+            this.props.handleKnobClick(event);
+            this.props.closeMenu(event);
+          }}
+          className={this.props.activeLink === 'MUSIC' ? 'active-link' : ''}
+        >
           <h3 onMouseOver={this.props.handleKnobLinkHover}>MUSIC</h3>
         </KnobNavLink3>
-        <KnobNavLink4 smooth to='/#side-projects' onClick={this.props.handleKnobClick} className={this.props.activeLink === 'SIDE PROJECTS' ? 'active-link' : ''}>
+        <KnobNavLink4
+          smooth
+          to='/#side-projects'
+          onClick={event => {
+            this.props.handleKnobClick(event);
+            this.props.closeMenu(event);
+          }}
+          className={
+            this.props.activeLink === 'SIDE PROJECTS' ? 'active-link' : ''
+          }
+        >
           <h3 onMouseOver={this.props.handleKnobLinkHover}>SIDE PROJECTS</h3>
         </KnobNavLink4>
-        <KnobNavLink5 smooth to='/#booking' onClick={this.props.handleKnobClick} className={this.props.activeLink === 'BOOKING' ? 'active-link' : ''}>
+        <KnobNavLink5
+          smooth
+          to='/#booking'
+          onClick={event => {
+            this.props.handleKnobClick(event);
+            this.props.closeMenu(event);
+          }}
+          className={this.props.activeLink === 'BOOKING' ? 'active-link' : ''}
+        >
           <h3 onMouseOver={this.props.handleKnobLinkHover}>BOOKING</h3>
         </KnobNavLink5>
         <span className='min'>Min</span>

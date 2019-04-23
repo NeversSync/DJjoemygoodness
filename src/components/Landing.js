@@ -24,7 +24,8 @@ class Landing extends Component {
           <KnobNav 
             hoverLink={this.props.hoverLink} 
             activeLink={this.props.activeLink} 
-            handleKnobLinkHover={this.props.handleKnobLinkHover} handleKnobClick={this.props.handleKnobClick}/>
+            handleKnobLinkHover={this.props.handleKnobLinkHover} 
+            handleKnobClick={this.props.handleKnobClick}/>
         </LandingKnobNavWrapper>
       </LandingWrapper>
     );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import { slide as Menu } from 'react-burger-menu';
 
@@ -17,7 +17,7 @@ const styles = {
   bmBurgerBars: {
     background: '#eee',
     borderRadius: '2px',
-    height: '5px',
+    height: '5px'
   },
   bmBurgerBarsHover: {
     background: '#a8d8f8'
@@ -64,16 +64,44 @@ const MenuKnobNavWrapper = styled.div`
   justify-content: center;
 `;
 
+class Nav extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      menuOpen: false
+    };
+    this.closeMenu = this.closeMenu.bind(this);
+  }
 
-const Nav = props => (
-  <Menu right width={'100%'} styles={styles}>
-    <MenuKnobNavWrapper>
-      <KnobNav 
-        hoverLink={props.hoverLink} 
-        activeLink={props.activeLink} 
-        handleKnobLinkHover={props.handleKnobLinkHover} handleKnobClick={props.handleKnobClick}/>
-    </MenuKnobNavWrapper>
-  </Menu>
-);
+  handleStateChange (state) {
+    this.setState({menuOpen: state.isOpen});  
+  }
+
+  closeMenu () {
+    this.setState({menuOpen: false});
+  }
+
+  render() {
+    return (
+      <Menu
+        right
+        width={'100%'}
+        isOpen={this.state.menuOpen}
+        onStateChange={(state) => this.handleStateChange(state)}
+        styles={styles}
+      >
+        <MenuKnobNavWrapper>
+          <KnobNav
+            hoverLink={this.props.hoverLink}
+            activeLink={this.props.activeLink}
+            handleKnobLinkHover={this.props.handleKnobLinkHover}
+            handleKnobClick={this.props.handleKnobClick}
+            closeMenu={this.closeMenu}
+          />
+        </MenuKnobNavWrapper>
+      </Menu>
+    );
+  }
+}
 
 export default Nav;
