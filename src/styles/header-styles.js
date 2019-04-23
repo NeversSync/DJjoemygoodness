@@ -1,5 +1,6 @@
 /* eslint-disable no-use-before-define */
 import styled from 'styled-components';
+import { HashLink as Link } from 'react-router-hash-link';
 import { Title } from '../components/Helpers';
 
 const HeaderContainer = styled.div`
@@ -19,7 +20,7 @@ const HeaderContainer = styled.div`
   }
 `;
 
-const LogoContainer = styled.a`
+const LogoContainer = styled(Link)`
   display: grid; 
   grid-column: 1 / 2;
   grid-row: 1 / 2;

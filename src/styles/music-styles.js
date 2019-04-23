@@ -63,7 +63,7 @@ const SoundcloudWrapper = styled(Card)`
   }
   `;
 
-const YoutubeWrapper = styled(Card)`
+const MusicYoutubeWrapper = styled(Card)`
   position: relative;
   padding-bottom: 56.25%; /* 16:9 */
   padding-top: 25px;
@@ -79,4 +79,4 @@ const YoutubeWrapper = styled(Card)`
   }
 `;
 
-export { MusicCopy, MusicImageWrapper, MusicTitle, MusicWrapper, SoundcloudWrapper, YoutubeWrapper };
+export { MusicCopy, MusicImageWrapper, MusicTitle, MusicWrapper, SoundcloudWrapper, MusicYoutubeWrapper };

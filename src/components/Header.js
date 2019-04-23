@@ -11,7 +11,7 @@ import {
 
 const Header = props => (
   <HeaderContainer>
-    <LogoContainer href='/'>
+    <LogoContainer to='#top' smooth>
       <Logo
         src='https://res.cloudinary.com/nicky-cloudinary/image/upload/f_auto,q_auto,r_500/v1553276016/joe-good/CartoonJoe.jpg'
         alt='logo'
