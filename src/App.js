@@ -5,6 +5,8 @@ import Landing from './components/Landing';
 import About from './components/About';
 import Music from './components/Music';
 import SideProjects from './components/SideProjects';
+import Footer from './components/Footer';
+
 
 // TODO
 
@@ -36,6 +38,7 @@ class App extends Component {
         <About />
         <Music />
         <SideProjects />
+        <Footer/>
       </div>
     );
   }
