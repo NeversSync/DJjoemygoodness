@@ -157,3 +157,14 @@
 .tick:nth-child(26) { transform: (rotate(115deg));  }
 .tick:nth-child(27) { transform: (rotate(125deg));  }
 .tick:nth-child(28) { transform: (rotate(135deg));  }
+
+// FOOTER
+
+.social-icon {
+  color: white;
+  font-size: 1.5em;
+
+  :hover {
+    color: var(--hover-color);
+  }
+}

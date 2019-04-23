@@ -1,5 +1,9 @@
 /* eslint-disable no-use-before-define */
 import React from 'react';
+import { FaInstagram } from 'react-icons/fa';
+import { FaSoundcloud } from 'react-icons/fa';
+import { FaRegEnvelope } from 'react-icons/fa';
+// import EmailIcon from 'react-icons/lib/fa/envelope-square';
 
 import {
   FooterContainer,
@@ -8,36 +12,51 @@ import {
   SocialText,
   FooterNav,
   FooterNavLink,
-  FooterNavLinkWrapper
+  FooterNavLinkWrapper,
+  Social,
+  SocialIcon,
+  SocialIconWrapper
 } from '../styles/footer-styles';
 
 // TODO: Add social icons
 
 const Footer = props => (
   <FooterContainer>
-    <LogoContainer to='#top' smooth>
+    {/* <LogoContainer to='#top' smooth>
       <Logo
         src='https://res.cloudinary.com/nicky-cloudinary/image/upload/f_auto,q_auto,r_500/v1553276016/joe-good/CartoonJoe.jpg'
         alt='logo'
       />
-    </LogoContainer>
-    <SocialText>
-      Keep in Touch
-    </SocialText>
+    </LogoContainer> */}
+    <Social>
+      <SocialText>Keep in Touch</SocialText>
+      <SocialIconWrapper>
+        <SocialIcon href='https://www.instagram.com/djjoemygoodness/' target="_blank" rel="noopener noreferrer" className="social-icon">
+          <FaInstagram />
+        </SocialIcon>
+        <SocialIcon href='https://soundcloud.com/joe-good-1' target="_blank" rel="noopener noreferrer" className="social-icon">
+          <FaSoundcloud  />
+        </SocialIcon>
+        <SocialIcon href='mailto:djjoemygoodness@gmail.com' target="_blank" rel="noopener noreferrer" className="social-icon">
+          <FaRegEnvelope  />
+        </SocialIcon>
+      </SocialIconWrapper>
+    </Social>
     <FooterNav
       hoverLink={props.hoverLink}
       activeLink={props.activeLink}
       handleKnobLinkHover={props.handleKnobLinkHover}
       handleKnobClick={props.handleKnobClick}
     >
-      <FooterNavLinkWrapper style={{borderLeft: 'none'}}>
+      <FooterNavLinkWrapper style={{ borderLeft: 'none' }}>
         <FooterNavLink
           smooth
           to='/#home'
           onClick={props.handleKnobClick}
           onMouseOver={props.handleKnobLinkHover}
           className={props.activeLink === 'HOME' ? 'active-link' : ''}
-        >HOME
+        >
+          HOME
         </FooterNavLink>
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
@@ -47,7 +66,8 @@ const Footer = props => (
           onClick={props.handleKnobClick}
           onMouseOver={props.handleKnobLinkHover}
           className={props.activeLink === 'ABOUT' ? 'active-link' : ''}
-        >ABOUT
+        >
+          ABOUT
         </FooterNavLink>
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
@@ -57,7 +77,8 @@ const Footer = props => (
           onClick={props.handleKnobClick}
           onMouseOver={props.handleKnobLinkHover}
           className={props.activeLink === 'MUSIC' ? 'active-link' : ''}
-        >MUSIC
+        >
+          MUSIC
         </FooterNavLink>
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
@@ -67,7 +88,8 @@ const Footer = props => (
           onClick={props.handleKnobClick}
           onMouseOver={props.handleKnobLinkHover}
           className={props.activeLink === 'SIDE PROJECTS' ? 'active-link' : ''}
-        >SIDE PROJECTS
+        >
+          SIDE PROJECTS
         </FooterNavLink>
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
