@@ -5,7 +5,6 @@ import Landing from './components/Landing';
 import About from './components/About';
 import Music from './components/Music';
 import SideProjects from './components/SideProjects';
-// import SideProjects from './components/SideProjects2';
 
 // TODO
 

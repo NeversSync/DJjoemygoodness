@@ -3,18 +3,18 @@ import { Wrapper, SubTitle, ImageWrapper, Copy, Card } from '../components/Helpe
 
 const SideProjectsWrapper = styled(Wrapper)`
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: 10vh auto auto auto auto 10vh;
+  grid-template-rows: 10vh auto auto auto auto auto auto 10vh;
 
   grid-gap: 1em;
-  background: url("https://res.cloudinary.com/nicky-cloudinary/image/upload/f_auto,q_auto:best/v1555986949/joe-good/joe-good-fire2.jpg");
+  background: url("https://res.cloudinary.com/nicky-cloudinary/image/upload/f_auto,q_auto:best/v1555986949/joe-good/joe-good-fire1.jpg");
   background-size: cover;
   background-attachment: fixed;
-  background-position: center;
+  background-position: top;
   background-repeat: no-repeat;
 
   &:before {
     content: "";
-    background-color: var(--orange);
+    background-color: hsla(22, 94%, 58%, .85);;
     background-size: cover;
     display: grid;
     grid-column: 1 / -1;
@@ -22,7 +22,7 @@ const SideProjectsWrapper = styled(Wrapper)`
   }
 
   @media (min-width: 1200px) {
-    grid-template-rows: 15vh auto auto auto auto 15vh;
+    grid-template-rows: 15vh auto auto auto auto 5vh auto auto 15vh;
   }
 `;
 
@@ -30,7 +30,6 @@ const SideProjectsTitle = styled(SubTitle)`
   grid-column: 1 / 4;
   grid-row: 2 / 3;
   justify-self: end;
-  /* margin-top: 40px; */
   margin-right: -25px;
   align-self: start;
   height: fit-content;
@@ -55,7 +54,7 @@ const SideProjectsCopy = styled(Copy)`
     grid-column: 7 / 11;
     grid-row: 2 / 3;
     margin-bottom: 0;
-    margin-top: 40px;
+    margin-top: 50px;
     justify-self: start;
   }
   `;
@@ -133,74 +132,40 @@ const SideProjectsLink = styled.a`
   }
 `;
 
+const CuddleFishSubtitle = styled(SideProjectsSubtitle)`
+  /* grid-column: 3 / 4; */
+  /* grid-row: 6 / 7; */
 
-const ProjectSection = styled.div`
-  display: grid;
-  justify-content: center;
-  align-items: center;
-  height: 60px;
-  font-size: 2.2em;
-  color: hsla(187, 5%, 33%, 1);
-  /* margin: 0 auto; */
-  /* margin: 50px 0px 0px 0px; */
-
-  @media (min-width: 768px) {
-    font-size: 2em;
+  @media (min-width: 1200px) {
+    grid-column: 3 / 5;
+    grid-row: 7 / 8;
+    line-height: 32px;
+    /* justify-self: start; */
   }
 `;
 
-const Project = styled.div`
-  display: grid;
-  grid-row: 2 / 3;
-  padding: 15px;
-  padding-top: 5px;
-  max-width: 400px;
-  background-color: white;
-  /* transition: background-color 0.5s cubic-bezier(.25,.8,.25,1), box-shadow 0.5s cubic-bezier(.25,.8,.25,1), opacity 2000ms ease-out, transform 2000ms ease-out;
-  opacity: 0;
-  transform: translateY(40px); */
+const CuddleFishImageWrapper = styled(SideProjectsImageWrapper)`
 
-  @media (min-width: 960px) {
-    &:hover {
-      background-color: hsla(187, 90%, 40%, 0.25);
-      cursor: pointer;
-      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
-        0 10px 10px rgba(0, 0, 0, 0.22);
-    }
-  }
-
-  &:active {
-    -webkit-transform: translate(0px, 3px);
-    transform: translate(0px, 3px);
-    box-shadow: none;
+  @media (min-width: 1200px) {
+    grid-column: 7 / 11;
+    grid-row: 7 / 8;
+    margin-bottom: 0;
+    justify-self: start;
+    align-self: start;
+    /* grid-row: 2 / 3; */
+    /* width: 100%; */
   }
 `;
 
-const ProjectHeader = styled.h3`
-  color: hsl(187, 40%, 2%);
-  text-align: center;
-  font-weight: 600;
-  margin: 2px;
-  color: hsla(187, 5%, 33%, 1);
-`;
-
-const SubHeader = styled.h3`
-  color: hsla(187, 5%, 33%, 1);
-  text-align: center;
-  font-size: 0.85em;
-  font-weight: 300;
-  line-height: 1.6em;
-  margin: 2px 0 15px 0;
-
-  @media (min-width: 768px) {
-    font-size: 0.75em;
+const CuddleFishCopy = styled(SideProjectsCopy)`
+  @media (min-width: 1200px) {
+    grid-column: 3 / 7;
+    align-self: start;
+    grid-row: 7 / 8;
+    margin-top: 80px;
+    height: fit-content;
+    width: 100%;
   }
-`;
-
-const Image = styled.img`
-  width: 100%;
-  height: 100%;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 `;
 
 export {
@@ -211,10 +176,7 @@ export {
   SideProjectsSubtitle,
   SideProjectsTitle,
   SideProjectsWrapper,
-  Wrapper,
-  ProjectHeader,
-  SubHeader,
-  Image,
-  Project,
-  ProjectSection
+  CuddleFishSubtitle,
+  CuddleFishImageWrapper,
+  CuddleFishCopy
 };

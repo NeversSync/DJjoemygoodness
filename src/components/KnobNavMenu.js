@@ -8,7 +8,7 @@ import {
   KnobNavLink5
 } from '../styles/knob-styles';
 
-class KnobNav extends Component {
+class KnobNavMenu extends Component {
   render() {
     let currentKnobClass;
     let activeTickGroup = [];
@@ -36,7 +36,10 @@ class KnobNav extends Component {
         <KnobNavLink1
           smooth
           to='/#home'
-          onClick={this.props.handleKnobClick}
+          onClick={event => {
+            this.props.handleKnobClick(event);
+            this.props.closeMenu(event);
+          }}
           className={this.props.activeLink === 'HOME' ? 'active-link' : ''}
         >
           <h3 onMouseOver={this.props.handleKnobLinkHover}>HOME</h3>
@@ -44,7 +47,10 @@ class KnobNav extends Component {
         <KnobNavLink2
           smooth
           to='/#about'
-          onClick={this.props.handleKnobClick}
+          onClick={event => {
+            this.props.handleKnobClick(event);
+            this.props.closeMenu(event);
+          }}
           className={this.props.activeLink === 'ABOUT' ? 'active-link' : ''}
         >
           <h3 onMouseOver={this.props.handleKnobLinkHover}>ABOUT</h3>
@@ -52,7 +58,10 @@ class KnobNav extends Component {
         <KnobNavLink3
           smooth
           to='/#music'
-          onClick={this.props.handleKnobClick}
+          onClick={event => {
+            this.props.handleKnobClick(event);
+            this.props.closeMenu(event);
+          }}
           className={this.props.activeLink === 'MUSIC' ? 'active-link' : ''}
         >
           <h3 onMouseOver={this.props.handleKnobLinkHover}>MUSIC</h3>
@@ -60,7 +69,10 @@ class KnobNav extends Component {
         <KnobNavLink4
           smooth
           to='/#side-projects'
-          onClick={this.props.handleKnobClick}
+          onClick={event => {
+            this.props.handleKnobClick(event);
+            this.props.closeMenu(event);
+          }}
           className={
             this.props.activeLink === 'SIDE PROJECTS' ? 'active-link' : ''
           }
@@ -70,7 +82,10 @@ class KnobNav extends Component {
         <KnobNavLink5
           smooth
           to='/#booking'
-          onClick={this.props.handleKnobClick}
+          onClick={event => {
+            this.props.handleKnobClick(event);
+            this.props.closeMenu(event);
+          }}
           className={this.props.activeLink === 'BOOKING' ? 'active-link' : ''}
         >
           <h3 onMouseOver={this.props.handleKnobLinkHover}>BOOKING</h3>
@@ -183,4 +198,4 @@ class KnobNav extends Component {
   }
 }
 
-export default KnobNav;
+export default KnobNavMenu;
