@@ -5,10 +5,11 @@ import Landing from './components/Landing';
 import About from './components/About';
 import Music from './components/Music';
 import SideProjects from './components/SideProjects';
+import Booking from './components/Booking';
 import Footer from './components/Footer';
 
 
-// TODO
+// TODO: Add booking from mom site
 
 class App extends Component {
   constructor(props) {
@@ -38,6 +39,7 @@ class App extends Component {
         <About />
         <Music />
         <SideProjects />
+        <Booking />
         <Footer/>
       </div>
     );

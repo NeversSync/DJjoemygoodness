@@ -3,7 +3,6 @@ import React from 'react';
 import { FaInstagram } from 'react-icons/fa';
 import { FaSoundcloud } from 'react-icons/fa';
 import { FaRegEnvelope } from 'react-icons/fa';
-// import EmailIcon from 'react-icons/lib/fa/envelope-square';
 
 import {
   FooterContainer,
@@ -17,8 +16,6 @@ import {
   SocialIcon,
   SocialIconWrapper
 } from '../styles/footer-styles';
-
-// TODO: Add social icons
 
 const Footer = props => (
   <FooterContainer>
