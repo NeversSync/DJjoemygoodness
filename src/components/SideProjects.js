@@ -25,12 +25,12 @@ const SideProjects = () => (
 
     <CuddleFishSubtitle>Cuddlefish Artcar</CuddleFishSubtitle>
     <CuddleFishCopy>
-      Cuddly goodness. Everyone enjoys a good fire show. Whether it's a festival, a club, or a church, Atomic Flow can brighten any occasion! Specializing in Partner Poi, Sword, Buugeng, Torches, Staff and Hoop, Atomic Flow are master performers. Enjoy the primal wonder of fire, set to synergistic melodies. Lessons in object manipulation and fire safety available. 
+      Cuddly goodness. Past life virgo gut flora, kale chips kefir solstice. Honoring your truth shiva safe space aries coconut water dakini, prius ganja awareness. Promoting positive change the wisdom of your body float tank Whole Earth Catalog, doula apple cider vinegar.
     </CuddleFishCopy>
     <SideProjectsLink className="custom-link" href="https://sites.google.com/site/atomicflowportland/" target="_blank">Learn more about Atomic Flow
     </SideProjectsLink>
     <CuddleFishImageWrapper>
-      <Image src='https://res.cloudinary.com/nicky-cloudinary/image/upload/f_auto,q_auto:best/v1555993759/joe-good/cuddlefish1.jpg' alt='joe-good-image' />
+      <Image src='https://res.cloudinary.com/nicky-cloudinary/image/upload/v1557267305/joe-good/JoeAndJoshCuddlefish.jpg' alt='joe-good-image' />
     </CuddleFishImageWrapper>
     <SideProjectsYoutubeWrapper>
       <iframe className='youtube-iframe' width="560" height="315"  src="https://www.youtube.com/embed/6QlJfDz7pLU" frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen title="fire video"></iframe>
