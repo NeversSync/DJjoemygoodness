@@ -101,7 +101,7 @@ const SideProjectsYoutubeWrapper = styled(Card)`
   align-self: center;
   box-shadow: 5px 5px 15px rgba(255, 255, 255, 0.2);
   grid-column: 3 / 11;
-  grid-row: 5 / 6;
+  grid-row: 4 / 5;
   margin: 0 auto;
   
   @media (min-width: 1200px) {
@@ -134,17 +134,21 @@ const SideProjectsLink = styled.a`
 
 const CuddleFishSubtitle = styled(SideProjectsSubtitle)`
   /* grid-column: 3 / 4; */
-  /* grid-row: 6 / 7; */
+  grid-row: 5 / 6;
+  margin-top: 8%;
 
   @media (min-width: 1200px) {
     grid-column: 3 / 5;
     grid-row: 7 / 8;
     line-height: 32px;
+    margin: 0;
     /* justify-self: start; */
   }
 `;
 
 const CuddleFishImageWrapper = styled(SideProjectsImageWrapper)`
+  grid-row: 6 / 7;
+  margin-top: 0;
 
   @media (min-width: 1200px) {
     grid-column: 7 / 11;
@@ -158,6 +162,8 @@ const CuddleFishImageWrapper = styled(SideProjectsImageWrapper)`
 `;
 
 const CuddleFishCopy = styled(SideProjectsCopy)`
+  grid-row: 7 / 8;
+
   @media (min-width: 1200px) {
     grid-column: 3 / 7;
     align-self: start;
@@ -167,7 +173,6 @@ const CuddleFishCopy = styled(SideProjectsCopy)`
     width: 100%;
   }
 `;
-
 export {
   SideProjectsCopy,
   SideProjectsYoutubeWrapper,
