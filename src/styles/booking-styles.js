@@ -2,23 +2,23 @@ import styled from 'styled-components';
 // import { Wrapper, Title,  Card} from '../components/Helpers';
 import { Wrapper, SubTitle, Card } from '../components/Helpers';
 
-const ContactWrapper = styled(Wrapper)`
+const BookingWrapper = styled(Wrapper)`
   background-color: var(--dark-background);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='24' viewBox='0 0 88 24'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='autumn' fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M10 0l30 15 2 1V2.18A10 10 0 0 0 41.76 0H39.7a8 8 0 0 1 .3 2.18v10.58L14.47 0H10zm31.76 24a10 10 0 0 0-5.29-6.76L4 1 2 0v13.82a10 10 0 0 0 5.53 8.94L10 24h4.47l-6.05-3.02A8 8 0 0 1 4 13.82V3.24l31.58 15.78A8 8 0 0 1 39.7 24h2.06zM78 24l2.47-1.24A10 10 0 0 0 86 13.82V0l-2 1-32.47 16.24A10 10 0 0 0 46.24 24h2.06a8 8 0 0 1 4.12-4.98L84 3.24v10.58a8 8 0 0 1-4.42 7.16L73.53 24H78zm0-24L48 15l-2 1V2.18A10 10 0 0 1 46.24 0h2.06a8 8 0 0 0-.3 2.18v10.58L73.53 0H78z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"), linear-gradient(hsla(22, 94%, 58%, .9), hsla(0, 0%, 16%, 1));
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 5fr 5fr .5fr;
+  grid-template-columns: 50px 1fr 50px;
   justify-items: center;
-  padding: 3% 2% 6% 2%;
-  height: 100vh;
+  grid-gap: 1em;
+  /* padding: 3% 2% 6% 2%; */
+  grid-template-rows: 10vh auto 10vh;
 
-   @media (max-width: 900px) {
-    rid-template-rows: 1fr 1fr 1fr; 
-    grid-template-columns: 1fr 400px 1fr;
-    height: 750px;
+   @media (min-width: 1200px) {
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 15vh auto 15vh;
+    /* grid-template-columns: 1fr 400px 1fr; */
   }
 `;
 
-const ContactTitleWrapper = styled.div`
+const BookingTitleWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr;
@@ -27,12 +27,12 @@ const ContactTitleWrapper = styled.div`
   padding: 20px;
 `;
 
-const ContactSummaryTitleWrapper = styled(ContactTitleWrapper)`
+const BookingSummaryTitleWrapper = styled(BookingTitleWrapper)`
   grid-template-rows: 1fr;
   padding: 10px 0px 40px 0px;
 `;
 
-// const ContactTitle = styled(Title)`
+// const BookingTitle = styled(Title)`
 //   grid-row: 1 / 2;
 //   grid-column: 2 / 3;
 //   justify-self: center;
@@ -48,45 +48,58 @@ const ContactSummaryTitleWrapper = styled(ContactTitleWrapper)`
 //   }
 // `;
 
-const ContactTitle = styled(SubTitle)`
+const BookingTitle = styled(SubTitle)`
   grid-column: 1 / 2;
   grid-row: 2 / 3;
   justify-self: end;
-  margin-top: 40px;
-  margin-right: -30px;
   align-self: start;
   height: fit-content;
   transform: rotate(-90deg);
+  margin: 0;
+  margin-right: -47px;
+  margin-top: 45px;
 
   @media(min-width: 1200px) {
     grid-column: 1 / 2;
+    justify-self: end;
     grid-row: 2 / 3;
+    margin-top: 49px;
+    margin-right: -58px;
   }
 `;
 
-const ContactCard = styled(Card)`
-  padding: 35px;
-  grid-column: 2 / 3;
-  grid-row: 2 / 3;
+const BookingCard = styled(Card)`
+  padding: 15px;
   background-color: white;
+  grid-column: 2 / 3;
+  width: 100%;
+  grid-row: 2 / 3;
+  justify-self: center;
 
-   @media (max-width: 900px) {
-    width: 80%;
+   @media (min-width: 1200px) {
+     display: grid;
+    padding: 35px;
+    width: 700px;
+    grid-column: 2 / 6;
+    grid-row: 2 / 3;
+    justify-content: center;
+    /* width: 80%; */
   }
 `;
 
-const ContactForm = styled.form`
+const BookingForm = styled.form`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr auto;
-  grid-gap: 30px;
-  width:600px;
-  text-align: center;
-  height: 300px;
+  grid-gap: 15px;
+  width: unset;
+  height: 400px;
 
-   @media (max-width: 900px) {
-    width: unset;
-    height: 400px;
+   @media (min-width: 1200px) {
+    width: 600px;
+    text-align: center;
+    height: 300px;
+    grid-gap: 30px;
   }
 `;
 
@@ -169,6 +182,7 @@ const LeftInput = styled.input`
 `;
 
 const RightTextArea = styled.textarea`
+  display: grid;
   border: none;
   box-shadow: 0px 2px 4px rgba(50, 50, 93, 0.1), 0 3px 8px rgba(0, 0, 0, 0.07);
   border-radius: 8px;
@@ -184,9 +198,9 @@ const RightTextArea = styled.textarea`
 
   @media (max-width: 900px) {
     width: 80%;
-    justify-self: center;
+    margin: 0 auto;
     height: 150px;
   }
 `;
 
-export { ContactWrapper, ContactForm, SubmitButton, ContactCard, ContactTitle, ContactTitleWrapper, LeftHalfInputs, RightHalfInputs, RightTextArea, LeftInput, ContactSummaryTitleWrapper };
+export { BookingWrapper, BookingForm, SubmitButton, BookingCard, BookingTitle, BookingTitleWrapper, LeftHalfInputs, RightHalfInputs, RightTextArea, LeftInput, BookingSummaryTitleWrapper };

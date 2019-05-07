@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-  ContactWrapper,
-  ContactForm,
+  BookingWrapper,
+  BookingForm,
   SubmitButton,
-  ContactCard,
-  ContactTitle,
-  // ContactTitleWrapper,
+  BookingCard,
+  BookingTitle,
+  // BookingTitleWrapper,
   LeftHalfInputs,
   RightHalfInputs,
   RightTextArea,
@@ -13,10 +13,10 @@ import {
 } from '../styles/booking-styles';
 
 const Booking = () => (
-  <ContactWrapper id='booking'>
-    <ContactTitle>BOOKING</ContactTitle>
-    <ContactCard>
-      <ContactForm
+  <BookingWrapper id='booking'>
+    <BookingTitle>BOOKING</BookingTitle>
+    <BookingCard>
+      <BookingForm
         netlify='true'
         data-netlify='true'
         method='POST'
@@ -43,9 +43,9 @@ const Booking = () => (
         <SubmitButton type='submit' value='submit'>
           SUBMIT
         </SubmitButton>
-      </ContactForm>
-    </ContactCard>
-  </ContactWrapper>
+      </BookingForm>
+    </BookingCard>
+  </BookingWrapper>
 );
 
 export default Booking;

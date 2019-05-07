@@ -8,8 +8,7 @@ import SideProjects from './components/SideProjects';
 import Booking from './components/Booking';
 import Footer from './components/Footer';
 
-
-// TODO: Add booking from mom site
+// TODO: connect contact form to email. 
 
 class App extends Component {
   constructor(props) {

@@ -163,6 +163,7 @@ const CuddleFishImageWrapper = styled(SideProjectsImageWrapper)`
 
 const CuddleFishCopy = styled(SideProjectsCopy)`
   grid-row: 7 / 8;
+  margin-bottom: 0;
 
   @media (min-width: 1200px) {
     grid-column: 3 / 7;
@@ -173,6 +174,7 @@ const CuddleFishCopy = styled(SideProjectsCopy)`
     width: 100%;
   }
 `;
+
 export {
   SideProjectsCopy,
   SideProjectsYoutubeWrapper,
