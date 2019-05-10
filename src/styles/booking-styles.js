@@ -49,15 +49,15 @@ const BookingSummaryTitleWrapper = styled(BookingTitleWrapper)`
 // `;
 
 const BookingTitle = styled(SubTitle)`
-  grid-column: 1 / 2;
-  grid-row: 2 / 3;
-  justify-self: end;
-  align-self: start;
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  justify-self: center;
+  align-self: end;
   height: fit-content;
-  transform: rotate(-90deg);
+  transform: rotate(0deg);
   margin: 0;
-  margin-right: -47px;
-  margin-top: 45px;
+  /* margin-right: -47px;
+  margin-top: 45px; */
 
   @media(min-width: 1200px) {
     grid-column: 1 / 2;
@@ -69,10 +69,10 @@ const BookingTitle = styled(SubTitle)`
 `;
 
 const BookingCard = styled(Card)`
-  padding: 15px;
+  padding: 15px 5px;
   background-color: white;
-  grid-column: 2 / 3;
-  width: 100%;
+  grid-column: 1 / -1;
+  width: 85%;
   grid-row: 2 / 3;
   justify-self: center;
 
@@ -106,10 +106,12 @@ const BookingForm = styled.form`
 const SubmitButton = styled.button`
   display: flex;
   grid-column: 1 / -1;
+  width: 80%;
   height: 55px;
   font-size: 20px;
   justify-content: space-evenly;
-  align-items: center; 
+  justify-self: center;
+  align-items: center;
   align-self: flex-start;
   color: white;
   background: linear-gradient(to left, hsla(348, 86%, 59%, .9), hsla(39, 100%, 63%, 0.9));
@@ -147,7 +149,7 @@ const LeftHalfInputs = styled.div`
   grid-column: 1 / 2;
   grid-template-rows: 1fr 1fr 1fr;
   grid-gap: 10px;
-  
+
   @media (max-width: 900px) {
     grid-row: 1 / 2;
     grid-column: 1 / -1;
