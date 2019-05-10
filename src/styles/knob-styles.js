@@ -8,6 +8,7 @@ const Knob = styled.div`
   position: relative;
   width: 150px;
   height: 150px;
+  transform: scale(.8);
   background-color: #6b6b6b;
   border-radius: 50%;
   box-shadow: inset -2px 2px 0px 0px rgba(255, 255, 255, 0.1),
@@ -38,7 +39,7 @@ const Knob = styled.div`
 
 const KnobNavLink = styled(Link)`
   position: absolute;
-  
+
   h3 {
     transition: all 200ms ease-in-out;
     font-size: .7em;
@@ -48,7 +49,7 @@ const KnobNavLink = styled(Link)`
     }
     @media(min-width: 1200px) {
     font-size: .8em
-    }            
+    }
   }
 `;
 
@@ -61,19 +62,19 @@ const KnobNavLink1 = styled(KnobNavLink)`
   @media(min-width: 1200px) {
     top: -122px;
     right: 96px;
-  }            
+  }
   `;
 
 const KnobNavLink2 = styled(KnobNavLink)`
   top: -104px;
   right: -4px;
   transform: rotate(-69deg);
-  
+
   @media(min-width: 1200px) {
     top: -114px;
     right: 16px;
     transform: rotate(-63deg);
-  }            
+  }
   `;
 
 const KnobNavLink3 = styled(KnobNavLink)`
@@ -86,24 +87,24 @@ const KnobNavLink4 = styled(KnobNavLink)`
   top: -65px;
   right: -149px;
   transform: rotate(-36deg);
-  
+
   @media(min-width: 1200px) {
     top: -51px;
     right: -175px;
     transform: rotate(-31deg);
-  }            
+  }
   `;
 
 const KnobNavLink5= styled(KnobNavLink)`
     top: 0px;
     right: -120px;
     transform: rotate(-17deg);
-  
+
   @media(min-width: 1200px) {
     top: 33px;
     right: -141px;
     transform: rotate(-16deg);
-  }            
+  }
 `;
 
 export { Knob, KnobNavLink, KnobNavLink1, KnobNavLink2, KnobNavLink3, KnobNavLink4, KnobNavLink5 };
