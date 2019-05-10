@@ -2,7 +2,7 @@
   "name": "joemygoodnessapp",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://neverssync.github.io/DJjoemygoodness/",
+  "homepage": "https://joemygoodness.netlify.com/",
   "dependencies": {
     "cloudinary-react": "^1.1.0",
     "node-sass": "^4.12.0",
