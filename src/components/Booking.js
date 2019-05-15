@@ -5,7 +5,6 @@ import {
   SubmitButton,
   BookingCard,
   BookingTitle,
-  // BookingTitleWrapper,
   LeftHalfInputs,
   RightHalfInputs,
   RightTextArea,

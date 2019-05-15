@@ -1,15 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './styles/boss.css';
 import './styles/App.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import PastExperience from './components/PastExperience';
 
 ReactDOM.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
+  <Router>
+    <Route exact path='/' component={App}/>
+    <Route path='/past-experience' component={PastExperience} />
+  </Router>,
   document.getElementById('root')
 );
 

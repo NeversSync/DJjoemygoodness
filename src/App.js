@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-  
+
 import Header from './components/Header';
 import Landing from './components/Landing';
 import About from './components/About';
@@ -8,7 +8,7 @@ import SideProjects from './components/SideProjects';
 import Booking from './components/Booking';
 import Footer from './components/Footer';
 
-// TODO: connect contact form to email. 
+// TODO: connect contact form to email.
 
 class App extends Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class App extends Component {
   handleKnobLinkHover = hoveredLink => {
     this.setState({ hoverLink: hoveredLink.target.textContent});
   }
-  
+
   handleKnobClick = event => {
     event.preventDefault();
     this.setState({ activeLink: event.target.textContent });

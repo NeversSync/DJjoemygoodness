@@ -103,7 +103,7 @@ const SideProjectsYoutubeWrapper = styled(Card)`
   grid-column: 3 / 11;
   grid-row: 4 / 5;
   margin: 0 auto;
-  
+
   @media (min-width: 1200px) {
     grid-column: 4 / 10;
     margin: 1% auto;
@@ -111,18 +111,18 @@ const SideProjectsYoutubeWrapper = styled(Card)`
 `;
 
 const SideProjectsLink = styled.a`
-  display:grid; 
-  width: fit-content; 
-  font-size: .8em; 
-  grid-column: 1 / -1; 
+  display:grid;
+  width: fit-content;
+  font-size: .8em;
+  grid-column: 1 / -1;
   grid-row: 3 / 4;
-  font-family: 'Rubik', sans-serif; 
+  font-family: 'Rubik', sans-serif;
   line-height: 22px;
   letter-spacing: 1.5px;
   font-weight: 300;
   margin: 0 auto;
   align-self: end;
-  
+
   @media (min-width: 900px) {
     margin: .5em auto;
     letter-spacing: 1.75px;
@@ -133,7 +133,6 @@ const SideProjectsLink = styled.a`
 `;
 
 const CuddleFishSubtitle = styled(SideProjectsSubtitle)`
-  /* grid-column: 3 / 4; */
   grid-row: 5 / 6;
   margin-top: 8%;
 
@@ -142,7 +141,6 @@ const CuddleFishSubtitle = styled(SideProjectsSubtitle)`
     grid-row: 7 / 8;
     line-height: 32px;
     margin: 0;
-    /* justify-self: start; */
   }
 `;
 
@@ -156,8 +154,6 @@ const CuddleFishImageWrapper = styled(SideProjectsImageWrapper)`
     margin-bottom: 0;
     justify-self: start;
     align-self: start;
-    /* grid-row: 2 / 3; */
-    /* width: 100%; */
   }
 `;
 
