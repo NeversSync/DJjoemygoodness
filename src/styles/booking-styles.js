@@ -32,22 +32,6 @@ const BookingSummaryTitleWrapper = styled(BookingTitleWrapper)`
   padding: 10px 0px 40px 0px;
 `;
 
-// const BookingTitle = styled(Title)`
-//   grid-row: 1 / 2;
-//   grid-column: 2 / 3;
-//   justify-self: center;
-//   font-weight: 500;
-//   align-self: end;
-//   padding-bottom: 6px;
-
-//   @media (max-width: 900px) {
-//     grid-row: 1 / 2;
-//     grid-column: 2 / 3;
-//     justify-self: center;
-//     text-align: center;
-//   }
-// `;
-
 const BookingTitle = styled(SubTitle)`
   grid-column: 2 / 3;
   grid-row: 1 / 2;
@@ -56,15 +40,15 @@ const BookingTitle = styled(SubTitle)`
   height: fit-content;
   transform: rotate(0deg);
   margin: 0;
-  /* margin-right: -47px;
-  margin-top: 45px; */
 
   @media(min-width: 1200px) {
     grid-column: 1 / 2;
-    justify-self: end;
     grid-row: 2 / 3;
-    margin-top: 49px;
-    margin-right: -58px;
+    justify-self: end;
+    align-self: start;
+    margin-right: -47px;
+    margin-top: 45px;
+    transform: rotate(-90deg);
   }
 `;
 
