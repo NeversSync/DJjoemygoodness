@@ -14,13 +14,13 @@
 }
 
 .custom-link {
-  color: var(--link-color); 
+  color: var(--link-color);
   text-decoration: underline;
-  // color: hsla(191, 100%, 75%, 1); 
+  // color: hsla(191, 100%, 75%, 1);
 }
 
 .custom-link:hover {
-  color: var(--hover-color); 
+  color: var(--hover-color);
 }
 
 .youtube-iframe {
@@ -158,6 +158,10 @@
 .tick:nth-child(27) { transform: (rotate(125deg));  }
 .tick:nth-child(28) { transform: (rotate(135deg));  }
 
+
+.bm-item:focus {
+  outline: none;
+}
 // FOOTER
 
 .social-icon {
