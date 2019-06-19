@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import styled from 'styled-components';
-import { HashLink as Link } from 'react-router-hash-link';
+import Link from 'gatsby-link';
 import { Title } from '../components/Helpers';
 
 const HeaderContainer = styled.div`
@@ -21,13 +21,13 @@ const HeaderContainer = styled.div`
 `;
 
 const LogoContainer = styled(Link)`
-  display: grid; 
+  display: grid;
   grid-column: 1 / 2;
   grid-row: 1 / 2;
   grid-gap: 10px;
   grid-template-columns: 2fr .5fr;
   padding: 10px;
-  
+
 
   @media(min-width: 900px) {
     grid-gap: 15px;

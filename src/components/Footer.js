@@ -19,7 +19,7 @@ import {
 
 const Footer = props => (
   <FooterContainer>
-    {/* <LogoContainer to='#top' smooth>
+    {/* <LogoContainer to='>
       <Logo
         src='https://res.cloudinary.com/nicky-cloudinary/image/upload/f_auto,q_auto,r_500/v1553276016/joe-good/CartoonJoe.jpg'
         alt='logo'
@@ -47,7 +47,6 @@ const Footer = props => (
     >
       <FooterNavLinkWrapper style={{ borderLeft: 'none' }}>
         <FooterNavLink
-          smooth
           to='/#home'
           onClick={props.handleKnobClick}
           onMouseOver={props.handleKnobLinkHover}
@@ -58,7 +57,6 @@ const Footer = props => (
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
         <FooterNavLink
-          smooth
           to='/#about'
           onClick={props.handleKnobClick}
           onMouseOver={props.handleKnobLinkHover}
@@ -69,7 +67,6 @@ const Footer = props => (
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
         <FooterNavLink
-          smooth
           to='/#music'
           onClick={props.handleKnobClick}
           onMouseOver={props.handleKnobLinkHover}
@@ -80,7 +77,6 @@ const Footer = props => (
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
         <FooterNavLink
-          smooth
           to='/#side-projects'
           onClick={props.handleKnobClick}
           onMouseOver={props.handleKnobLinkHover}
@@ -91,7 +87,6 @@ const Footer = props => (
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
         <FooterNavLink
-          smooth
           to='/#booking'
           onClick={props.handleKnobClick}
           className={props.activeLink === 'BOOKING' ? 'active-link' : ''}

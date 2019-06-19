@@ -1,4 +1,4 @@
-import { HashLink as Link } from 'react-router-hash-link';
+import Link from 'gatsby-link';
 import styled from 'styled-components';
 
 const Knob = styled.div`

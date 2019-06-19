@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import styled from 'styled-components';
-import { HashLink as Link } from 'react-router-hash-link';
+import Link from 'gatsby-link';
 import { Title } from '../components/Helpers';
 
 const FooterContainer = styled.div`
@@ -9,7 +9,7 @@ const FooterContainer = styled.div`
   align-content: center;
   padding: 1em 0em;
   grid-template-rows: 75px 75px;
-  
+
   @media(min-width: 1200px) {
     padding: 2em;
     grid-template-columns: 1fr 2fr .5fr;
@@ -18,14 +18,14 @@ const FooterContainer = styled.div`
 `;
 
 // const LogoContainer = styled(Link)`
-//   display: grid; 
+//   display: grid;
 //   grid-column: 3 / 4;
 //   grid-row: 1 / 2;
 //   justify-self: right;
 //   padding: 15px;
 //   width: fit-content;
 //   transition: all 200ms ease-in-out;
-  
+
 //   &:hover {
 //     transform: scale(1.1);
 //   }
@@ -47,10 +47,10 @@ const Social = styled.div`
     grid-row: 1 / 2;
     grid-column: 1 / -1;
     justify-self: center;
-    
+
     @media(min-width: 1200px) {
       grid-column: 1 / 2;
-    }    
+    }
 `;
 
 const SocialText = styled(Title)`
@@ -61,11 +61,11 @@ const SocialText = styled(Title)`
   text-align: center;
   transition: all 150ms ease-in-out;
   margin-right: 5px;
-  
+
   @media(min-width: 1200px) {
     margin-right: 25px;
     min-width: 240px;
-  } 
+  }
 `;
 
 const SocialIconWrapper = styled.div`
@@ -87,12 +87,12 @@ const FooterNav = styled.div`
   grid-row: 2 / 3;
   grid-column: 1 / -1;
   justify-self: center;
-  
+
   @media(min-width: 1200px) {
     grid-template-columns: 100px 100px 100px 172px 111px;
     grid-row: 1 / 2;
     grid-column: 3 / 4;
-  } 
+  }
 `;
 
 const FooterNavLinkWrapper = styled.div`
