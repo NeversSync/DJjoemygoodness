@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Rubik:400,400i,500|Sedgwick+Ave+Display');
+/* @import url('https://fonts.googleapis.com/css?family=Rubik:400,400i,500|Sedgwick+Ave+Display'); */
 
 /* font-family: 'Sedgwick Ave Display', cursive;
 font-family: 'Rubik', sans-serif; */
@@ -73,7 +73,7 @@ q {
   quotes: 2 1C 2 1D 2 18 2 19;
 }
 small {
-  font-size: 80%; 
+  font-size: 80%;
 }
 sub,
 sup {
@@ -304,11 +304,11 @@ ul {
 /* LANDING PAGE BUTTON STYLES */
 
 .left-button {
-  display: grid; 
-  grid-column: 4 / 5; 
+  display: grid;
+  grid-column: 4 / 5;
   grid-row: 3 / span 1;
-  align-self: center; 
-  justify-self: end; 
+  align-self: center;
+  justify-self: end;
   align-content: center;
 }
 .first-button {
@@ -321,29 +321,29 @@ ul {
 }
 
 .right-button {
-  display: grid; 
-  grid-column: 2 / 3; 
+  display: grid;
+  grid-column: 2 / 3;
   grid-row: 3 / span 1;
-  align-self: center; 
-  justify-self: start; 
+  align-self: center;
+  justify-self: start;
   align-content: center
 }
 
 .home-button {
-  display: grid; 
-  grid-column: 4 / 5; 
+  display: grid;
+  grid-column: 4 / 5;
   grid-row: 3 / span 1;
-  align-self: center; 
-  justify-self: end; 
+  align-self: center;
+  justify-self: end;
   align-content: center
 }
 
 .right {
-  grid-column: 2 / 3; 
+  grid-column: 2 / 3;
 }
 
-.page-image { 
-  border-radius: 4px; 
+.page-image {
+  border-radius: 4px;
 }
 
 input:focus, textarea:focus {
@@ -362,14 +362,14 @@ input:focus, textarea:focus {
 }
 
 .contact-for-more {
-  margin: 0 auto; 
+  margin: 0 auto;
   width: 50%;
 }
 
 .svg-left-arrow {
   /* -webkit-transform: rotate(180deg);
   transform: rotate(180deg); */
-  width: 30px; 
+  width: 30px;
   height: 30px;
 }
 
@@ -404,7 +404,7 @@ input:focus, textarea:focus {
   }
 
   .contact-for-more {
-    margin: 0 auto; 
+    margin: 0 auto;
     width: 100%;
   }
 }
