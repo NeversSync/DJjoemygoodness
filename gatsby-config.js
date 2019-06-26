@@ -30,14 +30,13 @@ module.exports = {
     //     head: true
     //   }
     // },
-    // { resolve: 'gatsby-plugin-styled-components' },
-    // {
-    //   resolve: 'gatsby-source-instagram-all',
-    //   options: {
-    //     // TODO
-    //     access_token: '2106430508.b82821b.83d3f9fc2ec341ac8d3b0e45c24e151f'
-    //   }
-    // },
+    { resolve: 'gatsby-plugin-styled-components' },
+    {
+      resolve: 'gatsby-source-instagram-all',
+      options: {
+        access_token: '2106430508.5672c3d.41d000f53da640c5b9091a0ce4b010b9'
+      }
+    },
     {
       resolve: 'gatsby-plugin-sharp',
       options: {
