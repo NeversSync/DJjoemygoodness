@@ -31,9 +31,9 @@ const InstagramFeed = () => (
     render={data => (
       <div>
         <InstaFeedWrapper>
-          {data.allInstagramContent.edges.map((item, i) => {
+          {data.allInstagramContent.edges.slice(0, 5).map((item, i) => {
             return item.node.localImage ? (
-              <InstaImageWrapper>
+              <InstaImageWrapper key={i}>
                 <Image
                   fluid={item.node.localImage.childImageSharp.fluid}
                   key={i}
