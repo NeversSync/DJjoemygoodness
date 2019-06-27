@@ -48,7 +48,7 @@ const InstagramFeed = () => (
           >
             <FaInstagram />
           </SocialIcon>
-          <SubTitle>Joe My Goodness on Instagram</SubTitle>
+          <SubTitle style={{textAlign: 'center'}}>Joe My Goodness on Instagram</SubTitle>
         </InstaTitleWrapper>
         <InstaFeedImagesWrapper>
           {data.allInstagramContent.edges.slice(0, 6).map((item, i) => {
@@ -63,6 +63,7 @@ const InstagramFeed = () => (
                   <Image
                     fluid={item.node.localImage.childImageSharp.fluid}
                     key={i}
+                    style={{ borderRadius: '5px' }}
                   />
                 </a>
               </InstaImageWrapper>
