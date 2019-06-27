@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-// import Scrollchor from 'react-scrollchor';
 
 const Wrapper = styled.div`
   display: grid;
@@ -9,13 +8,13 @@ const Wrapper = styled.div`
 `;
 
 const Copy = styled.p`
-  font-family: 'Rubik', sans-serif; 
+  font-family: 'Rubik', sans-serif;
   font-size: .6em;
   line-height: 22px;
   letter-spacing: 1.5px;
   font-weight: 300;
   margin: 0;
-  
+
   @media (min-width: 900px) {
     letter-spacing: 1.75px;
     font-size: .8em;
@@ -25,7 +24,6 @@ const Copy = styled.p`
 
 const Card = styled.div`
   box-shadow: 0 5px 15px rgba(50, 50, 93, 0.1), 0 3px 8px rgba(0, 0, 0, 0.07);
-  /* background: white; */
   border-radius: 4px;
   `;
 
@@ -70,7 +68,7 @@ const CTAButton = styled.button`
   margin-top: 30px;
   display: flex;
   justify-content: space-evenly;
-  align-items: center; 
+  align-items: center;
   width: 200px;
   height: 55px;
   background: linear-gradient(to left, hsla(348, 86%, 59%, .9), hsla(39, 100%, 63%, 0.9));

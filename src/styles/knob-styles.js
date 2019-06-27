@@ -1,4 +1,4 @@
-import { HashLink as Link } from 'react-router-hash-link';
+import Link from 'gatsby-link';
 import styled from 'styled-components';
 
 const Knob = styled.div`
@@ -71,39 +71,39 @@ const KnobNavLink2 = styled(KnobNavLink)`
   transform: rotate(-69deg);
 
   @media(min-width: 1200px) {
-    top: -114px;
+    top: -115px;
     right: 16px;
-    transform: rotate(-63deg);
+    transform: rotate(-67deg);
   }
   `;
 
 const KnobNavLink3 = styled(KnobNavLink)`
-  top: -79px;
-  right: -45px;
-  transform: rotate(-47deg);
+  top: -82px;
+  right: -48px;
+  transform: rotate(-48deg);
   `;
 
 const KnobNavLink4 = styled(KnobNavLink)`
-  top: -65px;
-  right: -149px;
+  top: -67px;
+  right: -152px;
   transform: rotate(-36deg);
 
   @media(min-width: 1200px) {
-    top: -51px;
-    right: -175px;
-    transform: rotate(-31deg);
+    top: -54px;
+    right: -179px;
+    transform: rotate(-33deg);
   }
   `;
 
 const KnobNavLink5= styled(KnobNavLink)`
-    top: 0px;
-    right: -120px;
-    transform: rotate(-17deg);
+    top: -1px;
+    right: -127px;
+    transform: rotate(-23deg);
 
   @media(min-width: 1200px) {
-    top: 33px;
-    right: -141px;
-    transform: rotate(-16deg);
+    top: 30px;
+    right: -152px;
+    transform: rotate(-20deg);
   }
 `;
 

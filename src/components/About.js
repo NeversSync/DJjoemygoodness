@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'gatsby-link';
 
 import { AboutCopy, AboutImageWrapper, AboutTitle, AboutWrapper } from '../styles/about-styles';
 import { Image } from '../components/Helpers';

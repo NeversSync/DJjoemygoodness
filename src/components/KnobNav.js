@@ -34,7 +34,6 @@ class KnobNav extends Component {
     return (
       <Knob className={currentKnobClass}>
         <KnobNavLink1
-          smooth
           to='/#home'
           onClick={this.props.handleKnobClick}
           className={this.props.activeLink === 'HOME' ? 'active-link' : ''}
@@ -42,7 +41,6 @@ class KnobNav extends Component {
           <h3 onMouseOver={this.props.handleKnobLinkHover}>HOME</h3>
         </KnobNavLink1>
         <KnobNavLink2
-          smooth
           to='/#about'
           onClick={this.props.handleKnobClick}
           className={this.props.activeLink === 'ABOUT' ? 'active-link' : ''}
@@ -50,7 +48,6 @@ class KnobNav extends Component {
           <h3 onMouseOver={this.props.handleKnobLinkHover}>ABOUT</h3>
         </KnobNavLink2>
         <KnobNavLink3
-          smooth
           to='/#music'
           onClick={this.props.handleKnobClick}
           className={this.props.activeLink === 'MUSIC' ? 'active-link' : ''}
@@ -58,7 +55,6 @@ class KnobNav extends Component {
           <h3 onMouseOver={this.props.handleKnobLinkHover}>MUSIC</h3>
         </KnobNavLink3>
         <KnobNavLink4
-          smooth
           to='/#side-projects'
           onClick={this.props.handleKnobClick}
           className={
@@ -68,7 +64,6 @@ class KnobNav extends Component {
           <h3 onMouseOver={this.props.handleKnobLinkHover}>SIDE PROJECTS</h3>
         </KnobNavLink4>
         <KnobNavLink5
-          smooth
           to='/#booking'
           onClick={this.props.handleKnobClick}
           className={this.props.activeLink === 'BOOKING' ? 'active-link' : ''}
