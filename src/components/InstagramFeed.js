@@ -1,8 +1,16 @@
 import React from 'react';
 // import { Card, Title } from '../components/Helpers';
-import { InstaFeedWrapper, InstaImageWrapper } from '../styles/instagram-style';
+import { FaInstagram } from 'react-icons/fa';
+import {
+  InstaFeedImagesWrapper,
+  InstaImageWrapper,
+  InstaFeedContainer,
+  InstaTitleWrapper
+} from '../styles/instagram-style';
 import { graphql, StaticQuery } from 'gatsby';
 import Image from 'gatsby-image';
+import { Title, SubTitle } from './Helpers';
+import { SocialIcon, SocialIconWrapper } from '../styles/footer-styles';
 
 const InstagramFeed = () => (
   <StaticQuery
@@ -29,22 +37,41 @@ const InstagramFeed = () => (
       }
     `}
     render={data => (
-      <div>
-        <InstaFeedWrapper>
-          {data.allInstagramContent.edges.slice(0, 5).map((item, i) => {
+      <InstaFeedContainer>
+        <InstaTitleWrapper>
+          <SocialIcon
+            href='https://www.instagram.com/djjoemygoodness/'
+            target='_blank'
+            rel='noopener noreferrer'
+            className='social-icon'
+            style={{ width: 'fit-content' }}
+          >
+            <FaInstagram />
+          </SocialIcon>
+          <SubTitle>Joe My Goodness on Instagram</SubTitle>
+        </InstaTitleWrapper>
+        <InstaFeedImagesWrapper>
+          {data.allInstagramContent.edges.slice(0, 6).map((item, i) => {
             return item.node.localImage ? (
               <InstaImageWrapper key={i}>
-                <Image
-                  fluid={item.node.localImage.childImageSharp.fluid}
+                <a
+                  href='https://www.instagram.com/djjoemygoodness/'
                   key={i}
-                />
+                  target='_blank'
+                  className='ig-image'
+                >
+                  <Image
+                    fluid={item.node.localImage.childImageSharp.fluid}
+                    key={i}
+                  />
+                </a>
               </InstaImageWrapper>
             ) : (
               <div />
             );
           })}
-        </InstaFeedWrapper>
-      </div>
+        </InstaFeedImagesWrapper>
+      </InstaFeedContainer>
     )}
   />
 );

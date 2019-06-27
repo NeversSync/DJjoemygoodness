@@ -8,6 +8,7 @@ import {
   SoundcloudWrapper,
   MusicYoutubeWrapper
 } from '../styles/music-styles';
+import { SubTitle } from '../components/Helpers';
 
 const Music = () => (
   <div>
@@ -46,8 +47,7 @@ const Music = () => (
           title='music video'
         />
       </MusicYoutubeWrapper>
-      <InstagramFeed />
-      {/* TODO: fix grid-row of feed */}
+      <InstagramFeed/>
     </MusicWrapper>
   </div>
 );
