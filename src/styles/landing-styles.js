@@ -39,6 +39,10 @@ const LandingImage = styled(Image)`
     width: 60%;
   }
 
+  @media(min-width: 900px) {
+    width: 50%;
+  }
+
   @media(min-width: 1200px) {
     width: 90%;
   }
