@@ -90,8 +90,8 @@ const KnobNavLink3 = styled(KnobNavLink)`
   `;
 
 const KnobNavLink4 = styled(KnobNavLink)`
-  top: -66px;
-  right: -142px;
+  top: -64px;
+  right: -141px;
   transform: rotate(-36deg);
 
   @media(min-width: 1200px) {
