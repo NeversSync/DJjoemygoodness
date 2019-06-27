@@ -3,7 +3,6 @@ import { Card } from '../components/Helpers';
 
 const InstaFeedContainer = styled(Card)`
   display: grid;
-  /* margin-top: 1.5em; */
   padding: .25em;
   padding-bottom: .5em;
   box-shadow: 5px 5px 15px rgba(255, 255, 255, 0.2);

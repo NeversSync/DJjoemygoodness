@@ -1,5 +1,4 @@
 import React from 'react';
-// import { Card, Title } from '../components/Helpers';
 import { FaInstagram } from 'react-icons/fa';
 import {
   InstaFeedImagesWrapper,

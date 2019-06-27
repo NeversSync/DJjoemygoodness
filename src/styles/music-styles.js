@@ -58,7 +58,6 @@ const MusicImageWrapper = styled(ImageWrapper)`
 `;
 
 const SoundcloudWrapper = styled(Card)`
-  /* box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07); */
   box-shadow: 5px 5px 15px rgba(255, 255, 255, 0.2);
   grid-column: 2 / 6;
   grid-row: 2 / 3;
@@ -84,8 +83,6 @@ const MusicYoutubeWrapper = styled(Card)`
   @media (min-width: 1200px) {
     grid-column: 4 / 10;
     grid-row: 4 / 5;
-    /* justify-self: center; */
-    /* margin: 0 10%; */
   }
 `;
 
