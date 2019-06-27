@@ -21,6 +21,10 @@ const Knob = styled.div`
     height: 250px;
   }
 
+  @media (orientation: landscape) {
+    transform: scale(1);
+  }
+
   &::after {
     position: absolute;
     top: 50%;
@@ -77,6 +81,8 @@ const KnobNavLink2 = styled(KnobNavLink)`
   }
   `;
 
+// TODO: fix side project link on mobile
+
 const KnobNavLink3 = styled(KnobNavLink)`
   top: -82px;
   right: -48px;
@@ -84,8 +90,8 @@ const KnobNavLink3 = styled(KnobNavLink)`
   `;
 
 const KnobNavLink4 = styled(KnobNavLink)`
-  top: -67px;
-  right: -152px;
+  top: -64px;
+  right: -149px;
   transform: rotate(-36deg);
 
   @media(min-width: 1200px) {

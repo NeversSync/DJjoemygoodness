@@ -7,8 +7,11 @@ const InstaFeedContainer = styled(Card)`
   padding-bottom: .5em;
   box-shadow: 5px 5px 15px rgba(255, 255, 255, 0.2);
   background: radial-gradient(hsla(240, 20%, 40%, .9), hsla(240, 53%, 15%, .8));
-  grid-column: 2 / 6;
+  /* grid-column: 2 / 6; */
   grid-row: 5 / 6;
+  grid-column: 1 / -1;
+  width: 85%;
+  justify-self: center;
 
   @media (min-width: 1200px) {
     margin-top: 1.5em;

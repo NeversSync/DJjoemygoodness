@@ -46,6 +46,7 @@ const Logo = styled.img`
   align-self: center;
   max-width: 100px;
   max-height: 100px;
+  border-radius: 50%;
 `;
 
 const LogoText = styled(Title)`
