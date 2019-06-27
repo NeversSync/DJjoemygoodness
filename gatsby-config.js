@@ -18,15 +18,15 @@ module.exports = {
         access_token: '6836969639.dd74a62.24cbd1a1d3504825baab9f6e9771227b'
       }
     },
-    // {
-    //   resolve: 'gatsby-plugin-sharp',
-    //   options: {
-    //     useMozJpeg: false,
-    //     stripMetadata: true,
-    //     defaultQuality: 75,
-    //   },
-    // },
-    // 'gatsby-transformer-sharp',
+    {
+      resolve: 'gatsby-plugin-sharp',
+      options: {
+        useMozJpeg: false,
+        stripMetadata: true,
+        defaultQuality: 75,
+      },
+    },
+    'gatsby-transformer-sharp',
     'gatsby-plugin-sass'
   ]
 };
