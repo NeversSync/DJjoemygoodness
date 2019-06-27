@@ -81,8 +81,6 @@ const KnobNavLink2 = styled(KnobNavLink)`
   }
   `;
 
-// TODO: fix side project link on mobile
-
 const KnobNavLink3 = styled(KnobNavLink)`
   top: -82px;
   right: -48px;
