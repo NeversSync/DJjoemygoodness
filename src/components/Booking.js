@@ -21,19 +21,12 @@ const Booking = () => (
         method='POST'
         data-netlify-honeypot='bot-field'
         name='contact-form-1'
-        // action='./thanks'
       >
         <LeftHalfInputs>
           <LeftInput name='name' type='text' placeholder='Name' />
           <LeftInput name='email' type='email' placeholder='Email address' />
           <LeftInput name='subject' type='text' placeholder='Subject' />
           <input type='hidden' name='form-name' value='contact-form-1' />
-          {/* <input
-            type='hidden'
-            name='_next'
-            value='./thanks'
-            style={{ display: 'none' }}
-          /> */}
         </LeftHalfInputs>
         <RightHalfInputs>
           <RightTextArea name='message' type='text' placeholder='Message' />
