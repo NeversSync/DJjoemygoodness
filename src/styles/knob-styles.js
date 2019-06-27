@@ -21,7 +21,7 @@ const Knob = styled.div`
     height: 250px;
   }
 
-  @media (orientation: landscape) {
+  @media (min-width: 900px) and (orientation: landscape) {
     transform: scale(1);
   }
 
