@@ -42,10 +42,12 @@ function StaticQueryDataRenderer({
 }
 
 const StaticQuery = props => {
-  const data = props.data,
-        query = props.query,
-        render = props.render,
-        children = props.children;
+  const {
+    data,
+    query,
+    render,
+    children
+  } = props;
   return _react.default.createElement(StaticQueryContext.Consumer, null, staticQueryData => _react.default.createElement(StaticQueryDataRenderer, {
     data: data,
     query: query,

@@ -35,22 +35,12 @@ if (process.env.NODE_ENV !== `production`) {
 
 const cleanAndFindPathCache = {};
 
-const findMatchPath = (matchPaths, trimmedPathname) => {
-  for (var _iterator = matchPaths, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
-    var _ref;
-
-    if (_isArray) {
-      if (_i >= _iterator.length) break;
-      _ref = _iterator[_i++];
-    } else {
-      _i = _iterator.next();
-      if (_i.done) break;
-      _ref = _i.value;
-    }
-
-    const _ref2 = _ref,
-          matchPath = _ref2.matchPath,
-          path = _ref2.path;
+const findMatchPath = trimmedPathname => {
+  for (const _ref of matchPaths) {
+    const {
+      matchPath,
+      path
+    } = _ref;
 
     if ((0, _utils.match)(matchPath, trimmedPathname)) {
       return path;
@@ -86,7 +76,7 @@ const cleanAndFindPath = rawPathname => {
     return cleanAndFindPathCache[trimmedPathname];
   }
 
-  let foundPath = findMatchPath(matchPaths, trimmedPathname);
+  let foundPath = findMatchPath(trimmedPathname);
 
   if (!foundPath) {
     if (trimmedPathname === `/index.html`) {
@@ -364,7 +354,8 @@ const queue = {
       pageHtmlExistsResults[path] = req.status === 200;
     });
   },
-  doesPageHtmlExistSync: rawPath => pageHtmlExistsResults[cleanAndFindPath(rawPath)]
+  doesPageHtmlExistSync: rawPath => pageHtmlExistsResults[cleanAndFindPath(rawPath)],
+  findMatchPath
 };
 
 const postInitialRenderWork = () => {

@@ -75,9 +75,9 @@ const navigate = (to, options = {}) => {
     window.__navigatingToLink = true;
   }
 
-  let _parsePath = (0, _gatsbyLink.parsePath)(to),
-      pathname = _parsePath.pathname;
-
+  let {
+    pathname
+  } = (0, _gatsbyLink.parsePath)(to);
   const redirect = redirectMap[pathname]; // If we're redirecting, just replace the passed in pathname
   // to the one we want to redirect to.
 
@@ -130,8 +130,10 @@ const navigate = (to, options = {}) => {
 function shouldUpdateScroll(prevRouterProps, {
   location
 }) {
-  const pathname = location.pathname,
-        hash = location.hash;
+  const {
+    pathname,
+    hash
+  } = location;
   const results = (0, _apiRunnerBrowser.apiRunner)(`shouldUpdateScroll`, {
     prevRouterProps,
     // `pathname` for backwards compatibility
@@ -147,7 +149,11 @@ function shouldUpdateScroll(prevRouterProps, {
   }
 
   if (prevRouterProps) {
-    const oldPathname = prevRouterProps.location.pathname;
+    const {
+      location: {
+        pathname: oldPathname
+      }
+    } = prevRouterProps;
 
     if (oldPathname === pathname) {
       // Scroll to element if it exists, if it doesn't, or no hash is provided,

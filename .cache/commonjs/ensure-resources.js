@@ -75,7 +75,9 @@ class EnsureResources extends _react.default.Component {
     // back, the browser will just change the URL and expect JS to handle
     // the change, which won't always work since it might not be a Gatsby
     // page.
-    const href = window.location.href;
+    const {
+      href
+    } = window.location;
     window.history.replaceState({}, ``, prevHref);
     window.location.replace(href);
   }
@@ -108,7 +110,9 @@ class EnsureResources extends _react.default.Component {
   }
 
   retryResources(nextProps) {
-    const pathname = nextProps.location.pathname;
+    const {
+      pathname
+    } = nextProps.location;
 
     if (!_loader.default.loadPageSync(pathname)) {
       // Store the previous and next location before resolving resources

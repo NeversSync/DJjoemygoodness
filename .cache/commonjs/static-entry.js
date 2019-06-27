@@ -11,31 +11,36 @@ const React = require(`react`);
 
 const fs = require(`fs`);
 
-const _require = require(`path`),
-      join = _require.join;
+const {
+  join
+} = require(`path`);
 
-const _require2 = require(`react-dom/server`),
-      renderToString = _require2.renderToString,
-      renderToStaticMarkup = _require2.renderToStaticMarkup;
+const {
+  renderToString,
+  renderToStaticMarkup
+} = require(`react-dom/server`);
 
-const _require3 = require(`@reach/router`),
-      ServerLocation = _require3.ServerLocation,
-      Router = _require3.Router,
-      isRedirect = _require3.isRedirect;
+const {
+  ServerLocation,
+  Router,
+  isRedirect
+} = require(`@reach/router`);
 
-const _require4 = require(`lodash`),
-      get = _require4.get,
-      merge = _require4.merge,
-      isObject = _require4.isObject,
-      flatten = _require4.flatten,
-      uniqBy = _require4.uniqBy;
+const {
+  get,
+  merge,
+  isObject,
+  flatten,
+  uniqBy
+} = require(`lodash`);
 
 const apiRunner = require(`./api-runner-ssr`);
 
 const syncRequires = require(`./sync-requires`);
 
-const _require5 = require(`gatsby/package.json`),
-      gatsbyVersion = _require5.version;
+const {
+  version: gatsbyVersion
+} = require(`gatsby/package.json`);
 
 const stats = JSON.parse(fs.readFileSync(`${process.cwd()}/public/webpack.stats.json`, `utf-8`));
 const chunkMapping = JSON.parse(fs.readFileSync(`${process.cwd()}/public/chunk-map.json`, `utf-8`)); // const testRequireError = require("./test-require-error")
@@ -165,7 +170,9 @@ var _default = (pagePath, callback) => {
   const pageDataRaw = fs.readFileSync(getPageDataFile(pagePath));
   const pageData = JSON.parse(pageDataRaw);
   const pageDataUrl = getPageDataUrl(pagePath);
-  const componentChunkName = pageData.componentChunkName;
+  const {
+    componentChunkName
+  } = pageData;
 
   class RouteHandler extends React.Component {
     render() {

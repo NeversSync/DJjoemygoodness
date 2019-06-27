@@ -51,7 +51,9 @@ if (window.__webpack_hot_middleware_reporter__ !== undefined) {
 
 class RouteHandler extends _react.default.Component {
   render() {
-    let location = this.props.location;
+    let {
+      location
+    } = this.props;
 
     if (!_loader.default.isPageNotFound(location.pathname)) {
       return _react.default.createElement(_ensureResources.default, {

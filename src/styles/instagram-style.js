@@ -18,6 +18,8 @@ const InstaFeedContainer = styled(Card)`
     padding: .5em;
     padding-bottom: 1.5em;
     grid-column: 4 / 10;
+    width: 100%;
+    justify-self: center;
   }
 `;
 
