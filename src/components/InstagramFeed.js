@@ -50,7 +50,7 @@ const InstagramFeed = () => (
           <SubTitle style={{textAlign: 'center'}}>Joe My Goodness on Instagram</SubTitle>
         </InstaTitleWrapper>
         <InstaFeedImagesWrapper>
-          {data.allInstagramContent.edges.slice(0, 6).map((item, i) => {
+          {data.allInstagramContent.edges.slice(0, 9).map((item, i) => {
             return item.node.localImage ? (
               <InstaImageWrapper key={i}>
                 <a
