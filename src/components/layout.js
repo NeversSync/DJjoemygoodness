@@ -28,8 +28,10 @@ const Layout = ({ children }) => (
         <Helmet
           title='DJ Joe My Goodness'
           meta={[
-            // { name: 'DJ Joe My Goodness', content: 'Joemygoodness' },
-            { name: 'keywords', content: 'DJ Joe My Goodness' }
+            { name: 'DJ Joe My Goodness', content: 'Joemygoodness' },
+            { name: 'keywords', content: 'DJ Joe My Goodness' },
+            { name: 'description', content: 'DJ Joe My Goodness, professional DJ and musician.' },
+            { name: 'og:image', content: 'https://joemygoodness.com/joemygoodness-screenshot.png' },
           ]}
         />
         <title>DJ Joe My Goodness</title>
@@ -37,14 +39,14 @@ const Layout = ({ children }) => (
           name='description'
           content='DJ Joe My Goodness, professional DJ and musician.'
         />
-        <meta property='og:type' content='website' />>
+        <meta property='og:type' content='website' />
         <meta property='og:url' content='https://joemygoodness.com/' />
         <meta property='og:title' content='DJ Joe My Goodness' />
-        <meta
+        {/* <meta
           property='og:description'
           content='DJ Joe My Goodness, professional DJ and musician.'
         />
-        <meta property='og:image' content='https://joemygoodness.com/joemygoodness-screenshot.png' />
+        <meta property='og:image' content='https://joemygoodness.com/joemygoodness-screenshot.png' /> */}
         <meta property='twitter:card' content='summary_large_image' />
         <meta property='twitter:url' content='https://joemygoodness.com/' />
         <meta property='twitter:title' content='DJ Joe My Goodness' />
