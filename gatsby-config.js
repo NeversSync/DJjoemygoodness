@@ -4,14 +4,13 @@ module.exports = {
 
   },
   plugins: [
-    // {
-    //   // TODO
-    //   resolve: 'gatsby-plugin-google-analytics',
-    //   options: {
-    //     trackingId: 'UA-134726933-2',
-    //     head: true
-    //   }
-    // },
+    {
+      resolve: 'gatsby-plugin-google-analytics',
+      options: {
+        trackingId: 'UA-143852563-1',
+        head: true
+      }
+    },
     { resolve: 'gatsby-plugin-styled-components' },
     {
       resolve: 'gatsby-source-instagram-all',
