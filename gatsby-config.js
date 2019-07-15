@@ -1,7 +1,6 @@
 module.exports = {
   siteMetadata: {
     title: 'DJ Joemygoodness',
-
   },
   plugins: [
     {
