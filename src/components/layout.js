@@ -26,12 +26,33 @@ const Layout = ({ children }) => (
     render={data => (
       <>
         <Helmet
-          title="DJ Joe My Goodness"
+          title='DJ Joe My Goodness'
           meta={[
-            { name: 'DJ Joe My Goodness', content: 'Joemygoodness' },
+            // { name: 'DJ Joe My Goodness', content: 'Joemygoodness' },
             { name: 'keywords', content: 'DJ Joe My Goodness' }
           ]}
         />
+        <title>DJ Joe My Goodness</title>
+        <meta
+          name='description'
+          content='DJ Joe My Goodness, professional DJ and musician.'
+        />
+        <meta property='og:type' content='website' />>
+        <meta property='og:url' content='https://joemygoodness.com/' />
+        <meta property='og:title' content='DJ Joe My Goodness' />
+        <meta
+          property='og:description'
+          content='DJ Joe My Goodness, professional DJ and musician.'
+        />
+        <meta property='og:image' content='https://joemygoodness.com/joemygoodness-screenshot.png' />
+        <meta property='twitter:card' content='summary_large_image' />
+        <meta property='twitter:url' content='https://joemygoodness.com/' />
+        <meta property='twitter:title' content='DJ Joe My Goodness' />
+        <meta
+          property='twitter:description'
+          content='DJ Joe My Goodness, professional DJ and musician.'
+        />
+        <meta property='twitter:image' content='https://joemygoodness.com/joemygoodness-screenshot.png' />
         <Content>{children}</Content>
       </>
     )}
