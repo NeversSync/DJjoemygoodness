@@ -1,8 +1,11 @@
 var plugins = [{
-      plugin: require('/Users/nickyevers/Desktop/WEB/WORK/JOE-GOOD/DJjoemygoodness/node_modules/gatsby-plugin-styled-components/gatsby-ssr'),
+      plugin: require('/Users/nickyevers/Desktop/WEB/WORK/OLD/JOE-GOOD/DJjoemygoodness/node_modules/gatsby-plugin-google-analytics/gatsby-ssr'),
+      options: {"plugins":[],"trackingId":"UA-143852563-1","head":true},
+    },{
+      plugin: require('/Users/nickyevers/Desktop/WEB/WORK/OLD/JOE-GOOD/DJjoemygoodness/node_modules/gatsby-plugin-styled-components/gatsby-ssr'),
       options: {"plugins":[]},
     },{
-      plugin: require('/Users/nickyevers/Desktop/WEB/WORK/JOE-GOOD/DJjoemygoodness/node_modules/gatsby-plugin-react-helmet/gatsby-ssr'),
+      plugin: require('/Users/nickyevers/Desktop/WEB/WORK/OLD/JOE-GOOD/DJjoemygoodness/node_modules/gatsby-plugin-react-helmet/gatsby-ssr'),
       options: {"plugins":[]},
     }]
 // During bootstrap, we write requires at top of this file which looks like:

@@ -8,9 +8,6 @@ import SideProjects from '../components/SideProjects';
 import Booking from '../components/Booking';
 import Footer from '../components/Footer';
 
-
-// TODO: connect contact form to email.
-
 if (typeof window !== 'undefined') {
   // eslint-disable-next-line global-require
   require('smooth-scroll')('a[href*="#"]');
