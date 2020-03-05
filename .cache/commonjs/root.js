@@ -19,7 +19,7 @@ var _apiRunnerBrowser = require("./api-runner-browser");
 
 var _loader = _interopRequireDefault(require("./loader"));
 
-var _jsonStore = _interopRequireDefault(require("./json-store"));
+var _queryResultStore = require("./query-result-store");
 
 var _ensureResources = _interopRequireDefault(require("./ensure-resources"));
 
@@ -45,11 +45,25 @@ if (window.__webpack_hot_middleware_reporter__ !== undefined) {
   });
 }
 
-(0, _navigation.init)();
+(0, _navigation.init)(); // In gatsby v2 if Router is used in page using matchPaths
+// paths need to contain full path.
+// For example:
+//   - page have `/app/*` matchPath
+//   - inside template user needs to use `/app/xyz` as path
+// Resetting `basepath`/`baseuri` keeps current behaviour
+// to not introduce breaking change.
+// Remove this in v3
+
+const RouteHandler = props => _react.default.createElement(_router.BaseContext.Provider, {
+  value: {
+    baseuri: `/`,
+    basepath: `/`
+  }
+}, _react.default.createElement(_queryResultStore.PageQueryStore, props));
 
 class LocationHandler extends _react.default.Component {
   render() {
-    let {
+    const {
       location
     } = this.props;
 
@@ -65,8 +79,8 @@ class LocationHandler extends _react.default.Component {
         basepath: __BASE_PATH__,
         location: location,
         id: "gatsby-focus-wrapper"
-      }, _react.default.createElement(_jsonStore.default, (0, _extends2.default)({
-        path: locationAndPageResources.pageResources.page.matchPath || locationAndPageResources.pageResources.page.path
+      }, _react.default.createElement(RouteHandler, (0, _extends2.default)({
+        path: encodeURI(locationAndPageResources.pageResources.page.matchPath || locationAndPageResources.pageResources.page.path)
       }, this.props, locationAndPageResources))))));
     }
 
@@ -77,7 +91,7 @@ class LocationHandler extends _react.default.Component {
     let custom404;
 
     if (real404PageResources) {
-      custom404 = _react.default.createElement(_jsonStore.default, (0, _extends2.default)({}, this.props, {
+      custom404 = _react.default.createElement(_queryResultStore.PageQueryStore, (0, _extends2.default)({}, this.props, {
         pageResources: real404PageResources
       }));
     }
@@ -88,7 +102,7 @@ class LocationHandler extends _react.default.Component {
       basepath: __BASE_PATH__,
       location: location,
       id: "gatsby-focus-wrapper"
-    }, _react.default.createElement(_jsonStore.default, {
+    }, _react.default.createElement(RouteHandler, {
       path: location.pathname,
       location: location,
       pageResources: dev404PageResources,
@@ -112,6 +126,6 @@ const WrappedRoot = (0, _apiRunnerBrowser.apiRunner)(`wrapRootElement`, {
   };
 }).pop();
 
-var _default = () => WrappedRoot;
+var _default = () => _react.default.createElement(_queryResultStore.StaticQueryStore, null, WrappedRoot);
 
 exports.default = _default;

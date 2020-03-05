@@ -21,6 +21,7 @@ const Booking = () => (
         method='POST'
         data-netlify-honeypot='bot-field'
         name='contact-form-1'
+        data-netlify-recaptcha='true'
       >
         <LeftHalfInputs>
           <LeftInput name='name' type='text' placeholder='Name' />
@@ -31,7 +32,6 @@ const Booking = () => (
         <RightHalfInputs>
           <RightTextArea name='message' type='text' placeholder='Message' />
         </RightHalfInputs>
-        <div data-netlify-recaptcha='true' />
         <SubmitButton type='submit' value='submit'>
           SUBMIT
         </SubmitButton>

@@ -36,7 +36,9 @@ class EnsureResources extends _react.default.Component {
       };
     }
 
-    return null;
+    return {
+      location: Object.assign({}, location)
+    };
   }
 
   loadResources(rawPath) {
@@ -83,6 +85,12 @@ class EnsureResources extends _react.default.Component {
   }
 
   render() {
+    if (process.env.NODE_ENV !== `production` && !this.state.pageResources) {
+      throw new Error(`EnsureResources was not able to find resources for path: "${this.props.location.pathname}"
+This typically means that an issue occurred building components for that path.
+Run \`gatsby clean\` to remove any cached elements.`);
+    }
+
     return this.props.children(this.state);
   }
 

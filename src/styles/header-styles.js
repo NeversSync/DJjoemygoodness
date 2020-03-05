@@ -21,6 +21,16 @@ const HeaderContainer = styled.div`
   }
 `;
 
+const LogoText = styled(Title)`
+  display: grid;
+  align-self: center;
+  justify-self: start;
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  text-align: center;
+  transition: all 150ms ease-in-out;
+`;
+
 const LogoContainer = styled(Link)`
   display: grid;
   grid-column: 1 / 2;
@@ -59,16 +69,6 @@ const Logo = styled.img`
     max-width: 100px;
     max-height: 100px;
   }
-`;
-
-const LogoText = styled(Title)`
-  display: grid;
-  align-self: center;
-  justify-self: start;
-  grid-column: 2 / 3;
-  grid-row: 1 / 2;
-  text-align: center;
-  transition: all 150ms ease-in-out;
 `;
 
 const NavContainer = styled.div`
