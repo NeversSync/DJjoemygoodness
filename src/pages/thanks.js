@@ -1,12 +1,16 @@
 import React from 'react';
-import {
-  BookingWrapper,
-} from '../styles/booking-styles';
+import Link from 'gatsby-link';
+import {Title} from '../components/Helpers';
+import { HomeButton } from '../styles/pastExperience-styles';
+
 
 const Thanks = () => (
-  <BookingWrapper>
-    <div>Thanks! We will be in touch shortly.</div>
-  </BookingWrapper>
+  <div style={{display: 'grid', minHeight: '85vh', justifyContent: 'center', alignContent: 'center', color: '#292929'}}>
+    <Title>Thank you! We will be in touch shortly.</Title>
+    <HomeButton to='/'>
+        HOME
+    </HomeButton>
+  </div>
 );
 
 export default Thanks;
