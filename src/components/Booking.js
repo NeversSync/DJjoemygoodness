@@ -16,18 +16,16 @@ const Booking = () => (
     <BookingTitle>BOOKING</BookingTitle>
     <BookingCard>
       <BookingForm
-        netlify='true'
         data-netlify='true'
         method='POST'
         data-netlify-honeypot='bot-field'
         name='contact-form-1'
-        data-netlify-recaptcha='true'
       >
         <LeftHalfInputs>
           <LeftInput name='name' type='text' placeholder='Name' />
           <LeftInput name='email' type='email' placeholder='Email address' />
           <LeftInput name='subject' type='text' placeholder='Subject' />
-          <input type='hidden' name='form-name' value='contact-form-1' />
+          <input type='hidden' name='bot-field' />
         </LeftHalfInputs>
         <RightHalfInputs>
           <RightTextArea name='message' type='text' placeholder='Message' />
