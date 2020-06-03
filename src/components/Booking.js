@@ -20,6 +20,7 @@ const Booking = () => (
         method='POST'
         data-netlify-honeypot='bot-field'
         name='contact-form-1'
+        action="/pages/thanks"
       >
         <LeftHalfInputs>
           <LeftInput name='name' type='text' placeholder='Name' />
