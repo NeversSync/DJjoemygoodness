@@ -8,7 +8,6 @@ import {
   SoundcloudWrapper,
   MusicYoutubeWrapper
 } from '../styles/music-styles';
-import { SubTitle } from '../components/Helpers';
 
 const Music = () => (
   <div>

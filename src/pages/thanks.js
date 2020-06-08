@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'gatsby-link';
 import {Title} from '../components/Helpers';
 import { HomeButton } from '../styles/pastExperience-styles';
 
