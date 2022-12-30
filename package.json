@@ -5,7 +5,7 @@
   "homepage": "https://joemygoodness.netlify.com/",
   "dependencies": {
     "cloudinary-react": "^1.1.1",
-    "gatsby": "^2.13.9",
+    "gatsby": "^2.32.13",
     "gatsby-cli": "^2.7.14",
     "gatsby-image": "^2.2.4",
     "gatsby-link": "^2.2.0",
