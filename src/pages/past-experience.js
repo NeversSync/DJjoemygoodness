@@ -12,7 +12,7 @@ const PastExperience = () => (
     </PastExperienceTitle>
     <PastExperienceCopy>
       <strong>Current:</strong><br/>
-      · Pacific Fire Gathering - Music Coordinator - 2012 - Present<br/>
+      · Pacific Fire Gathering - Music Coordinator - 2012 - 2019<br/>
       · Noteworthy DJs - Professional DJ - 2014 - Present <br/><br/>
       <strong>Recent:</strong><br/>
       · Twerk Du Soleil (Dante's) - DJ - 2018-2019<br/> Places - ABD (Seattle) - DJ - 2018<br/>
