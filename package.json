@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "https://joemygoodness.netlify.com/",
+  "scripts": {
+    "build": "next build",
+    "dev": "next",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "start": "next start"
+  },
   "dependencies": {
     "browserslist": "^3.2.8",
     "cloudinary-react": "^1.1.1",
@@ -17,7 +23,12 @@
     "react-icons": "^3.7.0",
     "reset-css": "^4.0.1",
     "smooth-scroll": "^16.1.0",
-    "styled-components": "^4.3.2"
+    "styled-components": "^4.3.2",
+    "date-fns": "^2.16.1",
+    "gray-matter": "^4.0.2",
+    "next": "^9.5.3",
+    "remark": "^12.0.1",
+    "remark-html": "^12.0.0"
   },
   "devDependencies": {
     "gh-pages": "^2.0.1",
@@ -29,12 +40,6 @@
     "stylelint-processor-styled-components": "^1.8.0"
   },
   "license": "MIT",
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "format": "prettier --write 'src/**/*.js'",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "eslintConfig": {
     "extends": "react-app"
   },
