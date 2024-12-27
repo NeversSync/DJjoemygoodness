@@ -1,5 +1,7 @@
 import React from 'react';
-import { navigate } from 'gatsby-link';
+//import { navigate } from 'gatsby-link';
+import { useRouter } from 'next/router';
+import { navigate } from 'next/router';
 import {
   BookingWrapper,
   BookingForm,
