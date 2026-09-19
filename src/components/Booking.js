@@ -1,7 +1,5 @@
 import React from 'react';
-//import { navigate } from 'gatsby-link';
 import { useRouter } from 'next/router';
-import { navigate } from 'next/router';
 import {
   BookingWrapper,
   BookingForm,
@@ -11,7 +9,7 @@ import {
   LeftHalfInputs,
   RightHalfInputs,
   RightTextArea,
-  LeftInput
+  LeftInput,
 } from '../styles/booking-styles';
 
 function encode(data) {
@@ -21,6 +19,7 @@ function encode(data) {
 }
 
 export default function Booking() {
+  const router = useRouter();
   const [state, setState] = React.useState({});
 
   const handleChange = (e) => {
@@ -38,12 +37,12 @@ export default function Booking() {
         ...state,
       }),
     })
-      .then(() => navigate(form.getAttribute('action')))
+      .then(() => router.push(form.getAttribute('action')))
       .catch((error) => alert(error));
   };
 
   return (
-    <BookingWrapper id='booking'>
+    <BookingWrapper id="booking">
       <BookingTitle>BOOKING</BookingTitle>
       <BookingCard>
         <BookingForm
@@ -52,20 +51,44 @@ export default function Booking() {
           action="/thanks"
           data-netlify="true"
           data-netlify-honeypot="bot-field"
-          onSubmit={handleSubmit}>
+          onSubmit={handleSubmit}
+        >
           <input type="hidden" name="form-name" value="contact-form" />
           <p hidden>
-            <label>Don’t fill this out if you're human: <input name="bot-field" onChange={handleChange} /></label>
+            <label>
+              Don’t fill this out if you&apos;re human:{' '}
+              <input name="bot-field" onChange={handleChange} />
+            </label>
           </p>
           <LeftHalfInputs>
-            <LeftInput name='name' type='text' placeholder='Name' onChange={handleChange} />
-            <LeftInput name='email' type='email' placeholder='Email address' onChange={handleChange} />
-            <LeftInput name='subject' type='text' placeholder='Subject' onChange={handleChange} />
+            <LeftInput
+              name="name"
+              type="text"
+              placeholder="Name"
+              onChange={handleChange}
+            />
+            <LeftInput
+              name="email"
+              type="email"
+              placeholder="Email address"
+              onChange={handleChange}
+            />
+            <LeftInput
+              name="subject"
+              type="text"
+              placeholder="Subject"
+              onChange={handleChange}
+            />
           </LeftHalfInputs>
           <RightHalfInputs>
-            <RightTextArea name='message' type='text' placeholder='Message' onChange={handleChange} />
+            <RightTextArea
+              name="message"
+              type="text"
+              placeholder="Message"
+              onChange={handleChange}
+            />
           </RightHalfInputs>
-          <SubmitButton type='submit' value='submit'>
+          <SubmitButton type="submit" value="submit">
             SUBMIT
           </SubmitButton>
         </BookingForm>

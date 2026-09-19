@@ -26,7 +26,7 @@ const PastExperience = () => (
       · Shift Festival (Grass Valley) - DJ - 2016<br/>
       · Crystal Ballroom (Portland) - Musician - 2016<br/>
       · Eclectronic Dawn Radio Show (Freeform Portland) - DJ - 2016<br/>
-      <HomeButton to='/'>
+      <HomeButton href='/'>
         HOME
       </HomeButton>
     </PastExperienceCopy>

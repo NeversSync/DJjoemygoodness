@@ -1,4 +1,4 @@
-import Link from 'gatsby-link';
+import Link from 'next/link';
 import styled from 'styled-components';
 
 const Knob = styled.div`

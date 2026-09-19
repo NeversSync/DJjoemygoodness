@@ -34,28 +34,28 @@ class KnobNav extends Component {
     return (
       <Knob className={currentKnobClass}>
         <KnobNavLink1
-          to='/#home'
+          href='/#home'
           onClick={this.props.handleKnobClick}
           className={this.props.activeLink === 'HOME' ? 'active-link' : ''}
         >
           <h3 onMouseOver={this.props.handleKnobLinkHover}>HOME</h3>
         </KnobNavLink1>
         <KnobNavLink2
-          to='/#about'
+          href='/#about'
           onClick={this.props.handleKnobClick}
           className={this.props.activeLink === 'ABOUT' ? 'active-link' : ''}
         >
           <h3 onMouseOver={this.props.handleKnobLinkHover}>ABOUT</h3>
         </KnobNavLink2>
         <KnobNavLink3
-          to='/#music'
+          href='/#music'
           onClick={this.props.handleKnobClick}
           className={this.props.activeLink === 'MUSIC' ? 'active-link' : ''}
         >
           <h3 onMouseOver={this.props.handleKnobLinkHover}>MUSIC</h3>
         </KnobNavLink3>
         <KnobNavLink4
-          to='/#side-projects'
+          href='/#side-projects'
           onClick={this.props.handleKnobClick}
           className={
             this.props.activeLink === 'SIDE PROJECTS' ? 'active-link' : ''
@@ -64,7 +64,7 @@ class KnobNav extends Component {
           <h3 onMouseOver={this.props.handleKnobLinkHover}>SIDE PROJECTS</h3>
         </KnobNavLink4>
         <KnobNavLink5
-          to='/#booking'
+          href='/#booking'
           onClick={this.props.handleKnobClick}
           className={this.props.activeLink === 'BOOKING' ? 'active-link' : ''}
         >

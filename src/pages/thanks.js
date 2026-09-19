@@ -6,7 +6,7 @@ import { HomeButton } from '../styles/pastExperience-styles';
 const Thanks = () => (
   <div style={{display: 'grid', minHeight: '85vh', justifyContent: 'center', alignContent: 'center', color: '#292929'}}>
     <Title>Thank you! We will be in touch shortly.</Title>
-    <HomeButton to='/'>
+    <HomeButton href='/'>
         HOME
     </HomeButton>
   </div>

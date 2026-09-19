@@ -47,7 +47,7 @@ const Footer = props => (
     >
       <FooterNavLinkWrapper style={{ borderLeft: 'none' }}>
         <FooterNavLink
-          to='/#home'
+          href='/#home'
           onClick={props.handleKnobClick}
           onMouseOver={props.handleKnobLinkHover}
           className={props.activeLink === 'HOME' ? 'active-link' : ''}
@@ -57,7 +57,7 @@ const Footer = props => (
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
         <FooterNavLink
-          to='/#about'
+          href='/#about'
           onClick={props.handleKnobClick}
           onMouseOver={props.handleKnobLinkHover}
           className={props.activeLink === 'ABOUT' ? 'active-link' : ''}
@@ -67,7 +67,7 @@ const Footer = props => (
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
         <FooterNavLink
-          to='/#music'
+          href='/#music'
           onClick={props.handleKnobClick}
           onMouseOver={props.handleKnobLinkHover}
           className={props.activeLink === 'MUSIC' ? 'active-link' : ''}
@@ -77,7 +77,7 @@ const Footer = props => (
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
         <FooterNavLink
-          to='/#side-projects'
+          href='/#side-projects'
           onClick={props.handleKnobClick}
           onMouseOver={props.handleKnobLinkHover}
           className={props.activeLink === 'SIDE PROJECTS' ? 'active-link' : ''}
@@ -87,7 +87,7 @@ const Footer = props => (
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
         <FooterNavLink
-          to='/#booking'
+          href='/#booking'
           onClick={props.handleKnobClick}
           className={props.activeLink === 'BOOKING' ? 'active-link' : ''}
           onMouseOver={props.handleKnobLinkHover}

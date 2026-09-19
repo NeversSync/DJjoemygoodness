@@ -1,6 +1,5 @@
 /* eslint-disable no-use-before-define */
 import styled from 'styled-components';
-//import Link from 'gatsby-link';
 import Link from 'next/link';
 import { Title } from '../components/Helpers';
 

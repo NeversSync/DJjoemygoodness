@@ -34,7 +34,7 @@ class KnobNavMenu extends Component {
     return (
       <Knob className={currentKnobClass}>
         <KnobNavLink1
-          to='/#home'
+          href='/#home'
           onClick={event => {
             this.props.handleKnobClick(event);
             this.props.closeMenu(event);
@@ -44,7 +44,7 @@ class KnobNavMenu extends Component {
           <h3 onMouseOver={this.props.handleKnobLinkHover}>HOME</h3>
         </KnobNavLink1>
         <KnobNavLink2
-          to='/#about'
+          href='/#about'
           onClick={event => {
             this.props.handleKnobClick(event);
             this.props.closeMenu(event);
@@ -54,7 +54,7 @@ class KnobNavMenu extends Component {
           <h3 onMouseOver={this.props.handleKnobLinkHover}>ABOUT</h3>
         </KnobNavLink2>
         <KnobNavLink3
-          to='/#music'
+          href='/#music'
           onClick={event => {
             this.props.handleKnobClick(event);
             this.props.closeMenu(event);
@@ -64,7 +64,7 @@ class KnobNavMenu extends Component {
           <h3 onMouseOver={this.props.handleKnobLinkHover}>MUSIC</h3>
         </KnobNavLink3>
         <KnobNavLink4
-          to='/#side-projects'
+          href='/#side-projects'
           onClick={event => {
             this.props.handleKnobClick(event);
             this.props.closeMenu(event);
@@ -76,7 +76,7 @@ class KnobNavMenu extends Component {
           <h3 onMouseOver={this.props.handleKnobLinkHover}>SIDE PROJECTS</h3>
         </KnobNavLink4>
         <KnobNavLink5
-          to='/#booking'
+          href='/#booking'
           onClick={event => {
             this.props.handleKnobClick(event);
             this.props.closeMenu(event);
