@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import {
   Knob,
-  KnobNavLink1,
-  KnobNavLink2,
-  KnobNavLink3,
-  KnobNavLink4,
-  KnobNavLink5
+  KnobNavLink,
+  KnobNavSpoke1,
+  KnobNavSpoke2,
+  KnobNavSpoke3,
+  KnobNavSpoke4,
+  KnobNavSpoke5,
 } from '../styles/knob-styles';
 
 class KnobNavMenu extends Component {
@@ -33,61 +34,71 @@ class KnobNavMenu extends Component {
 
     return (
       <Knob className={currentKnobClass}>
-        <KnobNavLink1
-          href='/#home'
-          onClick={event => {
-            this.props.handleKnobClick(event);
-            this.props.closeMenu(event);
-          }}
-          className={this.props.activeLink === 'HOME' ? 'active-link' : ''}
-        >
-          <h3 onMouseOver={this.props.handleKnobLinkHover}>HOME</h3>
-        </KnobNavLink1>
-        <KnobNavLink2
-          href='/#about'
-          onClick={event => {
-            this.props.handleKnobClick(event);
-            this.props.closeMenu(event);
-          }}
-          className={this.props.activeLink === 'ABOUT' ? 'active-link' : ''}
-        >
-          <h3 onMouseOver={this.props.handleKnobLinkHover}>ABOUT</h3>
-        </KnobNavLink2>
-        <KnobNavLink3
-          href='/#music'
-          onClick={event => {
-            this.props.handleKnobClick(event);
-            this.props.closeMenu(event);
-          }}
-          className={this.props.activeLink === 'MUSIC' ? 'active-link' : ''}
-        >
-          <h3 onMouseOver={this.props.handleKnobLinkHover}>MUSIC</h3>
-        </KnobNavLink3>
-        <KnobNavLink4
-          href='/#side-projects'
-          onClick={event => {
-            this.props.handleKnobClick(event);
-            this.props.closeMenu(event);
-          }}
-          className={
-            this.props.activeLink === 'SIDE PROJECTS' ? 'active-link' : ''
-          }
-        >
-          <h3 onMouseOver={this.props.handleKnobLinkHover}>SIDE PROJECTS</h3>
-        </KnobNavLink4>
-        <KnobNavLink5
-          href='/#booking'
-          onClick={event => {
-            this.props.handleKnobClick(event);
-            this.props.closeMenu(event);
-          }}
-          className={this.props.activeLink === 'BOOKING' ? 'active-link' : ''}
-        >
-          <h3 onMouseOver={this.props.handleKnobLinkHover}>BOOKING</h3>
-        </KnobNavLink5>
-        <span className='min'>Min</span>
-        <span className='max'>Max</span>
-        <div className='ticks'>
+        <KnobNavSpoke1>
+          <KnobNavLink
+            href="/#home"
+            onClick={(event) => {
+              this.props.handleKnobClick(event);
+              this.props.closeMenu(event);
+            }}
+            className={this.props.activeLink === 'HOME' ? 'active-link' : ''}
+          >
+            <h3 onMouseOver={this.props.handleKnobLinkHover}>HOME</h3>
+          </KnobNavLink>
+        </KnobNavSpoke1>
+        <KnobNavSpoke2>
+          <KnobNavLink
+            href="/#about"
+            onClick={(event) => {
+              this.props.handleKnobClick(event);
+              this.props.closeMenu(event);
+            }}
+            className={this.props.activeLink === 'ABOUT' ? 'active-link' : ''}
+          >
+            <h3 onMouseOver={this.props.handleKnobLinkHover}>ABOUT</h3>
+          </KnobNavLink>
+        </KnobNavSpoke2>
+        <KnobNavSpoke3>
+          <KnobNavLink
+            href="/#music"
+            onClick={(event) => {
+              this.props.handleKnobClick(event);
+              this.props.closeMenu(event);
+            }}
+            className={this.props.activeLink === 'MUSIC' ? 'active-link' : ''}
+          >
+            <h3 onMouseOver={this.props.handleKnobLinkHover}>MUSIC</h3>
+          </KnobNavLink>
+        </KnobNavSpoke3>
+        <KnobNavSpoke4>
+          <KnobNavLink
+            href="/#side-projects"
+            onClick={(event) => {
+              this.props.handleKnobClick(event);
+              this.props.closeMenu(event);
+            }}
+            className={
+              this.props.activeLink === 'SIDE PROJECTS' ? 'active-link' : ''
+            }
+          >
+            <h3 onMouseOver={this.props.handleKnobLinkHover}>SIDE PROJECTS</h3>
+          </KnobNavLink>
+        </KnobNavSpoke4>
+        <KnobNavSpoke5>
+          <KnobNavLink
+            href="/#booking"
+            onClick={(event) => {
+              this.props.handleKnobClick(event);
+              this.props.closeMenu(event);
+            }}
+            className={this.props.activeLink === 'BOOKING' ? 'active-link' : ''}
+          >
+            <h3 onMouseOver={this.props.handleKnobLinkHover}>BOOKING</h3>
+          </KnobNavLink>
+        </KnobNavSpoke5>
+        <span className="min">Min</span>
+        <span className="max">Max</span>
+        <div className="ticks">
           <div
             className={
               activeTickGroup.length === !12 ? 'tick' : 'tick activetick'
@@ -182,11 +193,11 @@ class KnobNavMenu extends Component {
           <div
             className={activeTickGroup.length < 20 ? 'tick' : 'tick activetick'}
           />
-          <div className='tick' />
-          <div className='tick' />
-          <div className='tick' />
-          <div className='tick' />
-          <div className='tick' />
+          <div className="tick" />
+          <div className="tick" />
+          <div className="tick" />
+          <div className="tick" />
+          <div className="tick" />
         </div>
       </Knob>
     );

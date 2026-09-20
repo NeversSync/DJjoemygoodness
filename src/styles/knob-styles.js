@@ -1,14 +1,26 @@
 import Link from 'next/link';
 import styled from 'styled-components';
 
+/**
+ * Labels sit on one circle centered on the dial, from 12 o'clock to 4 o'clock.
+ * CSS transform order: rotate(θ) then translateY(-R) places θ=0 at 12 o'clock
+ * and positive θ clockwise (30° steps → 4 o'clock at 120°).
+ * Text is rotated an extra -90deg (original tangential look); the start of each
+ * phrase is anchored on the circle (transform-origin: left center).
+ */
+export const DIAL_LABEL_ANGLES_DEG = [0, 30, 60, 90, 120];
+
 const Knob = styled.div`
+  --dial-size: 150px;
+  /* Prior radius was 0.76; +20% → 0.912 of dial size. */
+  --dial-label-radius: calc(var(--dial-size) * 0.912);
   display: grid;
   justify-self: center;
   align-self: center;
   position: relative;
-  width: 150px;
-  height: 150px;
-  transform: scale(.8);
+  width: var(--dial-size);
+  height: var(--dial-size);
+  transform: scale(0.8);
   background-color: #6b6b6b;
   border-radius: 50%;
   box-shadow: inset -2px 2px 0px 0px rgba(255, 255, 255, 0.1),
@@ -17,8 +29,7 @@ const Knob = styled.div`
     -25px 25px 25px -10px #111;
 
   @media (min-width: 1200px) {
-    width: 250px;
-    height: 250px;
+    --dial-size: 250px;
   }
 
   @media (max-width: 900px) and (orientation: landscape) {
@@ -41,74 +52,67 @@ const Knob = styled.div`
   }
 `;
 
+/** Zero-size ray from dial center; angle aims at the clock position. */
+const KnobNavSpoke = styled.span`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform: rotate(var(--label-angle));
+`;
+
 const KnobNavLink = styled(Link)`
   position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--link-color);
+  white-space: nowrap;
+  /* Start of the phrase sits on the guide circle; text stays tangential (-90deg). */
+  transform-origin: left center;
+  transform: translate(0, calc(-1 * var(--dial-label-radius)))
+    translate(0, -50%) rotate(-90deg);
 
   h3 {
+    margin: 0;
     transition: all 200ms ease-in-out;
-    font-size: .7em;
-    &:hover, &:active {
+    font-size: 0.7em;
+
+    &:hover,
+    &:active {
       color: var(--hover-color);
       transform: scale(1.1);
     }
-    @media(min-width: 1200px) {
-    font-size: .8em
+
+    @media (min-width: 1200px) {
+      font-size: 0.8em;
     }
   }
 `;
 
-const KnobNavLink1 = styled(KnobNavLink)`
-  color: var(--link-color);
-  transform: rotate(-90deg);
-  top: -105px;
-  right: 50px;
-
-  @media(min-width: 1200px) {
-    top: -122px;
-    right: 96px;
-  }
-  `;
-
-const KnobNavLink2 = styled(KnobNavLink)`
-  top: -104px;
-  right: -4px;
-  transform: rotate(-69deg);
-
-  @media(min-width: 1200px) {
-    top: -115px;
-    right: 16px;
-    transform: rotate(-67deg);
-  }
-  `;
-
-const KnobNavLink3 = styled(KnobNavLink)`
-  top: -82px;
-  right: -48px;
-  transform: rotate(-48deg);
-  `;
-
-const KnobNavLink4 = styled(KnobNavLink)`
-  top: -64px;
-  right: -141px;
-  transform: rotate(-36deg);
-
-  @media(min-width: 1200px) {
-    top: -54px;
-    right: -179px;
-    transform: rotate(-33deg);
-  }
-  `;
-
-const KnobNavLink5= styled(KnobNavLink)`
-    top: -1px;
-    right: -127px;
-    transform: rotate(-23deg);
-
-  @media(min-width: 1200px) {
-    top: 30px;
-    right: -152px;
-    transform: rotate(-20deg);
-  }
+const KnobNavSpoke1 = styled(KnobNavSpoke)`
+  --label-angle: 0deg;
+`;
+const KnobNavSpoke2 = styled(KnobNavSpoke)`
+  --label-angle: 30deg;
+`;
+const KnobNavSpoke3 = styled(KnobNavSpoke)`
+  --label-angle: 60deg;
+`;
+const KnobNavSpoke4 = styled(KnobNavSpoke)`
+  --label-angle: 90deg;
+`;
+const KnobNavSpoke5 = styled(KnobNavSpoke)`
+  --label-angle: 120deg;
 `;
 
-export { Knob, KnobNavLink, KnobNavLink1, KnobNavLink2, KnobNavLink3, KnobNavLink4, KnobNavLink5 };
+export {
+  Knob,
+  KnobNavSpoke,
+  KnobNavLink,
+  KnobNavSpoke1,
+  KnobNavSpoke2,
+  KnobNavSpoke3,
+  KnobNavSpoke4,
+  KnobNavSpoke5,
+};
