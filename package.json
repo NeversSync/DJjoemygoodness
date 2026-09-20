@@ -7,7 +7,12 @@
     "build": "node -r ./scripts/fix-readlink.js ./node_modules/next/dist/bin/next build",
     "dev": "node -r ./scripts/fix-readlink.js ./node_modules/next/dist/bin/next dev",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "start": "next start"
+    "start": "next start",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "next": "^14.2.18",
@@ -21,6 +26,12 @@
     "styled-components": "^6.1.13"
   },
   "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/user-event": "^14.5.2",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "prettier": "^3.3.3"
   },
   "engines": {

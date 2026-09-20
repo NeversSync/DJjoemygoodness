@@ -7,6 +7,11 @@ import Music from '../components/Music';
 import SideProjects from '../components/SideProjects';
 import Booking from '../components/Booking';
 import Footer from '../components/Footer';
+import {
+  hashFromHref,
+  labelFromKnobEvent,
+  scrollToSection,
+} from '../lib/sectionNav';
 
 if (typeof window !== 'undefined') {
   // eslint-disable-next-line global-require
@@ -18,25 +23,37 @@ class IndexPage extends Component {
     super(props);
     this.state = {
       hoverLink: 'HOME',
-      activeLink: 'HOME'
+      activeLink: 'HOME',
     };
     this.handleKnobClick = this.handleKnobClick.bind(this);
     this.handleKnobLinkHover = this.handleKnobLinkHover.bind(this);
   }
 
-  handleKnobLinkHover = hoveredLink => {
-    this.setState({ hoverLink: hoveredLink.target.textContent });
+  handleKnobLinkHover = (hoveredLink) => {
+    const label = (hoveredLink.target.textContent || '').trim();
+    if (label) {
+      this.setState({ hoverLink: label });
+    }
   };
 
-  handleKnobClick = event => {
+  handleKnobClick = (event) => {
     event.preventDefault();
-    this.setState({ activeLink: event.target.textContent });
+    const label = labelFromKnobEvent(event);
+    const hash = hashFromHref(event.currentTarget.getAttribute('href'));
+
+    if (label) {
+      this.setState({ activeLink: label, hoverLink: label });
+    }
+
+    if (typeof window !== 'undefined') {
+      scrollToSection(hash);
+    }
   };
 
   render() {
     return (
       <Layout>
-        <div className='App' id='top'>
+        <div className="App" id="top">
           <Header
             hoverLink={this.state.hoverLink}
             activeLink={this.state.activeLink}
@@ -53,7 +70,12 @@ class IndexPage extends Component {
           <Music />
           <SideProjects />
           <Booking />
-          <Footer />
+          <Footer
+            hoverLink={this.state.hoverLink}
+            activeLink={this.state.activeLink}
+            handleKnobLinkHover={this.handleKnobLinkHover}
+            handleKnobClick={this.handleKnobClick}
+          />
         </div>
       </Layout>
     );

@@ -17,6 +17,29 @@ Production build (writes static files to `out/`):
 npm run build
 ```
 
+### Tests
+
+Unit / component (Jest + Testing Library):
+
+```bash
+npm test
+```
+
+End-to-end (Playwright, **headless by default** — starts `npm run dev` automatically):
+
+```bash
+npx playwright install chromium   # once per machine
+npm run test:e2e
+```
+
+Debug a failing E2E in a visible browser:
+
+```bash
+npm run test:e2e:headed
+# or
+npm run test:e2e:ui
+```
+
 ### Netlify
 
 Build settings are in [`netlify.toml`](netlify.toml):

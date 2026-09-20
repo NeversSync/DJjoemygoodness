@@ -39,12 +39,7 @@ const Footer = props => (
         </SocialIcon>
       </SocialIconWrapper>
     </Social>
-    <FooterNav
-      hoverLink={props.hoverLink}
-      activeLink={props.activeLink}
-      handleKnobLinkHover={props.handleKnobLinkHover}
-      handleKnobClick={props.handleKnobClick}
-    >
+    <FooterNav>
       <FooterNavLinkWrapper style={{ borderLeft: 'none' }}>
         <FooterNavLink
           href='/#home'
