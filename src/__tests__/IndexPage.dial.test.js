@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import IndexPage from './index';
+import IndexPage from '../pages/index';
 import * as sectionNav from '../lib/sectionNav';
 
 jest.mock('../lib/sectionNav', () => {
