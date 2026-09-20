@@ -16,10 +16,11 @@ const PastExperienceWrapper = styled(Wrapper)`
   linear-gradient(hsla(240, 53%, 15%, 1), hsla(22, 94%, 58%, 0.9));
 
   @media (min-width: 1200px) {
-    grid-template-rows: 100vh;
-    overflow-y: hidden;
+    grid-template-rows: auto;
+    min-height: 100vh;
+    overflow-y: auto;
   }
-  `;
+`;
 
 const PastExperienceTitle = styled(SubTitle)`
   grid-column: 1 / -1;
