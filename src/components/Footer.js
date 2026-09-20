@@ -1,48 +1,65 @@
 /* eslint-disable no-use-before-define */
 import React from 'react';
-import { FaInstagram } from 'react-icons/fa';
-import { FaSoundcloud } from 'react-icons/fa';
-import { FaRegEnvelope } from 'react-icons/fa';
+import { FaInstagram, FaSoundcloud, FaRegEnvelope, FaYoutube } from 'react-icons/fa';
 
 import {
   FooterContainer,
-  LogoContainer,
-  Logo,
   SocialText,
   FooterNav,
   FooterNavLink,
   FooterNavLinkWrapper,
   Social,
   SocialIcon,
-  SocialIconWrapper
+  SocialIconWrapper,
 } from '../styles/footer-styles';
 
-const Footer = props => (
+const Footer = (props) => (
   <FooterContainer>
-    {/* <LogoContainer to='>
-      <Logo
-        src='https://res.cloudinary.com/nicky-cloudinary/image/upload/f_auto,q_auto,r_500/v1553276016/joe-good/CartoonJoe.jpg'
-        alt='logo'
-      />
-    </LogoContainer> */}
     <Social>
       <SocialText>Keep in Touch</SocialText>
       <SocialIconWrapper>
-        <SocialIcon href='https://www.instagram.com/djjoemygoodness/' target="_blank" rel="noopener noreferrer" className="social-icon">
+        <SocialIcon
+          href="https://www.instagram.com/djjoemygoodness/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="social-icon"
+          title="@djjoemygoodness"
+        >
           <FaInstagram />
         </SocialIcon>
-        <SocialIcon href='https://soundcloud.com/joe-good-1' target="_blank" rel="noopener noreferrer" className="social-icon">
-          <FaSoundcloud  />
+        <SocialIcon
+          href="https://www.youtube.com/playlist?list=PLSAGhFyWcKwk"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="social-icon"
+          title="Equilateral Expedition on YouTube"
+        >
+          <FaYoutube />
         </SocialIcon>
-        <SocialIcon href='mailto:djjoemygoodness@gmail.com' target="_blank" rel="noopener noreferrer" className="social-icon">
-          <FaRegEnvelope  />
+        <SocialIcon
+          href="https://soundcloud.com/joe-good-1"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="social-icon"
+          title="JoeMyGoodness on SoundCloud"
+        >
+          <FaSoundcloud />
+        </SocialIcon>
+        <SocialIcon
+          href="mailto:djjoemygoodness@gmail.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="social-icon"
+          title="Email"
+        >
+          <FaRegEnvelope />
         </SocialIcon>
       </SocialIconWrapper>
     </Social>
     <FooterNav>
       <FooterNavLinkWrapper style={{ borderLeft: 'none' }}>
         <FooterNavLink
-          href='/#home'
+          href="/#home"
           onClick={props.handleKnobClick}
           onMouseOver={props.handleKnobLinkHover}
           className={props.activeLink === 'HOME' ? 'active-link' : ''}
@@ -52,7 +69,7 @@ const Footer = props => (
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
         <FooterNavLink
-          href='/#about'
+          href="/#about"
           onClick={props.handleKnobClick}
           onMouseOver={props.handleKnobLinkHover}
           className={props.activeLink === 'ABOUT' ? 'active-link' : ''}
@@ -62,7 +79,7 @@ const Footer = props => (
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
         <FooterNavLink
-          href='/#music'
+          href="/#music"
           onClick={props.handleKnobClick}
           onMouseOver={props.handleKnobLinkHover}
           className={props.activeLink === 'MUSIC' ? 'active-link' : ''}
@@ -72,7 +89,7 @@ const Footer = props => (
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
         <FooterNavLink
-          href='/#side-projects'
+          href="/#side-projects"
           onClick={props.handleKnobClick}
           onMouseOver={props.handleKnobLinkHover}
           className={props.activeLink === 'SIDE PROJECTS' ? 'active-link' : ''}
@@ -82,7 +99,7 @@ const Footer = props => (
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
         <FooterNavLink
-          href='/#booking'
+          href="/#booking"
           onClick={props.handleKnobClick}
           className={props.activeLink === 'BOOKING' ? 'active-link' : ''}
           onMouseOver={props.handleKnobLinkHover}

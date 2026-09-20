@@ -71,7 +71,8 @@ const SocialText = styled(Title)`
 const SocialIconWrapper = styled.div`
   display: grid;
   grid-column: 2 / 3;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: repeat(4, auto);
+  align-items: center;
 `;
 
 const SocialIcon = styled.a`

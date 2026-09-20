@@ -3,23 +3,17 @@ import { Card } from '../components/Helpers';
 
 const InstaFeedContainer = styled(Card)`
   display: grid;
-  padding: .25em;
-  padding-bottom: .5em;
+  padding: 0.25em;
+  padding-bottom: 0.5em;
   box-shadow: 5px 5px 15px rgba(255, 255, 255, 0.2);
-  background: radial-gradient(hsla(240, 20%, 40%, .9), hsla(240, 53%, 15%, .8));
-  /* grid-column: 2 / 6; */
-  grid-row: 5 / 6;
-  grid-column: 1 / -1;
-  width: 85%;
+  background: radial-gradient(hsla(240, 20%, 40%, 0.9), hsla(240, 53%, 15%, 0.8));
+  width: 100%;
   justify-self: center;
 
   @media (min-width: 1200px) {
-    margin-top: 1.5em;
-    padding: .5em;
+    margin-top: 0.5em;
+    padding: 0.5em;
     padding-bottom: 1.5em;
-    grid-column: 4 / 10;
-    width: 100%;
-    justify-self: center;
   }
 `;
 
