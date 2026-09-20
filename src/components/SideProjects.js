@@ -63,7 +63,7 @@ const SideProjects = () => (
           className="youtube-iframe"
           width="560"
           height="315"
-          src="https://www.youtube.com/embed/uzq_yZsplc8"
+          src="https://www.youtube.com/embed/NLLKt13VOeA?start=1"
           frameBorder="0"
           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen

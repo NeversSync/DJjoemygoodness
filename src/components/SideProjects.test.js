@@ -17,7 +17,10 @@ describe('SideProjects portfolio', () => {
 
     expect(
       screen.getByTitle('Equilateral Expedition technical practice')
-    ).toHaveAttribute('src', 'https://www.youtube.com/embed/uzq_yZsplc8');
+    ).toHaveAttribute(
+      'src',
+      'https://www.youtube.com/embed/NLLKt13VOeA?start=1'
+    );
 
     expect(screen.getByTitle('Atomic Flow performance')).toHaveAttribute(
       'src',
