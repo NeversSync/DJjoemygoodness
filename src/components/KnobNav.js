@@ -7,6 +7,7 @@ import {
   KnobNavSpoke3,
   KnobNavSpoke4,
   KnobNavSpoke5,
+  KnobNavSpoke6,
 } from '../styles/knob-styles';
 
 class KnobNav extends Component {
@@ -27,9 +28,12 @@ class KnobNav extends Component {
     } else if (this.props.hoverLink === 'SIDE PROJECTS') {
       currentKnobClass = 'sideprojects-rotate';
       activeTickGroup.length = 18;
+    } else if (this.props.hoverLink === 'PARTICIPATE') {
+      currentKnobClass = 'participate-rotate';
+      activeTickGroup.length = 20;
     } else if (this.props.hoverLink === 'BOOKING') {
       currentKnobClass = 'booking-rotate';
-      activeTickGroup.length = 20;
+      activeTickGroup.length = 22;
     }
 
     return (
@@ -74,13 +78,24 @@ class KnobNav extends Component {
         </KnobNavSpoke4>
         <KnobNavSpoke5>
           <KnobNavLink
+            href="/participate"
+            onClick={this.props.handleKnobClick}
+            className={
+              this.props.activeLink === 'PARTICIPATE' ? 'active-link' : ''
+            }
+          >
+            <h3 onMouseOver={this.props.handleKnobLinkHover}>PARTICIPATE</h3>
+          </KnobNavLink>
+        </KnobNavSpoke5>
+        <KnobNavSpoke6>
+          <KnobNavLink
             href="/#booking"
             onClick={this.props.handleKnobClick}
             className={this.props.activeLink === 'BOOKING' ? 'active-link' : ''}
           >
             <h3 onMouseOver={this.props.handleKnobLinkHover}>BOOKING</h3>
           </KnobNavLink>
-        </KnobNavSpoke5>
+        </KnobNavSpoke6>
         <span className="min">Min</span>
         <span className="max">Max</span>
         <div className="ticks">
@@ -178,8 +193,12 @@ class KnobNav extends Component {
           <div
             className={activeTickGroup.length < 20 ? 'tick' : 'tick activetick'}
           />
-          <div className="tick" />
-          <div className="tick" />
+          <div
+            className={activeTickGroup.length < 22 ? 'tick' : 'tick activetick'}
+          />
+          <div
+            className={activeTickGroup.length < 22 ? 'tick' : 'tick activetick'}
+          />
           <div className="tick" />
           <div className="tick" />
           <div className="tick" />

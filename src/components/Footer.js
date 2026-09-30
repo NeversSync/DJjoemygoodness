@@ -99,6 +99,16 @@ const Footer = (props) => (
       </FooterNavLinkWrapper>
       <FooterNavLinkWrapper>
         <FooterNavLink
+          href="/participate"
+          onClick={props.handleKnobClick}
+          onMouseOver={props.handleKnobLinkHover}
+          className={props.activeLink === 'PARTICIPATE' ? 'active-link' : ''}
+        >
+          PARTICIPATE
+        </FooterNavLink>
+      </FooterNavLinkWrapper>
+      <FooterNavLinkWrapper>
+        <FooterNavLink
           href="/#booking"
           onClick={props.handleKnobClick}
           className={props.activeLink === 'BOOKING' ? 'active-link' : ''}

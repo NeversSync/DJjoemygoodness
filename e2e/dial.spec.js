@@ -41,6 +41,19 @@ test.describe('selector dial', () => {
       })
       .toBe(true);
   });
+
+  test('navigates to /participate from the dial', async ({ page }) => {
+    await page.goto('/');
+
+    await page
+      .locator('#home')
+      .getByRole('link', { name: 'PARTICIPATE' })
+      .click();
+
+    await expect(page).toHaveURL(/\/participate\/?$/);
+    await expect(page.getByLabel('Transport')).toBeVisible({ timeout: 30000 });
+    await expect(page.getByLabel('Preview')).toBeVisible();
+  });
 });
 
 test.describe('press package content', () => {

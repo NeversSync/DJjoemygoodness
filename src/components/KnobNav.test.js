@@ -58,4 +58,33 @@ describe('KnobNav', () => {
 
     expect(container.firstChild).toHaveClass('booking-rotate');
   });
+
+  it('links PARTICIPATE to /participate', () => {
+    render(
+      <KnobNav
+        hoverLink="HOME"
+        activeLink="HOME"
+        handleKnobClick={jest.fn()}
+        handleKnobLinkHover={jest.fn()}
+      />
+    );
+
+    expect(screen.getByRole('link', { name: 'PARTICIPATE' })).toHaveAttribute(
+      'href',
+      '/participate'
+    );
+  });
+
+  it('rotates to participate-rotate on PARTICIPATE hover', () => {
+    const { container } = render(
+      <KnobNav
+        hoverLink="PARTICIPATE"
+        activeLink="HOME"
+        handleKnobClick={jest.fn()}
+        handleKnobLinkHover={jest.fn()}
+      />
+    );
+
+    expect(container.firstChild).toHaveClass('participate-rotate');
+  });
 });

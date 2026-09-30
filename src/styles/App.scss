@@ -47,24 +47,29 @@
   color: var(--link-color);
 }
 
+/* Pointer: -90deg at 12 o'clock; +θ for each label angle on the dial. */
 .home-rotate:after {
   transform: rotate(-90deg);
 }
 
 .about-rotate:after {
-  transform: rotate(-70deg);
+  transform: rotate(-66deg);
 }
 
 .music-rotate:after {
-  transform: rotate(-50deg);
+  transform: rotate(-42deg);
 }
 
 .sideprojects-rotate:after {
-  transform: rotate(-33deg);
+  transform: rotate(-18deg);
+}
+
+.participate-rotate:after {
+  transform: rotate(6deg);
 }
 
 .booking-rotate:after {
-  transform: rotate(-15deg);
+  transform: rotate(30deg);
 }
 
 .min,

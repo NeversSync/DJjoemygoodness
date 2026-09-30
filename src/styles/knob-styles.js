@@ -4,11 +4,11 @@ import styled from 'styled-components';
 /**
  * Labels sit on one circle centered on the dial, from 12 o'clock to 4 o'clock.
  * CSS transform order: rotate(θ) then translateY(-R) places θ=0 at 12 o'clock
- * and positive θ clockwise (30° steps → 4 o'clock at 120°).
+ * and positive θ clockwise (24° steps → 4 o'clock at 120° with six spokes).
  * Text is rotated an extra -90deg (original tangential look); the start of each
  * phrase is anchored on the circle (transform-origin: left center).
  */
-export const DIAL_LABEL_ANGLES_DEG = [0, 30, 60, 90, 120];
+export const DIAL_LABEL_ANGLES_DEG = [0, 24, 48, 72, 96, 120];
 
 const Knob = styled.div`
   --dial-size: 150px;
@@ -94,15 +94,18 @@ const KnobNavSpoke1 = styled(KnobNavSpoke)`
   --label-angle: 0deg;
 `;
 const KnobNavSpoke2 = styled(KnobNavSpoke)`
-  --label-angle: 30deg;
+  --label-angle: 24deg;
 `;
 const KnobNavSpoke3 = styled(KnobNavSpoke)`
-  --label-angle: 60deg;
+  --label-angle: 48deg;
 `;
 const KnobNavSpoke4 = styled(KnobNavSpoke)`
-  --label-angle: 90deg;
+  --label-angle: 72deg;
 `;
 const KnobNavSpoke5 = styled(KnobNavSpoke)`
+  --label-angle: 96deg;
+`;
+const KnobNavSpoke6 = styled(KnobNavSpoke)`
   --label-angle: 120deg;
 `;
 
@@ -115,4 +118,5 @@ export {
   KnobNavSpoke3,
   KnobNavSpoke4,
   KnobNavSpoke5,
+  KnobNavSpoke6,
 };

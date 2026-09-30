@@ -1,0 +1,2252 @@
+{
+  "version": 1,
+  "name": "Wave_Motion_V2",
+  "source": "blank_solo",
+  "frames_forward": 1079,
+  "grid_step": 10,
+  "dwell_ms": 42,
+  "fps": 24,
+  "limits": {
+    "max_rotary_speed": 540,
+    "max_linear_speed": 300,
+    "rotary_accel": 1500,
+    "linear_accel": 1000,
+    "max_linear_mm": 150,
+    "max_rotary_delta_per_step": 180,
+    "min_linear_mm": 0,
+    "max_time_scale": 1,
+    "max_motor_mm_upper": 136,
+    "max_motor_mm_lower": 109
+  },
+  "emit_order": [
+    "twelve",
+    "four",
+    "eight",
+    "two",
+    "six",
+    "ten",
+    "center"
+  ],
+  "emit_order_mode": "groups",
+  "resync_every_n_keyframes": 0,
+  "peak_resync": true,
+  "peak_resync_end_frames": [
+    40,
+    160,
+    220,
+    360,
+    440,
+    520
+  ],
+  "interpolate": true,
+  "speed_scale": 1.0,
+  "groups": [
+    {
+      "id": "rotary_center",
+      "label": "Rot Center",
+      "kind": "rotary",
+      "steppers": [
+        "rotary_center"
+      ],
+      "invert": [],
+      "color": "#80deea"
+    },
+    {
+      "id": "rotary_twelve",
+      "label": "Rot Twelve",
+      "kind": "rotary",
+      "steppers": [
+        "rotary_twelve"
+      ],
+      "invert": [],
+      "color": "#e94560"
+    },
+    {
+      "id": "linear_twelve",
+      "label": "Lin Twelve",
+      "kind": "linear",
+      "steppers": [
+        "linear_twelve"
+      ],
+      "invert": [],
+      "color": "#448aff"
+    },
+    {
+      "id": "rotary_two",
+      "label": "Rot Two",
+      "kind": "rotary",
+      "steppers": [
+        "rotary_two"
+      ],
+      "invert": [],
+      "color": "#00e676"
+    },
+    {
+      "id": "linear_two",
+      "label": "Lin Two",
+      "kind": "linear",
+      "steppers": [
+        "linear_two"
+      ],
+      "invert": [],
+      "color": "#ffab40"
+    },
+    {
+      "id": "rotary_four",
+      "label": "Rot Four",
+      "kind": "rotary",
+      "steppers": [
+        "rotary_four"
+      ],
+      "invert": [],
+      "color": "#ce93d8"
+    },
+    {
+      "id": "linear_four",
+      "label": "Lin Four",
+      "kind": "linear",
+      "steppers": [
+        "linear_four"
+      ],
+      "invert": [],
+      "color": "#80deea"
+    },
+    {
+      "id": "rotary_six",
+      "label": "Rot Six",
+      "kind": "rotary",
+      "steppers": [
+        "rotary_six"
+      ],
+      "invert": [],
+      "color": "#ff8a80"
+    },
+    {
+      "id": "linear_six",
+      "label": "Lin Six",
+      "kind": "linear",
+      "steppers": [
+        "linear_six"
+      ],
+      "invert": [],
+      "color": "#e94560"
+    },
+    {
+      "id": "rotary_eight",
+      "label": "Rot Eight",
+      "kind": "rotary",
+      "steppers": [
+        "rotary_eight"
+      ],
+      "invert": [],
+      "color": "#448aff"
+    },
+    {
+      "id": "linear_eight",
+      "label": "Lin Eight",
+      "kind": "linear",
+      "steppers": [
+        "linear_eight"
+      ],
+      "invert": [],
+      "color": "#00e676"
+    },
+    {
+      "id": "rotary_ten",
+      "label": "Rot Ten",
+      "kind": "rotary",
+      "steppers": [
+        "rotary_ten"
+      ],
+      "invert": [],
+      "color": "#ffab40"
+    },
+    {
+      "id": "linear_ten",
+      "label": "Lin Ten",
+      "kind": "linear",
+      "steppers": [
+        "linear_ten"
+      ],
+      "invert": [],
+      "color": "#ce93d8"
+    }
+  ],
+  "keyframes": [
+    {
+      "frame": 0,
+      "lanes": {
+        "rotary_center": 0.0,
+        "rotary_twelve": 0.0,
+        "linear_twelve": 0.0,
+        "rotary_two": 0.0,
+        "linear_two": 0.0,
+        "rotary_four": 0.0,
+        "linear_four": 0.0,
+        "rotary_six": 0.0,
+        "linear_six": 0.0,
+        "rotary_eight": 0.0,
+        "linear_eight": 0.0,
+        "rotary_ten": 0.0,
+        "linear_ten": 0.0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 10,
+      "lanes": {
+        "rotary_twelve": 0,
+        "linear_twelve": 34,
+        "rotary_two": 0,
+        "linear_two": 0,
+        "rotary_four": 0,
+        "linear_four": 0,
+        "rotary_six": 0,
+        "linear_six": 0,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0,
+        "rotary_center": 20.625
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 20,
+      "lanes": {
+        "rotary_twelve": 0,
+        "linear_twelve": 68,
+        "rotary_two": 0,
+        "linear_two": 0,
+        "rotary_four": 0,
+        "linear_four": 0,
+        "rotary_six": 0,
+        "linear_six": 0,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0,
+        "rotary_center": 41.25
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 30,
+      "lanes": {
+        "rotary_twelve": 20.625,
+        "linear_twelve": 99,
+        "rotary_two": 0,
+        "linear_two": 34,
+        "rotary_four": 0,
+        "linear_four": 0,
+        "rotary_six": 0,
+        "linear_six": 0,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0,
+        "rotary_center": 60
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 40,
+      "lanes": {
+        "rotary_twelve": 41.25,
+        "linear_twelve": 68,
+        "rotary_two": 0,
+        "linear_two": 68,
+        "rotary_four": 0,
+        "linear_four": 0,
+        "rotary_six": 0,
+        "linear_six": 0,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0,
+        "rotary_center": 75
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 50,
+      "lanes": {
+        "rotary_twelve": 60,
+        "linear_twelve": 34,
+        "rotary_two": 20.625,
+        "linear_two": 99,
+        "rotary_four": 0,
+        "linear_four": 34,
+        "rotary_six": 0,
+        "linear_six": 0,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0,
+        "rotary_center": 60
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 60,
+      "lanes": {
+        "rotary_twelve": 75,
+        "linear_twelve": 0,
+        "rotary_two": 41.25,
+        "linear_two": 68,
+        "rotary_four": 0,
+        "linear_four": 68,
+        "rotary_six": 0,
+        "linear_six": 0,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0,
+        "rotary_center": 67.032
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 70,
+      "lanes": {
+        "rotary_twelve": 60,
+        "linear_twelve": 0,
+        "rotary_two": 60,
+        "linear_two": 34,
+        "rotary_four": 20.625,
+        "linear_four": 99,
+        "rotary_six": 0,
+        "linear_six": 34,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0,
+        "rotary_center": 74.063
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 80,
+      "lanes": {
+        "rotary_twelve": 67.032,
+        "linear_twelve": 0,
+        "rotary_two": 75,
+        "linear_two": 0,
+        "rotary_four": 41.25,
+        "linear_four": 68,
+        "rotary_six": 0,
+        "linear_six": 68,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0,
+        "rotary_center": 59.063
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 90,
+      "lanes": {
+        "rotary_twelve": 74.063,
+        "linear_twelve": 0,
+        "rotary_two": 60,
+        "linear_two": 0,
+        "rotary_four": 60,
+        "linear_four": 34,
+        "rotary_six": 20.625,
+        "linear_six": 99,
+        "rotary_eight": 0,
+        "linear_eight": 34,
+        "rotary_ten": 0,
+        "linear_ten": 0,
+        "rotary_center": 60
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 100,
+      "lanes": {
+        "rotary_twelve": 59.063,
+        "linear_twelve": 0,
+        "rotary_two": 67.032,
+        "linear_two": 0,
+        "rotary_four": 75,
+        "linear_four": 0,
+        "rotary_six": 41.25,
+        "linear_six": 68,
+        "rotary_eight": 0,
+        "linear_eight": 68,
+        "rotary_ten": 0,
+        "linear_ten": 0,
+        "rotary_center": 80.625
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 110,
+      "lanes": {
+        "rotary_twelve": 60,
+        "linear_twelve": 0,
+        "rotary_two": 74.063,
+        "linear_two": 0,
+        "rotary_four": 60,
+        "linear_four": 0,
+        "rotary_six": 60,
+        "linear_six": 34,
+        "rotary_eight": 20.625,
+        "linear_eight": 99,
+        "rotary_ten": 0,
+        "linear_ten": 34,
+        "rotary_center": 101.25
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 120,
+      "lanes": {
+        "rotary_twelve": 80.625,
+        "linear_twelve": 0,
+        "rotary_two": 59.063,
+        "linear_two": 0,
+        "rotary_four": 67.032,
+        "linear_four": 0,
+        "rotary_six": 75,
+        "linear_six": 0,
+        "rotary_eight": 41.25,
+        "linear_eight": 68,
+        "rotary_ten": 0,
+        "linear_ten": 68,
+        "rotary_center": 120
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 130,
+      "lanes": {
+        "rotary_twelve": 101.25,
+        "linear_twelve": 34,
+        "rotary_two": 60,
+        "linear_two": 0,
+        "rotary_four": 74.063,
+        "linear_four": 0,
+        "rotary_six": 60,
+        "linear_six": 0,
+        "rotary_eight": 60,
+        "linear_eight": 34,
+        "rotary_ten": 20.625,
+        "linear_ten": 99,
+        "rotary_center": 135
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 140,
+      "lanes": {
+        "rotary_twelve": 120,
+        "linear_twelve": 68,
+        "rotary_two": 80.625,
+        "linear_two": 0,
+        "rotary_four": 59.063,
+        "linear_four": 0,
+        "rotary_six": 67.032,
+        "linear_six": 0,
+        "rotary_eight": 75,
+        "linear_eight": 0,
+        "rotary_ten": 41.25,
+        "linear_ten": 68,
+        "rotary_center": 120
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 150,
+      "lanes": {
+        "rotary_twelve": 135,
+        "linear_twelve": 99,
+        "rotary_two": 101.25,
+        "linear_two": 34,
+        "rotary_four": 60,
+        "linear_four": 0,
+        "rotary_six": 74.063,
+        "linear_six": 0,
+        "rotary_eight": 60,
+        "linear_eight": 0,
+        "rotary_ten": 60,
+        "linear_ten": 34,
+        "rotary_center": 127.032
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 160,
+      "lanes": {
+        "rotary_twelve": 120,
+        "linear_twelve": 68,
+        "rotary_two": 120,
+        "linear_two": 68,
+        "rotary_four": 80.625,
+        "linear_four": 0,
+        "rotary_six": 59.063,
+        "linear_six": 0,
+        "rotary_eight": 67.032,
+        "linear_eight": 0,
+        "rotary_ten": 75,
+        "linear_ten": 0,
+        "rotary_center": 93.782
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 170,
+      "lanes": {
+        "rotary_twelve": 127.032,
+        "linear_twelve": 34,
+        "rotary_two": 98.084,
+        "linear_two": 99,
+        "rotary_four": 101.25,
+        "linear_four": 34,
+        "rotary_six": 60,
+        "linear_six": 0,
+        "rotary_eight": 74.063,
+        "linear_eight": 0,
+        "rotary_ten": 60,
+        "linear_ten": 0,
+        "rotary_center": 60.532
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 180,
+      "lanes": {
+        "rotary_twelve": 134.063,
+        "linear_twelve": 0,
+        "rotary_two": 120,
+        "linear_two": 68,
+        "rotary_four": 120,
+        "linear_four": 68,
+        "rotary_six": 80.625,
+        "linear_six": 0,
+        "rotary_eight": 59.063,
+        "linear_eight": 0,
+        "rotary_ten": 67.032,
+        "linear_ten": 0,
+        "rotary_center": 100.578
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 190,
+      "lanes": {
+        "rotary_twelve": 119.063,
+        "linear_twelve": 0,
+        "rotary_two": 127.032,
+        "linear_two": 34,
+        "rotary_four": 135,
+        "linear_four": 99,
+        "rotary_six": 101.25,
+        "linear_six": 34,
+        "rotary_eight": 60,
+        "linear_eight": 0,
+        "rotary_ten": 74.063,
+        "linear_ten": 0,
+        "rotary_center": 140.625
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 200,
+      "lanes": {
+        "rotary_twelve": 120,
+        "linear_twelve": 0,
+        "rotary_two": 134.063,
+        "linear_two": 0,
+        "rotary_four": 120,
+        "linear_four": 68,
+        "rotary_six": 120,
+        "linear_six": 68,
+        "rotary_eight": 80.625,
+        "linear_eight": 0,
+        "rotary_ten": 59.063,
+        "linear_ten": 0,
+        "rotary_center": 161.25
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 210,
+      "lanes": {
+        "rotary_twelve": 140.625,
+        "linear_twelve": 0,
+        "rotary_two": 119.063,
+        "linear_two": 0,
+        "rotary_four": 127.032,
+        "linear_four": 34,
+        "rotary_six": 93.268,
+        "linear_six": 99,
+        "rotary_eight": 101.25,
+        "linear_eight": 34,
+        "rotary_ten": 60,
+        "linear_ten": 0,
+        "rotary_center": 180
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 220,
+      "lanes": {
+        "rotary_twelve": 161.25,
+        "linear_twelve": 0,
+        "rotary_two": 120,
+        "linear_two": 0,
+        "rotary_four": 134.063,
+        "linear_four": 0,
+        "rotary_six": 120,
+        "linear_six": 68,
+        "rotary_eight": 120,
+        "linear_eight": 68,
+        "rotary_ten": 80.625,
+        "linear_ten": 0,
+        "rotary_center": 195
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 230,
+      "lanes": {
+        "rotary_twelve": 180,
+        "linear_twelve": 0,
+        "rotary_two": 140.625,
+        "linear_two": 0,
+        "rotary_four": 119.063,
+        "linear_four": 0,
+        "rotary_six": 127.032,
+        "linear_six": 34,
+        "rotary_eight": 135,
+        "linear_eight": 99,
+        "rotary_ten": 101.25,
+        "linear_ten": 34,
+        "rotary_center": 180
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 240,
+      "lanes": {
+        "rotary_twelve": 195,
+        "linear_twelve": 0,
+        "rotary_two": 161.25,
+        "linear_two": 0,
+        "rotary_four": 120,
+        "linear_four": 0,
+        "rotary_six": 134.063,
+        "linear_six": 0,
+        "rotary_eight": 120,
+        "linear_eight": 68,
+        "rotary_ten": 120,
+        "linear_ten": 68,
+        "rotary_center": 187.032
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 250,
+      "lanes": {
+        "rotary_twelve": 180,
+        "linear_twelve": 34,
+        "rotary_two": 180,
+        "linear_two": 0,
+        "rotary_four": 140.625,
+        "linear_four": 0,
+        "rotary_six": 119.063,
+        "linear_six": 0,
+        "rotary_eight": 127.032,
+        "linear_eight": 34,
+        "rotary_ten": 85.654,
+        "linear_ten": 99,
+        "rotary_center": 194.063
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 260,
+      "lanes": {
+        "rotary_twelve": 187.032,
+        "linear_twelve": 68,
+        "rotary_two": 195,
+        "linear_two": 0,
+        "rotary_four": 161.25,
+        "linear_four": 0,
+        "rotary_six": 120,
+        "linear_six": 0,
+        "rotary_eight": 134.063,
+        "linear_eight": 0,
+        "rotary_ten": 120,
+        "linear_ten": 68,
+        "rotary_center": 179.063
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 270,
+      "lanes": {
+        "rotary_twelve": 194.063,
+        "linear_twelve": 99,
+        "rotary_two": 180,
+        "linear_two": 34,
+        "rotary_four": 180,
+        "linear_four": 0,
+        "rotary_six": 140.625,
+        "linear_six": 0,
+        "rotary_eight": 119.063,
+        "linear_eight": 0,
+        "rotary_ten": 127.032,
+        "linear_ten": 34,
+        "rotary_center": 180
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 280,
+      "lanes": {
+        "rotary_twelve": 179.063,
+        "linear_twelve": 68,
+        "rotary_two": 187.032,
+        "linear_two": 68,
+        "rotary_four": 195,
+        "linear_four": 0,
+        "rotary_six": 161.25,
+        "linear_six": 0,
+        "rotary_eight": 120,
+        "linear_eight": 0,
+        "rotary_ten": 134.063,
+        "linear_ten": 0,
+        "rotary_center": 200.625
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 290,
+      "lanes": {
+        "rotary_twelve": 180,
+        "linear_twelve": 34,
+        "rotary_two": 194.063,
+        "linear_two": 99,
+        "rotary_four": 180,
+        "linear_four": 34,
+        "rotary_six": 180,
+        "linear_six": 0,
+        "rotary_eight": 140.625,
+        "linear_eight": 0,
+        "rotary_ten": 119.063,
+        "linear_ten": 0,
+        "rotary_center": 221.25
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 300,
+      "lanes": {
+        "rotary_twelve": 200.625,
+        "linear_twelve": 0,
+        "rotary_two": 179.063,
+        "linear_two": 68,
+        "rotary_four": 187.032,
+        "linear_four": 68,
+        "rotary_six": 195,
+        "linear_six": 0,
+        "rotary_eight": 161.25,
+        "linear_eight": 0,
+        "rotary_ten": 120,
+        "linear_ten": 0,
+        "rotary_center": 240
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 310,
+      "lanes": {
+        "rotary_twelve": 221.25,
+        "linear_twelve": 0,
+        "rotary_two": 180,
+        "linear_two": 34,
+        "rotary_four": 194.063,
+        "linear_four": 99,
+        "rotary_six": 180,
+        "linear_six": 34,
+        "rotary_eight": 180,
+        "linear_eight": 0,
+        "rotary_ten": 140.625,
+        "linear_ten": 0,
+        "rotary_center": 255
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 320,
+      "lanes": {
+        "rotary_twelve": 240,
+        "linear_twelve": 0,
+        "rotary_two": 200.625,
+        "linear_two": 0,
+        "rotary_four": 179.063,
+        "linear_four": 68,
+        "rotary_six": 187.032,
+        "linear_six": 68,
+        "rotary_eight": 195,
+        "linear_eight": 0,
+        "rotary_ten": 161.25,
+        "linear_ten": 0,
+        "rotary_center": 240
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 330,
+      "lanes": {
+        "rotary_twelve": 255,
+        "linear_twelve": 0,
+        "rotary_two": 221.25,
+        "linear_two": 0,
+        "rotary_four": 180,
+        "linear_four": 34,
+        "rotary_six": 194.063,
+        "linear_six": 99,
+        "rotary_eight": 180,
+        "linear_eight": 34,
+        "rotary_ten": 180,
+        "linear_ten": 0,
+        "rotary_center": 247.032
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 340,
+      "lanes": {
+        "rotary_twelve": 240,
+        "linear_twelve": 0,
+        "rotary_two": 240,
+        "linear_two": 0,
+        "rotary_four": 200.625,
+        "linear_four": 0,
+        "rotary_six": 179.063,
+        "linear_six": 68,
+        "rotary_eight": 187.032,
+        "linear_eight": 68,
+        "rotary_ten": 195,
+        "linear_ten": 0,
+        "rotary_center": 254.063
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 350,
+      "lanes": {
+        "rotary_twelve": 247.032,
+        "linear_twelve": 0,
+        "rotary_two": 255,
+        "linear_two": 0,
+        "rotary_four": 221.25,
+        "linear_four": 0,
+        "rotary_six": 180,
+        "linear_six": 34,
+        "rotary_eight": 194.063,
+        "linear_eight": 99,
+        "rotary_ten": 180,
+        "linear_ten": 34,
+        "rotary_center": 239.063
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 360,
+      "lanes": {
+        "rotary_twelve": 254.063,
+        "linear_twelve": 0,
+        "rotary_two": 240,
+        "linear_two": 0,
+        "rotary_four": 240,
+        "linear_four": 0,
+        "rotary_six": 200.625,
+        "linear_six": 0,
+        "rotary_eight": 179.063,
+        "linear_eight": 68,
+        "rotary_ten": 187.032,
+        "linear_ten": 68,
+        "rotary_center": 240
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 370,
+      "lanes": {
+        "rotary_twelve": 239.063,
+        "linear_twelve": 34,
+        "rotary_two": 247.032,
+        "linear_two": 0,
+        "rotary_four": 255,
+        "linear_four": 0,
+        "rotary_six": 221.25,
+        "linear_six": 0,
+        "rotary_eight": 180,
+        "linear_eight": 34,
+        "rotary_ten": 194.063,
+        "linear_ten": 99,
+        "rotary_center": 260.625
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 380,
+      "lanes": {
+        "rotary_twelve": 240,
+        "linear_twelve": 68,
+        "rotary_two": 254.063,
+        "linear_two": 0,
+        "rotary_four": 240,
+        "linear_four": 0,
+        "rotary_six": 240,
+        "linear_six": 0,
+        "rotary_eight": 200.625,
+        "linear_eight": 0,
+        "rotary_ten": 179.063,
+        "linear_ten": 68,
+        "rotary_center": 281.25
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 390,
+      "lanes": {
+        "rotary_twelve": 260.625,
+        "linear_twelve": 99,
+        "rotary_two": 239.063,
+        "linear_two": 34,
+        "rotary_four": 247.032,
+        "linear_four": 0,
+        "rotary_six": 255,
+        "linear_six": 0,
+        "rotary_eight": 221.25,
+        "linear_eight": 0,
+        "rotary_ten": 180,
+        "linear_ten": 34,
+        "rotary_center": 300
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 400,
+      "lanes": {
+        "rotary_twelve": 281.25,
+        "linear_twelve": 68,
+        "rotary_two": 240,
+        "linear_two": 68,
+        "rotary_four": 254.063,
+        "linear_four": 0,
+        "rotary_six": 240,
+        "linear_six": 0,
+        "rotary_eight": 240,
+        "linear_eight": 0,
+        "rotary_ten": 200.625,
+        "linear_ten": 0,
+        "rotary_center": 315
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 410,
+      "lanes": {
+        "rotary_twelve": 300,
+        "linear_twelve": 34,
+        "rotary_two": 260.625,
+        "linear_two": 99,
+        "rotary_four": 239.063,
+        "linear_four": 34,
+        "rotary_six": 247.032,
+        "linear_six": 0,
+        "rotary_eight": 255,
+        "linear_eight": 0,
+        "rotary_ten": 221.25,
+        "linear_ten": 0,
+        "rotary_center": 300
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 420,
+      "lanes": {
+        "rotary_twelve": 315,
+        "linear_twelve": 0,
+        "rotary_two": 281.25,
+        "linear_two": 68,
+        "rotary_four": 240,
+        "linear_four": 68,
+        "rotary_six": 254.063,
+        "linear_six": 0,
+        "rotary_eight": 240,
+        "linear_eight": 0,
+        "rotary_ten": 240,
+        "linear_ten": 0,
+        "rotary_center": 307.032
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 430,
+      "lanes": {
+        "rotary_twelve": 300,
+        "linear_twelve": 0,
+        "rotary_two": 300,
+        "linear_two": 34,
+        "rotary_four": 260.625,
+        "linear_four": 99,
+        "rotary_six": 239.063,
+        "linear_six": 34,
+        "rotary_eight": 247.032,
+        "linear_eight": 0,
+        "rotary_ten": 255,
+        "linear_ten": 0,
+        "rotary_center": 314.063
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 440,
+      "lanes": {
+        "rotary_twelve": 307.032,
+        "linear_twelve": 0,
+        "rotary_two": 315,
+        "linear_two": 0,
+        "rotary_four": 281.25,
+        "linear_four": 68,
+        "rotary_six": 240,
+        "linear_six": 68,
+        "rotary_eight": 254.063,
+        "linear_eight": 0,
+        "rotary_ten": 240,
+        "linear_ten": 0,
+        "rotary_center": 299.063
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 450,
+      "lanes": {
+        "rotary_twelve": 314.063,
+        "linear_twelve": 0,
+        "rotary_two": 300,
+        "linear_two": 0,
+        "rotary_four": 300,
+        "linear_four": 34,
+        "rotary_six": 260.625,
+        "linear_six": 99,
+        "rotary_eight": 239.063,
+        "linear_eight": 34,
+        "rotary_ten": 247.032,
+        "linear_ten": 0,
+        "rotary_center": 300
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 460,
+      "lanes": {
+        "rotary_twelve": 299.063,
+        "linear_twelve": 0,
+        "rotary_two": 307.032,
+        "linear_two": 0,
+        "rotary_four": 315,
+        "linear_four": 0,
+        "rotary_six": 281.25,
+        "linear_six": 68,
+        "rotary_eight": 240,
+        "linear_eight": 68,
+        "rotary_ten": 254.063,
+        "linear_ten": 0,
+        "rotary_center": 320.625
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 470,
+      "lanes": {
+        "rotary_twelve": 300,
+        "linear_twelve": 0,
+        "rotary_two": 314.063,
+        "linear_two": 0,
+        "rotary_four": 300,
+        "linear_four": 0,
+        "rotary_six": 300,
+        "linear_six": 34,
+        "rotary_eight": 260.625,
+        "linear_eight": 99,
+        "rotary_ten": 239.063,
+        "linear_ten": 34,
+        "rotary_center": 341.25
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 480,
+      "lanes": {
+        "rotary_twelve": 320.625,
+        "linear_twelve": 0,
+        "rotary_two": 299.063,
+        "linear_two": 0,
+        "rotary_four": 307.032,
+        "linear_four": 0,
+        "rotary_six": 315,
+        "linear_six": 0,
+        "rotary_eight": 281.25,
+        "linear_eight": 68,
+        "rotary_ten": 240,
+        "linear_ten": 68,
+        "rotary_center": 360
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 490,
+      "lanes": {
+        "rotary_twelve": 341.25,
+        "linear_twelve": 34,
+        "rotary_two": 300,
+        "linear_two": 0,
+        "rotary_four": 314.063,
+        "linear_four": 0,
+        "rotary_six": 300,
+        "linear_six": 0,
+        "rotary_eight": 300,
+        "linear_eight": 34,
+        "rotary_ten": 260.625,
+        "linear_ten": 99,
+        "rotary_center": 375
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 500,
+      "lanes": {
+        "rotary_twelve": 360,
+        "linear_twelve": 68,
+        "rotary_two": 320.625,
+        "linear_two": 0,
+        "rotary_four": 299.063,
+        "linear_four": 0,
+        "rotary_six": 307.032,
+        "linear_six": 0,
+        "rotary_eight": 315,
+        "linear_eight": 0,
+        "rotary_ten": 281.25,
+        "linear_ten": 68,
+        "rotary_center": 360
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 510,
+      "lanes": {
+        "rotary_twelve": 375,
+        "linear_twelve": 99,
+        "rotary_two": 341.25,
+        "linear_two": 34,
+        "rotary_four": 300,
+        "linear_four": 0,
+        "rotary_six": 314.063,
+        "linear_six": 0,
+        "rotary_eight": 300,
+        "linear_eight": 0,
+        "rotary_ten": 300,
+        "linear_ten": 34,
+        "rotary_center": 367.032
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 520,
+      "lanes": {
+        "rotary_twelve": 360,
+        "linear_twelve": 68,
+        "rotary_two": 360,
+        "linear_two": 68,
+        "rotary_four": 320.625,
+        "linear_four": 0,
+        "rotary_six": 299.063,
+        "linear_six": 0,
+        "rotary_eight": 307.032,
+        "linear_eight": 0,
+        "rotary_ten": 315,
+        "linear_ten": 0,
+        "rotary_center": 374.063
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 530,
+      "lanes": {
+        "rotary_twelve": 367.032,
+        "linear_twelve": 34,
+        "rotary_two": 375,
+        "linear_two": 33.757,
+        "rotary_four": 341.25,
+        "linear_four": 34,
+        "rotary_six": 300,
+        "linear_six": 0,
+        "rotary_eight": 314.063,
+        "linear_eight": 0,
+        "rotary_ten": 300,
+        "linear_ten": 0,
+        "rotary_center": 359.063
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 539,
+      "lanes": {
+        "rotary_twelve": 359.063,
+        "linear_twelve": 0,
+        "rotary_two": 359.063,
+        "linear_two": 0,
+        "rotary_four": 359.063,
+        "linear_four": 0,
+        "rotary_six": 300,
+        "linear_six": 0,
+        "rotary_eight": 359.063,
+        "linear_eight": 0,
+        "rotary_ten": 300,
+        "linear_ten": 0,
+        "rotary_center": 359.063
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 548,
+      "lanes": {
+        "rotary_center": 359.063,
+        "rotary_twelve": 367.032,
+        "linear_twelve": 34,
+        "rotary_two": 375,
+        "linear_two": 33.757,
+        "rotary_four": 341.25,
+        "linear_four": 34,
+        "rotary_six": 300,
+        "linear_six": 0,
+        "rotary_eight": 314.063,
+        "linear_eight": 0,
+        "rotary_ten": 300,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 558,
+      "lanes": {
+        "rotary_center": 374.063,
+        "rotary_twelve": 360,
+        "linear_twelve": 68,
+        "rotary_two": 360,
+        "linear_two": 68,
+        "rotary_four": 320.625,
+        "linear_four": 0,
+        "rotary_six": 299.063,
+        "linear_six": 0,
+        "rotary_eight": 307.032,
+        "linear_eight": 0,
+        "rotary_ten": 315,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 568,
+      "lanes": {
+        "rotary_center": 367.032,
+        "rotary_twelve": 375,
+        "linear_twelve": 99,
+        "rotary_two": 341.25,
+        "linear_two": 34,
+        "rotary_four": 300,
+        "linear_four": 0,
+        "rotary_six": 314.063,
+        "linear_six": 0,
+        "rotary_eight": 300,
+        "linear_eight": 0,
+        "rotary_ten": 300,
+        "linear_ten": 34
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 578,
+      "lanes": {
+        "rotary_center": 360,
+        "rotary_twelve": 360,
+        "linear_twelve": 68,
+        "rotary_two": 320.625,
+        "linear_two": 0,
+        "rotary_four": 299.063,
+        "linear_four": 0,
+        "rotary_six": 307.032,
+        "linear_six": 0,
+        "rotary_eight": 315,
+        "linear_eight": 0,
+        "rotary_ten": 281.25,
+        "linear_ten": 68
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 588,
+      "lanes": {
+        "rotary_center": 375,
+        "rotary_twelve": 341.25,
+        "linear_twelve": 34,
+        "rotary_two": 300,
+        "linear_two": 0,
+        "rotary_four": 314.063,
+        "linear_four": 0,
+        "rotary_six": 300,
+        "linear_six": 0,
+        "rotary_eight": 300,
+        "linear_eight": 34,
+        "rotary_ten": 260.625,
+        "linear_ten": 99
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 598,
+      "lanes": {
+        "rotary_center": 360,
+        "rotary_twelve": 320.625,
+        "linear_twelve": 0,
+        "rotary_two": 299.063,
+        "linear_two": 0,
+        "rotary_four": 307.032,
+        "linear_four": 0,
+        "rotary_six": 315,
+        "linear_six": 0,
+        "rotary_eight": 281.25,
+        "linear_eight": 68,
+        "rotary_ten": 240,
+        "linear_ten": 68
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 608,
+      "lanes": {
+        "rotary_center": 341.25,
+        "rotary_twelve": 300,
+        "linear_twelve": 0,
+        "rotary_two": 314.063,
+        "linear_two": 0,
+        "rotary_four": 300,
+        "linear_four": 0,
+        "rotary_six": 300,
+        "linear_six": 34,
+        "rotary_eight": 260.625,
+        "linear_eight": 99,
+        "rotary_ten": 239.063,
+        "linear_ten": 34
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 618,
+      "lanes": {
+        "rotary_center": 320.625,
+        "rotary_twelve": 299.063,
+        "linear_twelve": 0,
+        "rotary_two": 307.032,
+        "linear_two": 0,
+        "rotary_four": 315,
+        "linear_four": 0,
+        "rotary_six": 281.25,
+        "linear_six": 68,
+        "rotary_eight": 240,
+        "linear_eight": 68,
+        "rotary_ten": 254.063,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 628,
+      "lanes": {
+        "rotary_center": 300,
+        "rotary_twelve": 314.063,
+        "linear_twelve": 0,
+        "rotary_two": 300,
+        "linear_two": 0,
+        "rotary_four": 300,
+        "linear_four": 34,
+        "rotary_six": 260.625,
+        "linear_six": 99,
+        "rotary_eight": 239.063,
+        "linear_eight": 34,
+        "rotary_ten": 247.032,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 638,
+      "lanes": {
+        "rotary_center": 299.063,
+        "rotary_twelve": 307.032,
+        "linear_twelve": 0,
+        "rotary_two": 315,
+        "linear_two": 0,
+        "rotary_four": 281.25,
+        "linear_four": 68,
+        "rotary_six": 240,
+        "linear_six": 68,
+        "rotary_eight": 254.063,
+        "linear_eight": 0,
+        "rotary_ten": 240,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 648,
+      "lanes": {
+        "rotary_center": 314.063,
+        "rotary_twelve": 300,
+        "linear_twelve": 0,
+        "rotary_two": 300,
+        "linear_two": 34,
+        "rotary_four": 260.625,
+        "linear_four": 99,
+        "rotary_six": 239.063,
+        "linear_six": 34,
+        "rotary_eight": 247.032,
+        "linear_eight": 0,
+        "rotary_ten": 255,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 658,
+      "lanes": {
+        "rotary_center": 307.032,
+        "rotary_twelve": 315,
+        "linear_twelve": 0,
+        "rotary_two": 281.25,
+        "linear_two": 68,
+        "rotary_four": 240,
+        "linear_four": 68,
+        "rotary_six": 254.063,
+        "linear_six": 0,
+        "rotary_eight": 240,
+        "linear_eight": 0,
+        "rotary_ten": 240,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 668,
+      "lanes": {
+        "rotary_center": 300,
+        "rotary_twelve": 300,
+        "linear_twelve": 34,
+        "rotary_two": 260.625,
+        "linear_two": 99,
+        "rotary_four": 239.063,
+        "linear_four": 34,
+        "rotary_six": 247.032,
+        "linear_six": 0,
+        "rotary_eight": 255,
+        "linear_eight": 0,
+        "rotary_ten": 221.25,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 678,
+      "lanes": {
+        "rotary_center": 315,
+        "rotary_twelve": 281.25,
+        "linear_twelve": 68,
+        "rotary_two": 240,
+        "linear_two": 68,
+        "rotary_four": 254.063,
+        "linear_four": 0,
+        "rotary_six": 240,
+        "linear_six": 0,
+        "rotary_eight": 240,
+        "linear_eight": 0,
+        "rotary_ten": 200.625,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 688,
+      "lanes": {
+        "rotary_center": 300,
+        "rotary_twelve": 260.625,
+        "linear_twelve": 99,
+        "rotary_two": 239.063,
+        "linear_two": 34,
+        "rotary_four": 247.032,
+        "linear_four": 0,
+        "rotary_six": 255,
+        "linear_six": 0,
+        "rotary_eight": 221.25,
+        "linear_eight": 0,
+        "rotary_ten": 180,
+        "linear_ten": 34
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 698,
+      "lanes": {
+        "rotary_center": 281.25,
+        "rotary_twelve": 240,
+        "linear_twelve": 68,
+        "rotary_two": 254.063,
+        "linear_two": 0,
+        "rotary_four": 240,
+        "linear_four": 0,
+        "rotary_six": 240,
+        "linear_six": 0,
+        "rotary_eight": 200.625,
+        "linear_eight": 0,
+        "rotary_ten": 179.063,
+        "linear_ten": 68
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 708,
+      "lanes": {
+        "rotary_center": 260.625,
+        "rotary_twelve": 239.063,
+        "linear_twelve": 34,
+        "rotary_two": 247.032,
+        "linear_two": 0,
+        "rotary_four": 255,
+        "linear_four": 0,
+        "rotary_six": 221.25,
+        "linear_six": 0,
+        "rotary_eight": 180,
+        "linear_eight": 34,
+        "rotary_ten": 194.063,
+        "linear_ten": 99
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 718,
+      "lanes": {
+        "rotary_center": 240,
+        "rotary_twelve": 254.063,
+        "linear_twelve": 0,
+        "rotary_two": 240,
+        "linear_two": 0,
+        "rotary_four": 240,
+        "linear_four": 0,
+        "rotary_six": 200.625,
+        "linear_six": 0,
+        "rotary_eight": 179.063,
+        "linear_eight": 68,
+        "rotary_ten": 187.032,
+        "linear_ten": 68
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 728,
+      "lanes": {
+        "rotary_center": 239.063,
+        "rotary_twelve": 247.032,
+        "linear_twelve": 0,
+        "rotary_two": 255,
+        "linear_two": 0,
+        "rotary_four": 221.25,
+        "linear_four": 0,
+        "rotary_six": 180,
+        "linear_six": 34,
+        "rotary_eight": 194.063,
+        "linear_eight": 99,
+        "rotary_ten": 180,
+        "linear_ten": 34
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 738,
+      "lanes": {
+        "rotary_center": 254.063,
+        "rotary_twelve": 240,
+        "linear_twelve": 0,
+        "rotary_two": 240,
+        "linear_two": 0,
+        "rotary_four": 200.625,
+        "linear_four": 0,
+        "rotary_six": 179.063,
+        "linear_six": 68,
+        "rotary_eight": 187.032,
+        "linear_eight": 68,
+        "rotary_ten": 195,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 748,
+      "lanes": {
+        "rotary_center": 247.032,
+        "rotary_twelve": 255,
+        "linear_twelve": 0,
+        "rotary_two": 221.25,
+        "linear_two": 0,
+        "rotary_four": 180,
+        "linear_four": 34,
+        "rotary_six": 194.063,
+        "linear_six": 99,
+        "rotary_eight": 180,
+        "linear_eight": 34,
+        "rotary_ten": 180,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 758,
+      "lanes": {
+        "rotary_center": 240,
+        "rotary_twelve": 240,
+        "linear_twelve": 0,
+        "rotary_two": 200.625,
+        "linear_two": 0,
+        "rotary_four": 179.063,
+        "linear_four": 68,
+        "rotary_six": 187.032,
+        "linear_six": 68,
+        "rotary_eight": 195,
+        "linear_eight": 0,
+        "rotary_ten": 161.25,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 768,
+      "lanes": {
+        "rotary_center": 255,
+        "rotary_twelve": 221.25,
+        "linear_twelve": 0,
+        "rotary_two": 180,
+        "linear_two": 34,
+        "rotary_four": 194.063,
+        "linear_four": 99,
+        "rotary_six": 180,
+        "linear_six": 34,
+        "rotary_eight": 180,
+        "linear_eight": 0,
+        "rotary_ten": 140.625,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 778,
+      "lanes": {
+        "rotary_center": 240,
+        "rotary_twelve": 200.625,
+        "linear_twelve": 0,
+        "rotary_two": 179.063,
+        "linear_two": 68,
+        "rotary_four": 187.032,
+        "linear_four": 68,
+        "rotary_six": 195,
+        "linear_six": 0,
+        "rotary_eight": 161.25,
+        "linear_eight": 0,
+        "rotary_ten": 120,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 788,
+      "lanes": {
+        "rotary_center": 221.25,
+        "rotary_twelve": 180,
+        "linear_twelve": 34,
+        "rotary_two": 194.063,
+        "linear_two": 99,
+        "rotary_four": 180,
+        "linear_four": 34,
+        "rotary_six": 180,
+        "linear_six": 0,
+        "rotary_eight": 140.625,
+        "linear_eight": 0,
+        "rotary_ten": 119.063,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 798,
+      "lanes": {
+        "rotary_center": 200.625,
+        "rotary_twelve": 179.063,
+        "linear_twelve": 68,
+        "rotary_two": 187.032,
+        "linear_two": 68,
+        "rotary_four": 195,
+        "linear_four": 0,
+        "rotary_six": 161.25,
+        "linear_six": 0,
+        "rotary_eight": 120,
+        "linear_eight": 0,
+        "rotary_ten": 134.063,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 808,
+      "lanes": {
+        "rotary_center": 180,
+        "rotary_twelve": 194.063,
+        "linear_twelve": 99,
+        "rotary_two": 180,
+        "linear_two": 34,
+        "rotary_four": 180,
+        "linear_four": 0,
+        "rotary_six": 140.625,
+        "linear_six": 0,
+        "rotary_eight": 119.063,
+        "linear_eight": 0,
+        "rotary_ten": 127.032,
+        "linear_ten": 34
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 818,
+      "lanes": {
+        "rotary_center": 179.063,
+        "rotary_twelve": 187.032,
+        "linear_twelve": 68,
+        "rotary_two": 195,
+        "linear_two": 0,
+        "rotary_four": 161.25,
+        "linear_four": 0,
+        "rotary_six": 120,
+        "linear_six": 0,
+        "rotary_eight": 134.063,
+        "linear_eight": 0,
+        "rotary_ten": 120,
+        "linear_ten": 68
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 828,
+      "lanes": {
+        "rotary_center": 194.063,
+        "rotary_twelve": 180,
+        "linear_twelve": 34,
+        "rotary_two": 180,
+        "linear_two": 0,
+        "rotary_four": 140.625,
+        "linear_four": 0,
+        "rotary_six": 119.063,
+        "linear_six": 0,
+        "rotary_eight": 127.032,
+        "linear_eight": 34,
+        "rotary_ten": 85.654,
+        "linear_ten": 99
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 838,
+      "lanes": {
+        "rotary_center": 187.032,
+        "rotary_twelve": 195,
+        "linear_twelve": 0,
+        "rotary_two": 161.25,
+        "linear_two": 0,
+        "rotary_four": 120,
+        "linear_four": 0,
+        "rotary_six": 134.063,
+        "linear_six": 0,
+        "rotary_eight": 120,
+        "linear_eight": 68,
+        "rotary_ten": 120,
+        "linear_ten": 68
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 848,
+      "lanes": {
+        "rotary_center": 180,
+        "rotary_twelve": 180,
+        "linear_twelve": 0,
+        "rotary_two": 140.625,
+        "linear_two": 0,
+        "rotary_four": 119.063,
+        "linear_four": 0,
+        "rotary_six": 127.032,
+        "linear_six": 34,
+        "rotary_eight": 135,
+        "linear_eight": 99,
+        "rotary_ten": 101.25,
+        "linear_ten": 34
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 858,
+      "lanes": {
+        "rotary_center": 195,
+        "rotary_twelve": 161.25,
+        "linear_twelve": 0,
+        "rotary_two": 120,
+        "linear_two": 0,
+        "rotary_four": 134.063,
+        "linear_four": 0,
+        "rotary_six": 120,
+        "linear_six": 68,
+        "rotary_eight": 120,
+        "linear_eight": 68,
+        "rotary_ten": 80.625,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 868,
+      "lanes": {
+        "rotary_center": 180,
+        "rotary_twelve": 140.625,
+        "linear_twelve": 0,
+        "rotary_two": 119.063,
+        "linear_two": 0,
+        "rotary_four": 127.032,
+        "linear_four": 34,
+        "rotary_six": 93.268,
+        "linear_six": 99,
+        "rotary_eight": 101.25,
+        "linear_eight": 34,
+        "rotary_ten": 60,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 878,
+      "lanes": {
+        "rotary_center": 161.25,
+        "rotary_twelve": 120,
+        "linear_twelve": 0,
+        "rotary_two": 134.063,
+        "linear_two": 0,
+        "rotary_four": 120,
+        "linear_four": 68,
+        "rotary_six": 120,
+        "linear_six": 68,
+        "rotary_eight": 80.625,
+        "linear_eight": 0,
+        "rotary_ten": 59.063,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 888,
+      "lanes": {
+        "rotary_center": 140.625,
+        "rotary_twelve": 119.063,
+        "linear_twelve": 0,
+        "rotary_two": 127.032,
+        "linear_two": 34,
+        "rotary_four": 135,
+        "linear_four": 99,
+        "rotary_six": 101.25,
+        "linear_six": 34,
+        "rotary_eight": 60,
+        "linear_eight": 0,
+        "rotary_ten": 74.063,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 898,
+      "lanes": {
+        "rotary_center": 100.578,
+        "rotary_twelve": 134.063,
+        "linear_twelve": 0,
+        "rotary_two": 120,
+        "linear_two": 68,
+        "rotary_four": 120,
+        "linear_four": 68,
+        "rotary_six": 80.625,
+        "linear_six": 0,
+        "rotary_eight": 59.063,
+        "linear_eight": 0,
+        "rotary_ten": 67.032,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 908,
+      "lanes": {
+        "rotary_center": 60.532,
+        "rotary_twelve": 127.032,
+        "linear_twelve": 34,
+        "rotary_two": 98.084,
+        "linear_two": 99,
+        "rotary_four": 101.25,
+        "linear_four": 34,
+        "rotary_six": 60,
+        "linear_six": 0,
+        "rotary_eight": 74.063,
+        "linear_eight": 0,
+        "rotary_ten": 60,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 918,
+      "lanes": {
+        "rotary_center": 93.782,
+        "rotary_twelve": 120,
+        "linear_twelve": 68,
+        "rotary_two": 120,
+        "linear_two": 68,
+        "rotary_four": 80.625,
+        "linear_four": 0,
+        "rotary_six": 59.063,
+        "linear_six": 0,
+        "rotary_eight": 67.032,
+        "linear_eight": 0,
+        "rotary_ten": 75,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 928,
+      "lanes": {
+        "rotary_center": 127.032,
+        "rotary_twelve": 135,
+        "linear_twelve": 99,
+        "rotary_two": 101.25,
+        "linear_two": 34,
+        "rotary_four": 60,
+        "linear_four": 0,
+        "rotary_six": 74.063,
+        "linear_six": 0,
+        "rotary_eight": 60,
+        "linear_eight": 0,
+        "rotary_ten": 60,
+        "linear_ten": 34
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 938,
+      "lanes": {
+        "rotary_center": 120,
+        "rotary_twelve": 120,
+        "linear_twelve": 68,
+        "rotary_two": 80.625,
+        "linear_two": 0,
+        "rotary_four": 59.063,
+        "linear_four": 0,
+        "rotary_six": 67.032,
+        "linear_six": 0,
+        "rotary_eight": 75,
+        "linear_eight": 0,
+        "rotary_ten": 41.25,
+        "linear_ten": 68
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 948,
+      "lanes": {
+        "rotary_center": 135,
+        "rotary_twelve": 101.25,
+        "linear_twelve": 34,
+        "rotary_two": 60,
+        "linear_two": 0,
+        "rotary_four": 74.063,
+        "linear_four": 0,
+        "rotary_six": 60,
+        "linear_six": 0,
+        "rotary_eight": 60,
+        "linear_eight": 34,
+        "rotary_ten": 20.625,
+        "linear_ten": 99
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 958,
+      "lanes": {
+        "rotary_center": 120,
+        "rotary_twelve": 80.625,
+        "linear_twelve": 0,
+        "rotary_two": 59.063,
+        "linear_two": 0,
+        "rotary_four": 67.032,
+        "linear_four": 0,
+        "rotary_six": 75,
+        "linear_six": 0,
+        "rotary_eight": 41.25,
+        "linear_eight": 68,
+        "rotary_ten": 0,
+        "linear_ten": 68
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 968,
+      "lanes": {
+        "rotary_center": 101.25,
+        "rotary_twelve": 60,
+        "linear_twelve": 0,
+        "rotary_two": 74.063,
+        "linear_two": 0,
+        "rotary_four": 60,
+        "linear_four": 0,
+        "rotary_six": 60,
+        "linear_six": 34,
+        "rotary_eight": 20.625,
+        "linear_eight": 99,
+        "rotary_ten": 0,
+        "linear_ten": 34
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 978,
+      "lanes": {
+        "rotary_center": 80.625,
+        "rotary_twelve": 59.063,
+        "linear_twelve": 0,
+        "rotary_two": 67.032,
+        "linear_two": 0,
+        "rotary_four": 75,
+        "linear_four": 0,
+        "rotary_six": 41.25,
+        "linear_six": 68,
+        "rotary_eight": 0,
+        "linear_eight": 68,
+        "rotary_ten": 0,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 988,
+      "lanes": {
+        "rotary_center": 60,
+        "rotary_twelve": 74.063,
+        "linear_twelve": 0,
+        "rotary_two": 60,
+        "linear_two": 0,
+        "rotary_four": 60,
+        "linear_four": 34,
+        "rotary_six": 20.625,
+        "linear_six": 99,
+        "rotary_eight": 0,
+        "linear_eight": 34,
+        "rotary_ten": 0,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 998,
+      "lanes": {
+        "rotary_center": 59.063,
+        "rotary_twelve": 67.032,
+        "linear_twelve": 0,
+        "rotary_two": 75,
+        "linear_two": 0,
+        "rotary_four": 41.25,
+        "linear_four": 68,
+        "rotary_six": 0,
+        "linear_six": 68,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 1008,
+      "lanes": {
+        "rotary_center": 74.063,
+        "rotary_twelve": 60,
+        "linear_twelve": 0,
+        "rotary_two": 60,
+        "linear_two": 34,
+        "rotary_four": 20.625,
+        "linear_four": 99,
+        "rotary_six": 0,
+        "linear_six": 34,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 1018,
+      "lanes": {
+        "rotary_center": 67.032,
+        "rotary_twelve": 75,
+        "linear_twelve": 0,
+        "rotary_two": 41.25,
+        "linear_two": 68,
+        "rotary_four": 0,
+        "linear_four": 68,
+        "rotary_six": 0,
+        "linear_six": 0,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 1028,
+      "lanes": {
+        "rotary_center": 60,
+        "rotary_twelve": 60,
+        "linear_twelve": 34,
+        "rotary_two": 20.625,
+        "linear_two": 99,
+        "rotary_four": 0,
+        "linear_four": 34,
+        "rotary_six": 0,
+        "linear_six": 0,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 1038,
+      "lanes": {
+        "rotary_center": 75,
+        "rotary_twelve": 41.25,
+        "linear_twelve": 68,
+        "rotary_two": 0,
+        "linear_two": 68,
+        "rotary_four": 0,
+        "linear_four": 0,
+        "rotary_six": 0,
+        "linear_six": 0,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 1048,
+      "lanes": {
+        "rotary_center": 60,
+        "rotary_twelve": 20.625,
+        "linear_twelve": 99,
+        "rotary_two": 0,
+        "linear_two": 34,
+        "rotary_four": 0,
+        "linear_four": 0,
+        "rotary_six": 0,
+        "linear_six": 0,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 1058,
+      "lanes": {
+        "rotary_center": 41.25,
+        "rotary_twelve": 0,
+        "linear_twelve": 68,
+        "rotary_two": 0,
+        "linear_two": 0,
+        "rotary_four": 0,
+        "linear_four": 0,
+        "rotary_six": 0,
+        "linear_six": 0,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 1068,
+      "lanes": {
+        "rotary_center": 20.625,
+        "rotary_twelve": 0,
+        "linear_twelve": 34,
+        "rotary_two": 0,
+        "linear_two": 0,
+        "rotary_four": 0,
+        "linear_four": 0,
+        "rotary_six": 0,
+        "linear_six": 0,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 1078,
+      "lanes": {
+        "rotary_center": 0,
+        "rotary_twelve": 0,
+        "linear_twelve": 0,
+        "rotary_two": 0,
+        "linear_two": 0,
+        "rotary_four": 0,
+        "linear_four": 0,
+        "rotary_six": 0,
+        "linear_six": 0,
+        "rotary_eight": 0,
+        "linear_eight": 0,
+        "rotary_ten": 0,
+        "linear_ten": 0
+      },
+      "steppers": {}
+    }
+  ],
+  "meta": {
+    "aligned_required": true,
+    "notes": "Blank solo session: one automation lane per motor (13). Zero keys every 10 frames (Aligned / hold-ready)."
+  }
+}

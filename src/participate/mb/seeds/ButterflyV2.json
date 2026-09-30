@@ -1,0 +1,443 @@
+{
+  "version": 1,
+  "name": "ButterflyV2",
+  "source": "attract_tsv",
+  "frames_forward": 540,
+  "grid_step": 10,
+  "dwell_ms": 42,
+  "fps": 24,
+  "limits": {
+    "max_rotary_speed": 540,
+    "max_linear_speed": 300,
+    "rotary_accel": 1500,
+    "linear_accel": 1000,
+    "max_linear_mm": 136,
+    "max_rotary_delta_per_step": 180,
+    "min_linear_mm": 0,
+    "linear_mm_scale": 1000,
+    "max_motor_mm_upper": 136,
+    "max_motor_mm_lower": 109
+  },
+  "emit_order": [
+    "twelve",
+    "four",
+    "eight",
+    "two",
+    "six",
+    "ten",
+    "center"
+  ],
+  "resync_every_n_keyframes": 0,
+  "peak_resync": true,
+  "peak_resync_end_frames": [
+    40,
+    160,
+    220,
+    360,
+    440,
+    520
+  ],
+  "interpolate": true,
+  "speed_scale": 1.0,
+  "groups": [
+    {
+      "id": "new_linear_group",
+      "label": "Lin_12_6",
+      "kind": "linear",
+      "steppers": [
+        "linear_twelve",
+        "linear_six"
+      ],
+      "invert": []
+    },
+    {
+      "id": "new_rotary_group",
+      "label": "Rot_12_Center_Six",
+      "kind": "rotary",
+      "steppers": [
+        "rotary_center",
+        "rotary_six",
+        "rotary_twelve"
+      ],
+      "invert": [
+        "rotary_center"
+      ]
+    },
+    {
+      "id": "loc_lower",
+      "label": "Linear Lower",
+      "kind": "linear",
+      "steppers": [
+        "linear_two",
+        "linear_ten"
+      ],
+      "invert": []
+    },
+    {
+      "id": "new_rotary_group_2",
+      "label": "Rot_T_10_2",
+      "kind": "rotary",
+      "steppers": [
+        "rotary_two",
+        "rotary_ten"
+      ],
+      "invert": [
+        "rotary_two"
+      ]
+    },
+    {
+      "id": "loc_upper",
+      "label": "Linear Upper",
+      "kind": "linear",
+      "steppers": [
+        "linear_four",
+        "linear_eight"
+      ],
+      "invert": []
+    },
+    {
+      "id": "new_rotary_group_3",
+      "label": "Rot_B_8_4",
+      "kind": "rotary",
+      "steppers": [
+        "rotary_eight",
+        "rotary_four"
+      ],
+      "invert": [
+        "rotary_four"
+      ]
+    }
+  ],
+  "keyframes": [
+    {
+      "frame": 0,
+      "lanes": {
+        "new_linear_group": 0.0,
+        "new_rotary_group": 0.0,
+        "loc_lower": 0.0,
+        "new_rotary_group_2": 0.0,
+        "loc_upper": 0.0,
+        "new_rotary_group_3": 0.0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 40,
+      "lanes": {
+        "loc_upper": 109,
+        "loc_lower": 102,
+        "new_rotary_group": -180,
+        "new_rotary_group_2": 90,
+        "new_rotary_group_3": 90,
+        "new_linear_group": 93.1
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 70,
+      "lanes": {
+        "loc_upper": 12,
+        "loc_lower": 0,
+        "new_rotary_group": 0,
+        "new_rotary_group_2": 0,
+        "new_rotary_group_3": 0,
+        "new_linear_group": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 100,
+      "lanes": {
+        "loc_upper": 122,
+        "loc_lower": 0,
+        "new_rotary_group": 135.872,
+        "new_rotary_group_2": -90,
+        "new_rotary_group_3": -105,
+        "new_linear_group": 52.2
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 120,
+      "lanes": {
+        "loc_upper": 49,
+        "loc_lower": 0,
+        "new_rotary_group": 0,
+        "new_rotary_group_2": 0,
+        "new_rotary_group_3": 0,
+        "new_linear_group": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 160,
+      "lanes": {
+        "loc_upper": 47,
+        "loc_lower": 102,
+        "new_rotary_group": -41.59,
+        "new_rotary_group_2": -52.49,
+        "new_rotary_group_3": 9.771,
+        "new_linear_group": 91.6
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 190,
+      "lanes": {
+        "loc_upper": 8,
+        "loc_lower": 27,
+        "new_rotary_group": 75,
+        "new_rotary_group_2": 90,
+        "new_rotary_group_3": 0,
+        "new_linear_group": 91.6
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 220,
+      "lanes": {
+        "loc_upper": 50,
+        "loc_lower": 105,
+        "new_rotary_group": 180,
+        "new_rotary_group_2": 60,
+        "new_rotary_group_3": 15,
+        "new_linear_group": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 240,
+      "lanes": {
+        "loc_upper": 50,
+        "loc_lower": 31,
+        "new_rotary_group": 0,
+        "new_rotary_group_2": 105,
+        "new_rotary_group_3": -15,
+        "new_linear_group": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 250,
+      "lanes": {
+        "loc_upper": 50,
+        "loc_lower": 5,
+        "new_rotary_group": 0,
+        "new_rotary_group_2": 90,
+        "new_rotary_group_3": -15,
+        "new_linear_group": 7.6
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 281,
+      "lanes": {
+        "loc_upper": 50,
+        "loc_lower": 79,
+        "new_rotary_group": -180,
+        "new_rotary_group_2": 0,
+        "new_rotary_group_3": 0,
+        "new_linear_group": 26.6
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 300,
+      "lanes": {
+        "loc_upper": 2,
+        "loc_lower": 93,
+        "new_rotary_group": -30,
+        "new_rotary_group_2": -180,
+        "new_rotary_group_3": -90,
+        "new_linear_group": 75.9
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 320,
+      "lanes": {
+        "loc_upper": 131,
+        "loc_lower": 0,
+        "new_rotary_group": 0,
+        "new_rotary_group_2": 0,
+        "new_rotary_group_3": 15,
+        "new_linear_group": 86.1
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 340,
+      "lanes": {
+        "loc_upper": 0,
+        "loc_lower": 90,
+        "new_rotary_group": 180,
+        "new_rotary_group_2": 180,
+        "new_rotary_group_3": -15,
+        "new_linear_group": 93.3
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 360,
+      "lanes": {
+        "loc_upper": 57,
+        "loc_lower": 106,
+        "new_rotary_group": 180,
+        "new_rotary_group_2": 165,
+        "new_rotary_group_3": 15,
+        "new_linear_group": 64.2
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 370,
+      "lanes": {
+        "loc_upper": 28,
+        "loc_lower": 104,
+        "new_rotary_group": 180,
+        "new_rotary_group_2": 165,
+        "new_rotary_group_3": -15,
+        "new_linear_group": 24.5
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 400,
+      "lanes": {
+        "loc_upper": 132,
+        "loc_lower": 0,
+        "new_rotary_group": 0,
+        "new_rotary_group_2": 0,
+        "new_rotary_group_3": -15,
+        "new_linear_group": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 410,
+      "lanes": {
+        "loc_upper": 94.2,
+        "loc_lower": 37,
+        "new_rotary_group": 0,
+        "new_rotary_group_2": 0,
+        "new_rotary_group_3": 15,
+        "new_linear_group": 7.9
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 440,
+      "lanes": {
+        "loc_upper": 53,
+        "loc_lower": 109,
+        "new_rotary_group": -180,
+        "new_rotary_group_2": -180,
+        "new_rotary_group_3": -15,
+        "new_linear_group": 82.3
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 470,
+      "lanes": {
+        "loc_upper": 90.7,
+        "loc_lower": 33,
+        "new_rotary_group": 0,
+        "new_rotary_group_2": 0,
+        "new_rotary_group_3": 15,
+        "new_linear_group": 75.9
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 480,
+      "lanes": {
+        "loc_upper": 127.8,
+        "loc_lower": 0,
+        "new_rotary_group": 15,
+        "new_rotary_group_2": 0,
+        "new_rotary_group_3": 0,
+        "new_linear_group": 37.9
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 490,
+      "lanes": {
+        "loc_upper": 87.5,
+        "loc_lower": 29.9,
+        "new_rotary_group": 60.11,
+        "new_rotary_group_2": 30,
+        "new_rotary_group_3": -15,
+        "new_linear_group": 0
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 498,
+      "lanes": {
+        "loc_upper": 61.6,
+        "loc_lower": 56.6,
+        "new_rotary_group": 60,
+        "new_rotary_group_2": 66.68,
+        "new_rotary_group_3": 15,
+        "new_linear_group": 15.5
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 510,
+      "lanes": {
+        "loc_upper": 36.2,
+        "loc_lower": 86.3,
+        "new_rotary_group": 60,
+        "new_rotary_group_2": 120,
+        "new_rotary_group_3": -15,
+        "new_linear_group": 32.4
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 520,
+      "lanes": {
+        "loc_upper": 49,
+        "loc_lower": 69.9,
+        "new_rotary_group": 60,
+        "new_rotary_group_2": 60,
+        "new_rotary_group_3": 15,
+        "new_linear_group": 35.3
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 530,
+      "lanes": {
+        "loc_upper": 25,
+        "loc_lower": 32,
+        "new_rotary_group": 30,
+        "new_rotary_group_2": 45,
+        "new_rotary_group_3": -15,
+        "new_linear_group": 21.3
+      },
+      "steppers": {}
+    },
+    {
+      "frame": 539,
+      "lanes": {
+        "loc_upper": 0,
+        "loc_lower": 0,
+        "new_rotary_group": 0,
+        "new_rotary_group_2": 0,
+        "new_rotary_group_3": 0,
+        "new_linear_group": 0
+      },
+      "steppers": {}
+    }
+  ],
+  "meta": {
+    "aligned_required": true,
+    "seed": "attract_4_lane",
+    "linear_mm_scale": 1000,
+    "notes": "Seeded from Attract TSV curves; every grid_step frame; 4 lockstep groups. Linear Blender Y \u00d7 1000 \u2192 mm (same as generate_attract_gcode)."
+  }
+}

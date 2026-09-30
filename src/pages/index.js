@@ -37,9 +37,19 @@ class IndexPage extends Component {
   };
 
   handleKnobClick = (event) => {
+    const href = event.currentTarget.getAttribute('href') || '';
+    // Real page route — let Next Link navigate (no hash scroll).
+    if (href === '/participate' || href.startsWith('/participate?')) {
+      const label = labelFromKnobEvent(event);
+      if (label) {
+        this.setState({ activeLink: label, hoverLink: label });
+      }
+      return;
+    }
+
     event.preventDefault();
     const label = labelFromKnobEvent(event);
-    const hash = hashFromHref(event.currentTarget.getAttribute('href'));
+    const hash = hashFromHref(href);
 
     if (label) {
       this.setState({ activeLink: label, hoverLink: label });

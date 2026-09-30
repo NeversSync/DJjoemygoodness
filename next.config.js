@@ -15,6 +15,10 @@ const nextConfig = {
   webpack: (config) => {
     config.resolve.symlinks = false;
     config.cache = false;
+    config.module.rules.push({
+      test: /\.md$/,
+      type: 'asset/source',
+    });
     return config;
   },
 };
