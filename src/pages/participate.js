@@ -20,28 +20,67 @@ const ParticipateShell = styled.div`
   width: 100%;
   background: #0f1218;
   color: #e8eaed;
+  /* Room for fixed HOME (bottom-left) + layout FAB (bottom-right) */
+  padding-bottom: 64px;
 `;
 
+/**
+ * Compact DjJoe CTA — same coral→amber gradient / letter-spacing as
+ * past-experience HOME, parked bottom-left so it never covers Preview “?”
+ * or the layout FAB.
+ */
 const HomeChrome = styled(Link)`
   position: fixed;
-  top: 10px;
-  left: 12px;
-  z-index: 40;
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
+  bottom: 14px;
+  left: 14px;
+  z-index: 15;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
+  height: 42px;
+  padding: 0 1.1em 0 0.85em;
+  font-family: Rubik, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 1.8px;
   text-transform: uppercase;
-  color: #9ec9e8;
-  background: rgba(15, 18, 24, 0.85);
-  border: 1px solid rgba(158, 201, 232, 0.35);
-  border-radius: 4px;
   text-decoration: none;
+  color: #fff;
+  background: linear-gradient(
+    to left,
+    hsla(348, 86%, 59%, 0.92),
+    hsla(39, 100%, 63%, 0.92)
+  );
+  border: none;
+  border-radius: 7px;
+  border-bottom: 3px solid hsla(348, 2%, 10%, 0.5);
+  box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.3);
+  transition: 0.3s ease;
 
   &:hover,
   &:focus-visible {
     color: #fff;
-    border-color: #9ec9e8;
+    background: linear-gradient(
+      to left,
+      hsla(348, 96%, 69%, 0.95),
+      hsla(39, 100%, 63%, 0.95)
+    );
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   }
+
+  &:active {
+    transform: translateY(2px);
+    border-bottom: none;
+    box-shadow: none;
+  }
+`;
+
+const HomeArrow = styled.span`
+  display: inline-block;
+  font-size: 1.05em;
+  line-height: 1;
+  transform: translateY(-1px);
 `;
 
 const ParticipateLoading = styled.div`
@@ -55,7 +94,10 @@ const ParticipateLoading = styled.div`
 const ParticipatePage = () => (
   <Layout>
     <ParticipateShell>
-      <HomeChrome href="/">Home</HomeChrome>
+      <HomeChrome href="/" aria-label="Back to DJ Joe My Goodness home">
+        <HomeArrow aria-hidden>←</HomeArrow>
+        Home
+      </HomeChrome>
       <ParticipateApp />
     </ParticipateShell>
   </Layout>

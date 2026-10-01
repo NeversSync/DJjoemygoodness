@@ -10,6 +10,7 @@ import { normalizeGroupInvert } from "../core/document";
 import type { MotionGroup, StepperName, StepperPositions } from "../core/types";
 import { useEditor } from "../state/EditorContext";
 import { Panel, Row } from "./Panel";
+import { RotaryDial } from "./RotaryDial";
 
 const GroupBox = styled.div<{ $color?: string }>`
   border-left: 3px solid ${({ $color, theme }) => $color ?? theme.accent};
@@ -127,20 +128,6 @@ const MotorRow = styled.div`
     font-variant-numeric: tabular-nums;
   }
 `;
-const DeltaWrap = styled.div`
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  flex: 1 1 8rem;
-  min-width: 6rem;
-  font-size: 0.7rem;
-  color: ${({ theme }) => theme.muted};
-
-  input[type="range"] {
-    flex: 1 1 auto;
-    min-width: 4rem;
-  }
-`;
 const Unit = styled.span`
   font-size: 0.75rem;
   color: ${({ theme }) => theme.muted};
@@ -160,9 +147,6 @@ const Nudges = styled.div`
 
 const ROTARY_NUDGES = [-60, -15, -1, 1, 15, 60];
 
-/** Signed shortest delta in (−180, 180] from previous absolute. */
-const wrapDelta180 = (abs: number, prev: number) => ((abs - prev + 540) % 360) - 180;
-
 export function GroupsPanel() {
   const { state, dispatch, forward } = useEditor();
   const { doc, selected, activeLane, workingGroup } = state;
@@ -172,12 +156,6 @@ export function GroupsPanel() {
   const pos = Object.fromEntries(
     ALL_STEPPERS.map((s) => [s, forward[s]?.[playFrame] ?? 0]),
   ) as StepperPositions;
-  const prevAuthored = [...doc.keyframes].reverse().find((k) => k.frame < playFrame) ?? null;
-  const prevPos = prevAuthored
-    ? Object.fromEntries(
-      ALL_STEPPERS.map((s) => [s, forward[s]?.[prevAuthored.frame] ?? 0]),
-    ) as StepperPositions
-    : null;
 
   const edit = useCallback((label: string, apply: (d: typeof doc) => typeof doc) => {
     dispatch({ type: "edit", label, apply });
@@ -230,8 +208,6 @@ export function GroupsPanel() {
   const renderMotor = (stepper: StepperName, group: MotionGroup | undefined) => {
     const kind = stepperKind(stepper);
     const val = pos[stepper];
-    const prevVal = prevPos?.[stepper] ?? 0;
-    const delta180 = wrapDelta180(val, prevVal);
     const inverted = group ? normalizeGroupInvert(group).includes(stepper) : false;
     const short = stepper.replace("_", " ").replace(/(rotary|linear)/, (m) => m.slice(0, 3).toUpperCase());
     const linMax = group
@@ -248,7 +224,7 @@ export function GroupsPanel() {
             <option key={g.id} value={g.id}>{g.label}</option>
           ))}
         </select>
-        {group && <label style={{ fontSize: "0.75rem", display: "inline-flex", alignItems: "center", gap: 3, flexShrink: 0 }}>
+        {group && kind === "rotary" && <label style={{ fontSize: "0.75rem", display: "inline-flex", alignItems: "center", gap: 3, flexShrink: 0 }}>
           <input type="checkbox" checked={inverted} disabled={!group || locked}
             onChange={(e) => edit("Toggle invert", (d) => setInvert(d, stepper, e.target.checked))} /> Inv
         </label>}
@@ -266,14 +242,12 @@ export function GroupsPanel() {
           </>
         ) : (
           <>
-            <DeltaWrap title="Delta from previous keyframe">
-              <span>Δ</span>
-              <input type="range" min={-180} max={180} step={0.1} value={delta180} disabled={locked}
-                onChange={(e) => setMotorValue(stepper, group, prevVal + Number(e.target.value))} />
-              <span style={{ fontVariantNumeric: "tabular-nums", minWidth: 48 }}>
-                {delta180 > 0 ? "+" : ""}{delta180.toFixed(1)}°
-              </span>
-            </DeltaWrap>
+            <RotaryDial
+              stepper={stepper}
+              value={val}
+              disabled={locked}
+              onChange={(abs) => setMotorValue(stepper, group, abs)}
+            />
             <input type="number" step={0.1} value={Number(val.toFixed(1))} disabled={locked}
               title="Absolute degrees (cumulative)" aria-label={`${short} degrees`}
               onChange={(e) => {

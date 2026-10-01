@@ -103,7 +103,7 @@ export function Transport({ autoPlay = false }: { autoPlay?: boolean } = {}) {
     <Panel title="Transport" help="transport" area="transport">
       <Row>
         <button type="button" onClick={() => seek(0)} title="Start">⏮</button>
-        <button type="button" onClick={() => stepKey(-1)} title="Previous">◀</button>
+        <button type="button" onClick={() => stepKey(-1)} title="Previous key / frame">|◀</button>
         <button type="button" onClick={() => playing && dir === -1 ? setPlaying(false) : startPlay(-1)}
           title="Play reverse (ping-pong)"
           style={playing && dir === -1 ? { background: "#448aff" } : undefined}>Rev</button>
@@ -111,7 +111,7 @@ export function Transport({ autoPlay = false }: { autoPlay?: boolean } = {}) {
         <button type="button" onClick={() => playing && dir === 1 ? setPlaying(false) : startPlay(1)}
           title="Play forward (ping-pong)"
           style={playing && dir === 1 ? { background: "#00e676", color: "#000" } : undefined}>▶</button>
-        <button type="button" onClick={() => stepKey(1)} title="Next">▶▏</button>
+        <button type="button" onClick={() => stepKey(1)} title="Next key / frame">▶|</button>
         <button type="button" onClick={() => seek(end)} title="End">⏭</button>
       </Row>
       <Row>

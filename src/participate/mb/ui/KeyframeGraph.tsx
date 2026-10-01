@@ -179,17 +179,56 @@ const PAD = { l: 44, r: 12, t: 14, b: 28 };
 const NODE_R = 6;
 const NODE_HIT = 14;
 
-function laneRange(kfs: MotionKeyframe[], lane: string): { lo: number; hi: number } {
+function laneRange(
+  kfs: MotionKeyframe[],
+  lane: string,
+  extra: number[] = [],
+): { lo: number; hi: number } {
   let lo = Infinity, hi = -Infinity;
   for (const kf of kfs) {
     if (kf.lanes?.[lane] === undefined) continue;
     const v = kf.lanes[lane] ?? 0;
     lo = Math.min(lo, v); hi = Math.max(hi, v);
   }
+  for (const v of extra) {
+    if (!Number.isFinite(v)) continue;
+    lo = Math.min(lo, v); hi = Math.max(hi, v);
+  }
   if (!Number.isFinite(lo)) { lo = 0; hi = 1; }
   if (Math.abs(hi - lo) < 1e-6) { lo -= 1; hi += 1; }
   const pad = (hi - lo) * 0.12;
   return { lo: lo - pad, hi: hi + pad };
+}
+
+/** 1–2–5×10ⁿ step so grid lines land on readable ° / mm values. */
+function niceStep(span: number, targetCount = 5): number {
+  if (!(span > 0) || !Number.isFinite(span)) return 1;
+  const raw = span / Math.max(1, targetCount);
+  const pow = 10 ** Math.floor(Math.log10(raw));
+  const n = raw / pow;
+  const nice = n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10;
+  return nice * pow;
+}
+
+/** Value ticks in [lo, hi] for the active-lane axis (shared by grid + labels). */
+function valueTicks(lo: number, hi: number, targetCount = 5): number[] {
+  const step = niceStep(hi - lo, targetCount);
+  const start = Math.ceil((lo - step * 1e-9) / step) * step;
+  const ticks: number[] = [];
+  for (let v = start; v <= hi + step * 1e-6; v += step) {
+    const t = Math.round(v / step) * step;
+    if (ticks.length && Math.abs(ticks[ticks.length - 1]! - t) < step * 1e-6) continue;
+    ticks.push(t);
+    if (ticks.length > 24) break;
+  }
+  return ticks;
+}
+
+function formatTick(v: number): string {
+  const a = Math.abs(v);
+  if (a >= 100 || (a >= 1 && Math.abs(v - Math.round(v)) < 1e-6)) return String(Math.round(v));
+  if (a >= 0.1) return v.toFixed(1);
+  return v.toFixed(2);
 }
 
 function clampZoom(z: Zoom): Zoom {
@@ -267,6 +306,8 @@ type DragState =
       startVal: number;
       /** Last primary-node value from pointer move (avoids stale React doc on up). */
       lastVal: number;
+      /** Y-axis range frozen at drag start so pointer→value stays stable while the draw range expands. */
+      valueRange: { lo: number; hi: number };
       beforeDoc: MotionBuilderDocument;
     }
   | { kind: "box"; x0: number; y0: number; x1: number; y1: number }
@@ -373,11 +414,33 @@ export function KeyframeGraph() {
     ctx.fillStyle = "#0b0f16";
     ctx.fillRect(0, 0, cssW, cssH);
 
-    ctx.strokeStyle = "rgba(255,255,255,0.06)"; ctx.lineWidth = 1;
-    for (let i = 0; i <= 4; i++) {
-      const y = PAD.t + (L.plotH * i) / 4;
-      ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(PAD.l + L.plotW, y); ctx.stroke();
+    // Active-lane value range first — grid must use real °/mm, not plot quarters.
+    const liveExtra =
+      dragRef.current?.kind === "drag" ? [dragRef.current.lastVal] : [];
+    const activeRange = laneRange(kfs, activeLane, liveExtra);
+    rangeRef.current = activeRange;
+    const vLo = activeRange.lo + (activeRange.hi - activeRange.lo) * L.vy0;
+    const vHi = activeRange.lo + (activeRange.hi - activeRange.lo) * L.vy1;
+    const ticks = valueTicks(Math.min(vLo, vHi), Math.max(vLo, vHi), 5);
+
+    ctx.font = "11px Segoe UI, sans-serif";
+    for (const tick of ticks) {
+      const y = vToY(tick, L, activeRange);
+      if (y < PAD.t - 1 || y > PAD.t + L.plotH + 1) continue;
+      const isZero = Math.abs(tick) < 1e-9;
+      ctx.strokeStyle = isZero ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.07)";
+      ctx.lineWidth = isZero ? 1.25 : 1;
+      ctx.beginPath();
+      ctx.moveTo(PAD.l, y);
+      ctx.lineTo(PAD.l + L.plotW, y);
+      ctx.stroke();
+      ctx.fillStyle = "rgba(255,255,255,0.5)";
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      ctx.fillText(formatTick(tick), PAD.l - 4, y);
     }
+    ctx.textAlign = "left";
+    ctx.textBaseline = "alphabetic";
 
     const lastKey = kfs.at(-1)?.frame ?? 0;
     if (lastKey < ff - 1) {
@@ -408,9 +471,12 @@ export function KeyframeGraph() {
     for (const [gi, g] of groups.entries()) {
       const color = normalizeGroupColor(g.color, gi);
       const laneKeys = kfs.filter((kf) => kf.lanes?.[g.id] !== undefined);
-      const r = laneRange(kfs, g.id);
+      const liveExtraLane =
+        g.id === activeLane && dragRef.current?.kind === "drag"
+          ? [dragRef.current.lastVal]
+          : [];
+      const r = g.id === activeLane ? activeRange : laneRange(kfs, g.id, liveExtraLane);
       const isActive = g.id === activeLane;
-      if (isActive) rangeRef.current = r;
       ctx.strokeStyle = color;
       ctx.globalAlpha = isActive ? 1 : 0.35;
       ctx.lineWidth = isActive ? 2.2 : 1.2;
@@ -463,11 +529,9 @@ export function KeyframeGraph() {
       ctx.strokeRect(bx, by, bw, bh);
     }
 
-    const r = laneRange(kfs, activeLane);
-    const vLo = r.lo + (r.hi - r.lo) * L.vy0, vHi = r.lo + (r.hi - r.lo) * L.vy1;
-    ctx.fillStyle = "rgba(255,255,255,0.55)"; ctx.font = "11px Segoe UI, sans-serif";
-    ctx.fillText(String(Math.round(vHi)), 4, PAD.t + 10);
-    ctx.fillText(String(Math.round(vLo)), 4, PAD.t + L.plotH);
+    ctx.fillStyle = "rgba(255,255,255,0.45)";
+    ctx.font = "11px Segoe UI, sans-serif";
+    ctx.textAlign = "left";
     ctx.fillText(String(Math.round(L.vf0)), PAD.l, cssH - 8);
     ctx.fillText(String(Math.round(L.vf1)), PAD.l + L.plotW - 28, cssH - 8);
   }, [doc, selected, activeLane, prefs.graphOpen, zoom, physics, size, playFrame]);
@@ -602,6 +666,7 @@ export function KeyframeGraph() {
           startY: cy,
           startVal,
           lastVal: startVal,
+          valueRange: { ...rangeRef.current },
           beforeDoc: doc,
         };
       }
@@ -646,7 +711,7 @@ export function KeyframeGraph() {
     if (drag.kind === "drag") {
       const L = layoutRef.current;
       if (!L) return;
-      let newVal = round1(yToV(cy, L, rangeRef.current));
+      let newVal = round1(yToV(cy, L, drag.valueRange));
       const g = doc.groups.find((x) => x.id === activeLane);
       if (g?.kind === "linear") {
         newVal = round1(clampLinearMm(newVal, linearMaxMmForGroup(g, doc.limits), doc.limits.min_linear_mm ?? 0));

@@ -1,7 +1,55 @@
 import { averageLanesFromSurrounding } from "../interpolate";
-import { clampLinearMm, linearMaxMmForGroup, linearMaxMmForStepper } from "../constants";
+import {
+  clampLinearMm,
+  clampRotaryJump,
+  linearMaxMmForGroup,
+  linearMaxMmForStepper,
+} from "../constants";
 import type { MotionBuilderDocument, StepperName } from "../types";
 import { EditError, ensureTimelineFits, keyAt, lastFrame, produce, round3 } from "./produce";
+
+/** Previous authored sample on `laneId` strictly before `frame` (0 if none). */
+export function prevLaneValue(doc: MotionBuilderDocument, frame: number, laneId: string): number {
+  let best = 0;
+  let bestFrame = -1;
+  for (const kf of doc.keyframes) {
+    if (kf.frame >= frame) break;
+    if (kf.lanes?.[laneId] === undefined) continue;
+    if (kf.frame > bestFrame) {
+      bestFrame = kf.frame;
+      best = Number(kf.lanes[laneId] ?? 0);
+    }
+  }
+  return best;
+}
+
+/** Previous authored stepper override (or group lane) before `frame`. */
+export function prevStepperValue(
+  doc: MotionBuilderDocument,
+  frame: number,
+  stepper: StepperName,
+): number {
+  let best = 0;
+  let bestFrame = -1;
+  for (const kf of doc.keyframes) {
+    if (kf.frame >= frame) break;
+    const ov = kf.steppers?.[stepper];
+    if (ov !== undefined) {
+      if (kf.frame > bestFrame) {
+        bestFrame = kf.frame;
+        best = Number(ov);
+      }
+      continue;
+    }
+    // Fall back to group lane that owns this stepper
+    const g = doc.groups.find((x) => x.steppers.includes(stepper));
+    if (g && kf.lanes?.[g.id] !== undefined && kf.frame > bestFrame) {
+      bestFrame = kf.frame;
+      best = Number(kf.lanes[g.id] ?? 0);
+    }
+  }
+  return best;
+}
 
 function ensureKeyAt(draft: MotionBuilderDocument, frame: number): void {
   if (keyAt(draft, frame)) return;
@@ -106,6 +154,8 @@ export function writeLane(d: MotionBuilderDocument, frame: number, laneId: strin
     const maxMm = linearMaxMmForGroup(g, d.limits);
     const minMm = d.limits.min_linear_mm ?? 0;
     v = round3(clampLinearMm(v, maxMm, minMm));
+  } else if (g?.kind === "rotary") {
+    v = round3(clampRotaryJump(prevLaneValue(d, f, laneId), v));
   }
   kf.lanes[laneId] = v;
   const members = d.groups.find((x) => x.id === laneId)?.steppers ?? [];
@@ -128,6 +178,8 @@ export const setStepperOverride = (doc: MotionBuilderDocument, frame: number, st
     let v = round3(value);
     if (String(stepper).startsWith("linear_")) {
       v = round3(clampLinearMm(v, linearMaxMmForStepper(stepper, d.limits), d.limits.min_linear_mm ?? 0));
+    } else if (String(stepper).startsWith("rotary_")) {
+      v = round3(clampRotaryJump(prevStepperValue(d, frame, stepper), v));
     }
     kf.steppers = { ...kf.steppers, [stepper]: v };
   });

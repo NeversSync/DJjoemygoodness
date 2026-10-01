@@ -49,6 +49,21 @@ export function clampLinearMm(
 ): number {
   return Math.max(minMm, Math.min(maxMm, value));
 }
+
+/** Max absolute ° change between consecutive authored rotary samples (one keyframe jump). */
+export const MAX_ROTARY_JUMP_DEG = 360;
+
+/** Clamp `next` so |next − prev| ≤ maxJump (default 360°). */
+export function clampRotaryJump(
+  prev: number,
+  next: number,
+  maxJump: number = MAX_ROTARY_JUMP_DEG,
+): number {
+  const d = next - prev;
+  if (d > maxJump) return prev + maxJump;
+  if (d < -maxJump) return prev - maxJump;
+  return next;
+}
 /** Keeps files email-attachable after Base64 overhead. */
 export const MAX_DOCUMENT_BYTES = 9 * 1024 * 1024;
 

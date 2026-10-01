@@ -7,6 +7,7 @@ import {
 import { isCollisionRisk, tierMaxMm } from "../core/collision";
 import { groupIdForStepper, normalizeGroupColor } from "../core/document";
 import { positionsAt } from "../core/preview";
+import { CLOCK_ANGLE, alignedTipAngle } from "../core/previewAngles";
 import { spanViolationsAtFrame } from "../core/physics";
 import type {
   MotionBuilderDocument, MotionLimits, PhysicsViolation,
@@ -15,24 +16,8 @@ import type {
 import { useEditor } from "../state/EditorContext";
 import { Panel } from "./Panel";
 
-const CLOCK_ANGLE: Record<string, number> = {
-  "12 o'clock": -Math.PI / 2,
-  "2 o'clock": -Math.PI / 2 + Math.PI / 3,
-  "4 o'clock": -Math.PI / 2 + (2 * Math.PI) / 3,
-  "6 o'clock": Math.PI / 2,
-  "8 o'clock": -Math.PI / 2 + (4 * Math.PI) / 3,
-  "10 o'clock": -Math.PI / 2 + (5 * Math.PI) / 3,
-  center: 0,
-};
-const LOWER = new Set(["2 o'clock", "6 o'clock", "10 o'clock"]);
 /** Frames of slack around a violation span so scrubbing still shows the alert. */
 const VICINITY_PAD = 8;
-
-function alignedTipAngle(box: string, radialOut: number): number {
-  if (box === "center") return Math.PI / 2;
-  if (LOWER.has(box)) return radialOut + Math.PI;
-  return radialOut;
-}
 
 function colorForStepper(doc: MotionBuilderDocument, stepper: StepperName | undefined, fallback = 0): string {
   if (!stepper) return normalizeGroupColor(null, fallback);

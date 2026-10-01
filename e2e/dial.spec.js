@@ -51,8 +51,10 @@ test.describe('selector dial', () => {
       .click();
 
     await expect(page).toHaveURL(/\/participate\/?$/);
-    await expect(page.getByLabel('Transport')).toBeVisible({ timeout: 30000 });
-    await expect(page.getByLabel('Preview')).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Transport' })).toBeVisible({
+      timeout: 30000,
+    });
+    await expect(page.getByRole('region', { name: 'Preview' })).toBeVisible();
   });
 });
 
