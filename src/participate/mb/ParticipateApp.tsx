@@ -320,10 +320,12 @@ function AppInner({ autoPlay }: { autoPlay?: boolean }) {
   const canResize = effective === "auto" || effective === "graph";
   /** Auto/Desktop + Graph focus: fixed Transport + fixed Preview/Physics rail. */
   const fixedChrome = effective === "auto" || effective === "graph";
-  /** Tablet Graph focus: keep the rail compact so the plot owns the width. */
+  /** Graph focus: Preview/Physics rail ~2× the prior compact width so Physics is readable. */
   const railWidth =
-    effective === "graph" && width <= 1280
-      ? Math.min(Math.max(140, sizes.right), 168)
+    effective === "graph"
+      ? (width <= 1280
+          ? Math.min(Math.max(280, sizes.right), 336)
+          : Math.max(sizes.right, Math.min(640, Math.round(sizes.right * 2))))
       : sizes.right;
   const transportRef = useRef<HTMLDivElement>(null);
   const [transportH, setTransportH] = useState(120);

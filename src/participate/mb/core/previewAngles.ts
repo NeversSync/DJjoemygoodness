@@ -36,9 +36,23 @@ export function boxForStepper(stepper: StepperName): string | null {
   return null;
 }
 
-/** Home tip angle (radians) for a stepper at 0° — use as dial pointer offset. */
+/** Tip angle at 0° motor — dial needle offset so it matches Preview. */
 export function dialHomeAngleRad(stepper: StepperName): number {
   const box = boxForStepper(stepper);
-  if (!box) return -Math.PI / 2; // 12 o'clock default
+  if (!box) return -Math.PI / 2;
   return alignedTipAngle(box);
+}
+
+/**
+ * Clock-face seat angle for the dial indentation (where the box sits),
+ * not tip-at-0. Center has no single seat — callers draw a multi-mark glyph.
+ */
+export function dialSeatAngleRad(stepper: StepperName): number | null {
+  const box = boxForStepper(stepper);
+  if (!box || box === "center") return null;
+  return CLOCK_ANGLE[box] ?? null;
+}
+
+export function isCenterStepper(stepper: StepperName): boolean {
+  return boxForStepper(stepper) === "center";
 }

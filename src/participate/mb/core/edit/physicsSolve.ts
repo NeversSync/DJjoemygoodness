@@ -1,17 +1,32 @@
-import { clampLinearMm, DEFAULT_FPS, DEFAULT_LIMITS, linearMaxMmForStepper } from "../constants";
-import { tierMaxMm } from "../collision";
+import {
+  COLLISION_BOX_PAIRS,
+  clampLinearMm,
+  DEFAULT_FPS,
+  DEFAULT_LIMITS,
+  linearMaxMmForStepper,
+} from "../constants";
+import { findPillarCollision, isCollisionRisk, tierMaxMm } from "../collision";
 import { expandKeyframePositions, groupIdForStepper } from "../document";
+import { interpolateForwardPositions, keyDefinesStepper } from "../interpolate";
 import { trapezoidMinTimeS } from "../physics";
 import type {
+  LinearStepper,
   MotionBuilderDocument,
+  MotionKeyframe,
   MotionLimits,
   PhysicsViolation,
+  RotaryStepper,
   StepperName,
 } from "../types";
 import { EditError, ensureTimelineFits, keyAt, produce, round3 } from "./produce";
 import { setLaneValue, setStepperOverride } from "./keyframes";
 
 export type SolveMode = "scale" | "spread";
+
+const PILLAR_SAFE_FRAC = 0.85;
+/** Just under the risk threshold so dense sampling clears. */
+const PILLAR_SAFE_MARGIN_MM = 0.05;
+const PILLAR_SAFE_ANGLE_FRAC = 0.9;
 
 type SpanNums = {
   prevFrame: number;
@@ -57,7 +72,8 @@ export function scaleRatioForViolation(doc: MotionBuilderDocument, v: PhysicsVio
   switch (v.code) {
     case "linear_above_max":
     case "linear_below_min":
-      return 1; // absolute clamp, not travel scale
+    case "pillar_collision":
+      return 1;
     case "linear_speed": {
       const cap = L.max_linear_speed * L.max_time_scale;
       const speed = sp.dt > 0 ? dist / sp.dt : 0;
@@ -132,10 +148,225 @@ function writeStepperAt(
   return setStepperOverride(doc, frame, stepper, value);
 }
 
-function scaleViolation(doc: MotionBuilderDocument, v: PhysicsViolation): MotionBuilderDocument {
-  if (v.code === "crash_zone" || v.code === "pillar_collision") {
-    throw new EditError("Scale cannot auto-fix crash/pillar — edit Preview or stagger linears");
+function collisionPair(rot: StepperName) {
+  return COLLISION_BOX_PAIRS.find(([r]) => r === rot) as
+    | readonly [RotaryStepper, LinearStepper, number]
+    | undefined;
+}
+
+function safeLinearCapMm(lin: LinearStepper, L: MotionLimits): number {
+  return round3(PILLAR_SAFE_FRAC * tierMaxMm(lin, L) - PILLAR_SAFE_MARGIN_MM);
+}
+
+function maxSafeDeg(linMm: number, maxExt: number): number {
+  const frac = Math.min(0.95, Math.max(0.5, PILLAR_SAFE_FRAC));
+  const span = Math.max(1e-6, (1 - frac) * maxExt);
+  return 10 + ((maxExt - linMm) / span) * 50;
+}
+
+function pyMod(a: number, n: number) {
+  return ((a % n) + n) % n;
+}
+
+/** Rotate `rotDeg` into the safe tip cone for this depth / phase. */
+export function nearestSafeTipDeg(
+  rotDeg: number,
+  phaseDeg: number,
+  linMm: number,
+  maxExt: number,
+): number {
+  const maxSafe = maxSafeDeg(linMm, maxExt) * PILLAR_SAFE_ANGLE_FRAC;
+  const mod = pyMod(rotDeg - phaseDeg, 120);
+  const dist = Math.min(mod, 120 - mod);
+  if (dist <= maxSafe) return rotDeg;
+  const targetMod = mod <= 60 ? maxSafe : 120 - maxSafe;
+  return round3(rotDeg + (targetMod - mod));
+}
+
+/** Snap tip to the nearest phase lattice center (safest angle at any depth). */
+export function nearestLatticeTipDeg(rotDeg: number, phaseDeg: number): number {
+  const mod = pyMod(rotDeg - phaseDeg, 120);
+  const delta = mod <= 60 ? -mod : 120 - mod;
+  return round3(rotDeg + delta);
+}
+
+function definingKeysAround(
+  doc: MotionBuilderDocument,
+  frame: number,
+  stepper: StepperName,
+): { prev: MotionKeyframe; next: MotionKeyframe } {
+  let prev = doc.keyframes[0]!;
+  let next = doc.keyframes.at(-1)!;
+  let sawNext = false;
+  for (const kf of doc.keyframes) {
+    if (!keyDefinesStepper(doc, kf, stepper)) continue;
+    if (kf.frame <= frame) prev = kf;
+    if (kf.frame >= frame && !sawNext) {
+      next = kf;
+      sawNext = true;
+    }
   }
+  return { prev, next };
+}
+
+function lastAuthoredFrame(doc: MotionBuilderDocument): number {
+  return doc.keyframes.at(-1)?.frame ?? 0;
+}
+
+function deepLinearSpans(samples: number[], thresh: number): { from: number; to: number }[] {
+  const spans: { from: number; to: number }[] = [];
+  let start: number | null = null;
+  for (let f = 0; f < samples.length; f++) {
+    if (samples[f]! >= thresh) {
+      if (start == null) start = f;
+    } else if (start != null) {
+      spans.push({ from: start, to: f - 1 });
+      start = null;
+    }
+  }
+  if (start != null) spans.push({ from: start, to: samples.length - 1 });
+  return spans;
+}
+
+function tryWriteStepperAt(
+  doc: MotionBuilderDocument,
+  frame: number,
+  stepper: StepperName,
+  value: number,
+): MotionBuilderDocument {
+  if (frame <= 0) return doc;
+  try {
+    return writeStepperAt(doc, frame, stepper, value);
+  } catch (e) {
+    if (e instanceof EditError) return doc;
+    throw e;
+  }
+}
+
+/**
+ * Hold the tip on one lattice-safe angle through a deep-linear span so
+ * interpolation cannot sweep across the pillar. Bounds snap out to the
+ * document grid so new keys stay GCode-friendly.
+ */
+function holdTipThroughSpan(
+  doc: MotionBuilderDocument,
+  rot: RotaryStepper,
+  _phase: number,
+  from: number,
+  to: number,
+  holdDeg: number,
+): MotionBuilderDocument {
+  const step = Math.max(1, doc.grid_step || 10);
+  const lo = Math.max(0, Math.floor(from / step) * step);
+  const hi = Math.ceil(to / step) * step;
+  let out = doc;
+  const frames = new Set<number>();
+  for (let f = lo; f <= hi; f += step) frames.add(f);
+  for (const kf of doc.keyframes) {
+    if (kf.frame < lo || kf.frame > hi) continue;
+    if (!keyDefinesStepper(doc, kf, rot)) continue;
+    frames.add(kf.frame);
+  }
+  for (const f of [...frames].sort((a, b) => a - b)) {
+    out = tryWriteStepperAt(out, f, rot, holdDeg);
+  }
+  return out;
+}
+
+function capLinearKeys(
+  doc: MotionBuilderDocument,
+  lin: LinearStepper,
+  cap: number,
+  fromFrame: number,
+  toFrame: number,
+): MotionBuilderDocument {
+  let out = doc;
+  for (const kf of doc.keyframes) {
+    if (kf.frame < fromFrame || kf.frame > toFrame) continue;
+    if (!keyDefinesStepper(out, kf, lin)) continue;
+    const val = expandKeyframePositions(out, kf)[lin];
+    if (val > cap) out = writeStepperAt(out, kf.frame, lin, cap);
+  }
+  return out;
+}
+
+/** Scale tip collision: pull the paired linear just under the safe extension. */
+function scalePillarCollision(doc: MotionBuilderDocument, v: PhysicsViolation): MotionBuilderDocument {
+  if (!v.stepper) throw new EditError("No rotary on this tip collision");
+  const pair = collisionPair(v.stepper);
+  if (!pair) throw new EditError("Unknown tip / box pair for Scale");
+  const [, lin] = pair;
+  const L = limitsOf(doc);
+  const cap = safeLinearCapMm(lin, L);
+  const hit = v.frame;
+  const { prev, next } = definingKeysAround(doc, hit, lin);
+
+  let out = capLinearKeys(doc, lin, cap, prev.frame, next.frame);
+  if (findPillarCollision(interpolateForwardPositions(out), L)) {
+    out = capLinearKeys(out, lin, cap, 0, lastAuthoredFrame(out));
+  }
+  if (findPillarCollision(interpolateForwardPositions(out), L)) {
+    throw new EditError("Scale could not clear tip collision — try Spread (rotate tip)");
+  }
+  return out;
+}
+
+/**
+ * Spread tip collision: while linears are in the risk band, hold tips on the
+ * nearest phase-lattice center so the path cannot sweep across the pillar.
+ */
+function spreadPillarCollision(doc: MotionBuilderDocument, v: PhysicsViolation): MotionBuilderDocument {
+  if (!v.stepper) throw new EditError("No rotary on this tip collision");
+  const seed = collisionPair(v.stepper);
+  if (!seed) throw new EditError("Unknown tip / box pair for Spread");
+  const L = limitsOf(doc);
+  const gid = groupIdForStepper(doc, v.stepper);
+  const pairs = COLLISION_BOX_PAIRS.filter(([rot]) =>
+    gid ? groupIdForStepper(doc, rot) === gid : rot === v.stepper);
+
+  let out = doc;
+  let edited = false;
+  // Prefer the reported pair first; siblings share the rotary lane under lockstep.
+  for (const [rot, lin, phase] of [seed, ...pairs.filter((p) => p !== seed)]) {
+    if (edited && !findPillarCollision(interpolateForwardPositions(out), L)) break;
+    const forward = interpolateForwardPositions(out);
+    const maxExt = tierMaxMm(lin, L);
+    const spans = deepLinearSpans(forward[lin], PILLAR_SAFE_FRAC * maxExt);
+    for (const sp of spans) {
+      const entry = forward[rot][sp.from];
+      if (entry == null) continue;
+      const hold = nearestLatticeTipDeg(entry, phase);
+      out = holdTipThroughSpan(out, rot, phase, sp.from, sp.to, hold);
+      edited = true;
+    }
+  }
+
+  if (!edited) {
+    const [rot, lin, phase] = seed;
+    const forward = interpolateForwardPositions(doc);
+    const r = forward[rot]?.[v.frame];
+    const l = forward[lin]?.[v.frame];
+    if (r == null || l == null) throw new EditError("Missing pose at tip-collision frame");
+    const maxExt = tierMaxMm(lin, L);
+    if (!isCollisionRisk(r, l, phase, maxExt)) {
+      throw new EditError("Nothing to spread — tip already clear at this frame");
+    }
+    const hold = nearestLatticeTipDeg(r, phase);
+    const { prev, next } = definingKeysAround(doc, v.frame, rot);
+    out = holdTipThroughSpan(doc, rot, phase, prev.frame, next.frame, hold);
+  }
+
+  if (findPillarCollision(interpolateForwardPositions(out), L)) {
+    throw new EditError("Spread could not clear tip collision — try Scale (pull linear back)");
+  }
+  return out;
+}
+
+function scaleViolation(doc: MotionBuilderDocument, v: PhysicsViolation): MotionBuilderDocument {
+  if (v.code === "crash_zone") {
+    throw new EditError("Scale cannot auto-fix crash zone — stagger or pull linears manually");
+  }
+  if (v.code === "pillar_collision") return scalePillarCollision(doc, v);
   if (!v.stepper) throw new EditError("No stepper on this violation to scale");
 
   const L = limitsOf(doc);
@@ -169,11 +400,11 @@ export function gridSpreadTarget(prevFrame: number, needed: number, gridStep: nu
  * duration that clears the limit — minimum viable solution without retiming.
  */
 function spreadViolation(doc: MotionBuilderDocument, v: PhysicsViolation): MotionBuilderDocument {
+  if (v.code === "pillar_collision") return spreadPillarCollision(doc, v);
   if (
     v.code === "linear_above_max"
     || v.code === "linear_below_min"
     || v.code === "crash_zone"
-    || v.code === "pillar_collision"
   ) {
     throw new EditError("Spread cannot fix absolute travel / crash — use Scale or edit values");
   }
@@ -225,7 +456,7 @@ export function solvePhysicsViolation(
 
 /** True when Scale is a sensible option for this code. */
 export function canScale(code: PhysicsViolation["code"]): boolean {
-  return code !== "crash_zone" && code !== "pillar_collision";
+  return code !== "crash_zone";
 }
 
 /** True when Spread is a sensible option for this code. */
@@ -236,5 +467,6 @@ export function canSpread(code: PhysicsViolation["code"]): boolean {
     || code === "rotary_delta"
     || code === "rotary_speed"
     || code === "rotary_accel_time"
+    || code === "pillar_collision"
   );
 }

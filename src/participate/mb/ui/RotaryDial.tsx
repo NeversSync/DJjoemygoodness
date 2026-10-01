@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { dialHomeAngleRad } from "../core/previewAngles";
+import { dialHomeAngleRad, dialSeatAngleRad, isCenterStepper } from "../core/previewAngles";
 import type { StepperName } from "../core/types";
 
 const SIZE = 56;
@@ -32,6 +32,18 @@ function wrapPi(a: number): number {
   return x;
 }
 
+/** Short radial tick from inner→outer fraction of r. */
+function tick(
+  ctx: CanvasRenderingContext2D,
+  cx: number, cy: number, r: number, ang: number,
+  inner: number, outer: number,
+) {
+  ctx.beginPath();
+  ctx.moveTo(cx + Math.cos(ang) * r * inner, cy + Math.sin(ang) * r * inner);
+  ctx.lineTo(cx + Math.cos(ang) * r * outer, cy + Math.sin(ang) * r * outer);
+  ctx.stroke();
+}
+
 type Props = {
   stepper: StepperName;
   value: number;
@@ -41,11 +53,14 @@ type Props = {
 
 /**
  * Infinite absolute rotary dial. Pointer at 0° matches the Preview triangle tip
- * for this motor's box; positive ° rotates the same direction as Preview.
+ * for this motor's box; the rim indentation marks the box's clock-face seat
+ * (center gets a 3-spoke glyph instead).
  */
 export function RotaryDial({ stepper, value, disabled, onChange }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
   const home = dialHomeAngleRad(stepper);
+  const seat = dialSeatAngleRad(stepper);
+  const center = isCenterStepper(stepper);
   const drag = useRef<{ lastAng: number; value: number } | null>(null);
   const valueRef = useRef(value);
   valueRef.current = value;
@@ -71,14 +86,18 @@ export function RotaryDial({ stepper, value, disabled, onChange }: Props) {
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    // Tick at home (0°)
-    const hx = cx + Math.cos(home) * r * 0.72;
-    const hy = cy + Math.sin(home) * r * 0.72;
-    ctx.strokeStyle = "rgba(255,255,255,0.35)";
-    ctx.beginPath();
-    ctx.moveTo(cx + Math.cos(home) * r * 0.45, cy + Math.sin(home) * r * 0.45);
-    ctx.lineTo(hx, hy);
-    ctx.stroke();
+    // Clock-seat indentation (or center 3-spoke glyph at 12 / 4 / 8)
+    ctx.strokeStyle = "rgba(255,255,255,0.4)";
+    ctx.lineWidth = 1.5;
+    ctx.lineCap = "round";
+    if (center) {
+      for (let i = 0; i < 3; i++) {
+        const ang = -Math.PI / 2 + (i * 2 * Math.PI) / 3;
+        tick(ctx, cx, cy, r, ang, 0.52, 0.78);
+      }
+    } else if (seat != null) {
+      tick(ctx, cx, cy, r, seat, 0.45, 0.72);
+    }
 
     const tip = home + (valueRef.current * Math.PI) / 180;
     const px = cx + Math.cos(tip) * r * 0.78;
@@ -98,7 +117,7 @@ export function RotaryDial({ stepper, value, disabled, onChange }: Props) {
     ctx.beginPath();
     ctx.arc(cx, cy, 3, 0, Math.PI * 2);
     ctx.fill();
-  }, [home]);
+  }, [home, seat, center]);
 
   useEffect(() => { draw(); }, [draw, value]);
 
@@ -130,8 +149,12 @@ export function RotaryDial({ stepper, value, disabled, onChange }: Props) {
     try { ref.current?.releasePointerCapture(e.pointerId); } catch { /* */ }
   };
 
+  const tip = center
+    ? "center: 3-spoke mark; drag sets absolute ° (matches Preview tip)"
+    : `${stepper}: notch = clock seat; drag sets absolute ° (matches Preview tip)`;
+
   return (
-    <Wrap title={`${stepper}: drag to set absolute ° (matches Preview tip)`}>
+    <Wrap title={tip}>
       <Canvas
         ref={ref}
         width={SIZE}

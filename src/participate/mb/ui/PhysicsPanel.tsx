@@ -41,7 +41,7 @@ const Actions = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 4px;
+  margin-bottom: 4px;
   button {
     font-size: 0.75rem;
     padding: 4px 10px;
@@ -94,6 +94,28 @@ export function PhysicsPanel() {
       <List>
         {physics.violations.map((v, i) => (
           <Card key={i} $color={v.color}>
+            <Actions>
+              {canScale(v.code) && (
+                <button type="button" title={
+                  v.code === "pillar_collision"
+                    ? "Pull the paired linear under the safe depth (Undoable)"
+                    : "Shrink travel to fit limits (Undoable)"
+                }
+                  onClick={(e) => { e.stopPropagation(); solve(v, "scale"); }}>
+                  Scale
+                </button>
+              )}
+              {canSpread(v.code) && (
+                <button type="button" title={
+                  v.code === "pillar_collision"
+                    ? "Hold tips on a safe angle while linears are deep (Undoable)"
+                    : "Reshape this lane’s values along a linear ramp on the grid (Undoable)"
+                }
+                  onClick={(e) => { e.stopPropagation(); solve(v, "spread"); }}>
+                  Spread
+                </button>
+              )}
+            </Actions>
             <VRow
               type="button"
               title="Jump playhead, select keys, and edit this lane on the graph"
@@ -101,20 +123,6 @@ export function PhysicsPanel() {
             >
               {v.display}
             </VRow>
-            <Actions>
-              {canScale(v.code) && (
-                <button type="button" title="Shrink travel to fit limits (Undoable)"
-                  onClick={(e) => { e.stopPropagation(); solve(v, "scale"); }}>
-                  Scale
-                </button>
-              )}
-              {canSpread(v.code) && (
-                <button type="button" title="Reshape this lane’s values along a linear ramp on the grid (Undoable)"
-                  onClick={(e) => { e.stopPropagation(); solve(v, "spread"); }}>
-                  Spread
-                </button>
-              )}
-            </Actions>
           </Card>
         ))}
       </List>

@@ -38,4 +38,4 @@ Five or more slides are near full extension at once. Pull at least one lane back
 
 ## pillar_collision
 
-A deeply extended box would swing its tip into the center column. Reduce the extension or rotate the tip away first.
+A deeply extended box would swing its tip into the center column. **Scale** pulls that linear just under the safe depth; **Spread** holds the tip on a safe angle while the linear is deep so the path cannot clip the pillar mid-swing.
