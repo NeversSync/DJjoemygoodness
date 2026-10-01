@@ -10,4 +10,4 @@ Nothing is uploaded: files stay on your device until you email them.
 ## Settings in the file
 
 - **Blend** (interpolate): on = smooth transitions between keys; off = jump and hold.
-- **Machine %**: the speed Joe will run it at on the sculpture. Physics always checks full speed.
+- **Machine %**: the speed Our Team will run it at on the sculpture. Physics always checks full speed.

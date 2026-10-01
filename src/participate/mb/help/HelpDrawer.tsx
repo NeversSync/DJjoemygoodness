@@ -1,6 +1,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import Markdown, { type Components } from "react-markdown";
 import styled from "styled-components";
+import { bookingContactHref, isBookingContactHref } from "./contact";
 import { useHelp } from "./HelpContext";
 import { HELP_TOPIC_IDS, HELP_TOPICS, helpMarkdown, parseHelpHref, slugify } from "./registry";
 
@@ -56,8 +57,25 @@ export function HelpDrawer() {
     h2: ({ children }) => <h2 id={slugify(text(children))}>{children}</h2>,
     a: ({ href = "", children }) => {
       const link = parseHelpHref(href);
-      if (!link) return <a href={href} target="_blank" rel="noreferrer">{children}</a>;
-      return <a href={href} onClick={(e) => { e.preventDefault(); open(link); }}>{children}</a>;
+      if (link) {
+        return <a href={href} onClick={(e) => { e.preventDefault(); open(link); }}>{children}</a>;
+      }
+      if (isBookingContactHref(href)) {
+        const dest = bookingContactHref();
+        return (
+          <a
+            href={dest}
+            onClick={(e) => {
+              e.preventDefault();
+              close();
+              window.location.assign(dest);
+            }}
+          >
+            {children}
+          </a>
+        );
+      }
+      return <a href={href} target="_blank" rel="noreferrer">{children}</a>;
     },
   };
 

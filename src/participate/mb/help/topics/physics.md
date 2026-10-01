@@ -1,8 +1,14 @@
 # Physics
 
-Checks your animation against what the real motors can do. It re-runs automatically after every edit and stops at the **first failing span** (two neighbouring keys). You can still save with issues, but Joe can only schedule files that pass.
+Checks your animation against what the real motors can do. It re-runs automatically after every edit and stops at the **first failing span** (two neighbouring keys). You can still save with issues, but **Our Team** can only schedule files that pass.
 
 Each row names the motor, the span, and a **recc** (recommendation): usually *scale the move down* or *spread it over more frames*. Tap a row to jump the playhead and graph there.
+
+## Scale vs Spread
+
+- **Scale**: shrink the offending travel toward safer neighbors (keeps timing; lowers the spike).
+- **Spread**: keep the spike's magnitude and pull nearby keys toward it in a wave. If the wave hits **Aligned** (frame 0), Spread expands the takeoff forward instead so the peak lands a few frames later.
+**Scale All / Spread All**: walk open violations one at a time (short pause so the UI can refresh). Each step is Undoable. Spread only adjusts existing keys (no new keyframes) and skips hits it already tried so it cannot flash-loop.
 
 ## linear_above_max
 

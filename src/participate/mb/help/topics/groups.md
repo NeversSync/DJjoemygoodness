@@ -13,7 +13,7 @@ Shows every motor's value at the current keyframe, organized by **lockstep lane*
 
 - **Group** picks the lane a motor follows, or *solo* to control it alone.
 - **Inv** mirrors a motor inside its lane: it receives the negative value.
-- Rotary values are **degrees** (multi-turn allowed, e.g. 720). Nudge buttons add ±1, ±15, ±90, ±360. With several graph nodes selected, a nudge applies to all of them.
+- Rotary values are **degrees** (multi-turn allowed, e.g. 720). Use the **dial** (notch = clock-face seat; center has a 3-spoke mark) or the nudge buttons (±1, ±15, ±60). With several graph nodes selected, a nudge applies to all of them.
 - Linear values are **millimetres** of travel toward the center (0 = home).
 
 Frame 0 is locked to Aligned, so its controls are disabled.

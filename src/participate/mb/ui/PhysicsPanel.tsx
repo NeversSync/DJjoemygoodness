@@ -1,14 +1,17 @@
-import styled from "styled-components";
 import { moveGroupToTop } from "../core/edit/groups";
 import {
   canScale,
   canSpread,
+  solveNextPhysicsViolation,
   solvePhysicsViolation,
+  violationFingerprint,
   type SolveMode,
 } from "../core/edit/physicsSolve";
 import type { PhysicsViolation, ViolationCode } from "../core/types";
-import { useEditor } from "../state/EditorContext";
+import { PHYSICS_DEBOUNCE_MS, useEditor } from "../state/EditorContext";
 import { Panel } from "./Panel";
+import { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 
 const List = styled.div`
   display: flex;
@@ -48,8 +51,17 @@ const Actions = styled.div`
     min-height: 28px;
   }
 `;
+const TopActions = styled(Actions)`
+  margin-bottom: 8px;
+  button {
+    font-weight: 600;
+  }
+`;
 const Ok = styled.div`color: ${({ theme }) => theme.ok}; font-weight: 600;`;
 const Pending = styled.div`color: ${({ theme }) => theme.muted}; font-style: italic;`;
+
+const SOLVE_ALL_PAUSE_MS = PHYSICS_DEBOUNCE_MS + 80;
+const SOLVE_ALL_MAX_STEPS = 80;
 
 /** Kept for help-topic anchors (HelpLink / registry), not used on row click. */
 export const PHYSICS_HELP_ANCHOR: Record<ViolationCode, string> = {
@@ -64,8 +76,18 @@ export const PHYSICS_HELP_ANCHOR: Record<ViolationCode, string> = {
   pillar_collision: "pillar_collision",
 };
 
+function sleep(ms: number) {
+  return new Promise<void>((r) => setTimeout(r, ms));
+}
+
 export function PhysicsPanel() {
   const { physics, state, dispatch } = useEditor();
+  const docRef = useRef(state.doc);
+  docRef.current = state.doc;
+  const [runningAll, setRunningAll] = useState<SolveMode | null>(null);
+  const cancelRef = useRef(false);
+
+  useEffect(() => () => { cancelRef.current = true; }, []);
 
   const seekViolation = (v: PhysicsViolation) => {
     const keys = new Set(state.doc.keyframes.map((k) => k.frame));
@@ -86,30 +108,88 @@ export function PhysicsPanel() {
     });
   };
 
+  const solveAll = async (mode: SolveMode) => {
+    if (runningAll) return;
+    cancelRef.current = false;
+    setRunningAll(mode);
+    let steps = 0;
+    let applied = 0;
+    const attempted = new Set<string>();
+    try {
+      while (steps < SOLVE_ALL_MAX_STEPS && !cancelRef.current) {
+        steps++;
+        const hit = solveNextPhysicsViolation(docRef.current, mode, attempted);
+        if (!hit) break;
+        const { violation: v } = hit;
+        attempted.add(violationFingerprint(v));
+        const beforeCount = docRef.current.keyframes.length;
+        dispatch({
+          type: "edit",
+          label: `Physics ${mode} all @ frame ${v.frame}`,
+          apply: (d) => solvePhysicsViolation(d, v, mode),
+        });
+        applied++;
+        // Guard: Spread must not spawn keyframes; if it somehow did, stop flashing.
+        await sleep(SOLVE_ALL_PAUSE_MS);
+        if (mode === "spread" && docRef.current.keyframes.length > beforeCount) {
+          dispatch({
+            type: "status",
+            text: "Spread All stopped — unexpected new keys",
+            error: true,
+          });
+          break;
+        }
+      }
+      dispatch({
+        type: "status",
+        text: applied === 0
+          ? `No violations ${mode} could fix`
+          : `Physics ${mode} all: ${applied} step(s)`,
+        error: applied === 0,
+      });
+    } finally {
+      setRunningAll(null);
+    }
+  };
+
   if (!physics) return <Panel title="Physics" help="physics" area="physics"><Pending>Checking…</Pending></Panel>;
   if (physics.ok) return <Panel title="Physics" help="physics" area="physics"><Ok>Physics OK ✓</Ok></Panel>;
 
+  const busy = runningAll != null;
+
   return (
     <Panel title="Physics" help="physics" area="physics">
+      <TopActions>
+        <button type="button" disabled={busy}
+          title="Apply Scale to each violation in turn (Undoable per step)"
+          onClick={() => void solveAll("scale")}>
+          {runningAll === "scale" ? "Scaling…" : "Scale All"}
+        </button>
+        <button type="button" disabled={busy}
+          title="Apply Spread to each violation in turn (Undoable per step)"
+          onClick={() => void solveAll("spread")}>
+          {runningAll === "spread" ? "Spreading…" : "Spread All"}
+        </button>
+      </TopActions>
       <List>
         {physics.violations.map((v, i) => (
           <Card key={i} $color={v.color}>
             <Actions>
               {canScale(v.code) && (
-                <button type="button" title={
+                <button type="button" disabled={busy} title={
                   v.code === "pillar_collision"
                     ? "Pull the paired linear under the safe depth (Undoable)"
-                    : "Shrink travel to fit limits (Undoable)"
+                    : "Shrink travel toward neighbors to fit limits (Undoable)"
                 }
                   onClick={(e) => { e.stopPropagation(); solve(v, "scale"); }}>
                   Scale
                 </button>
               )}
               {canSpread(v.code) && (
-                <button type="button" title={
+                <button type="button" disabled={busy} title={
                   v.code === "pillar_collision"
                     ? "Hold tips on a safe angle while linears are deep (Undoable)"
-                    : "Reshape this lane’s values along a linear ramp on the grid (Undoable)"
+                    : "Keep the spike; pull nearby keys toward it in a smooth wave (Undoable)"
                 }
                   onClick={(e) => { e.stopPropagation(); solve(v, "spread"); }}>
                   Spread
