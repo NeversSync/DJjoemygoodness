@@ -9,6 +9,7 @@
 - **Alt+Delete**: remove selected keys for every lane
 - **Space**: play / stop
 - **← / →**: previous / next key
+- **Ctrl+wheel** (⌘+wheel on Mac): zoom the Keyframe Graph toward the cursor
 - **? or F1**: help
 
 On a tablet (no keyboard), use the matching buttons:

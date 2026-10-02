@@ -1,6 +1,6 @@
 import { captureAll, captureLane, mirrorSamples, pasteAnchor, pasteClip, type Clip, type PasteMode } from "../core/edit/clipboard";
 import { EditError } from "../core/edit/produce";
-import { addKeyframe, removeKeys } from "../core/edit/keyframes";
+import { addKeyframe, quantizeKeyframes, removeKeys } from "../core/edit/keyframes";
 import { averageLanesLinked, deleteLanesLinked, nudgeLanesLinked } from "../core/edit/workingGroup";
 import type { Action, EditorState } from "./editor";
 
@@ -69,6 +69,17 @@ export function nudgeSelection(s: EditorState, delta: number): Action {
   const wg = s.workingGroup;
   return { type: "edit", label: `Nudged ${frames.length} key(s) on ${laneLabel(s)} by ${sign}${delta}°`,
     apply: (d) => ({ doc: nudgeLanesLinked(d, frames, s.activeLane, delta, wg), frames }) };
+}
+
+export function quantizeKeys(_s: EditorState): Action {
+  return guard(() => ({
+    type: "edit",
+    label: "Quantize keyframes to every 10 frames",
+    apply: (d) => {
+      const doc = quantizeKeyframes(d);
+      return { doc, frames: doc.keyframes.map((k) => k.frame) };
+    },
+  }));
 }
 
 export function addKey(s: EditorState): Action {

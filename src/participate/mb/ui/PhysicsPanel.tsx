@@ -115,13 +115,28 @@ export function PhysicsPanel() {
     let steps = 0;
     let applied = 0;
     const attempted = new Set<string>();
+    const history: string[] = [];
     try {
       while (steps < SOLVE_ALL_MAX_STEPS && !cancelRef.current) {
         steps++;
         const hit = solveNextPhysicsViolation(docRef.current, mode, attempted);
         if (!hit) break;
         const { violation: v } = hit;
-        attempted.add(violationFingerprint(v));
+        const fp = violationFingerprint(v);
+        history.push(fp);
+        // Abort if the last 3 solves repeat the previous 3 (A-B-C-A-B-C flash loop).
+        if (history.length >= 6) {
+          const a = history.slice(-6, -3).join("||");
+          const b = history.slice(-3).join("||");
+          if (a === b) {
+            dispatch({
+              type: "status",
+              text: `Physics ${mode} all stopped — oscillating between the same hits`,
+              error: true,
+            });
+            break;
+          }
+        }
         const beforeCount = docRef.current.keyframes.length;
         dispatch({
           type: "edit",

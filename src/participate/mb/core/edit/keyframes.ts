@@ -1,11 +1,23 @@
-import { averageLanesFromSurrounding } from "../interpolate";
 import {
+  ALL_STEPPERS,
   clampLinearMm,
   clampRotaryJump,
   linearMaxMmForGroup,
   linearMaxMmForStepper,
 } from "../constants";
-import type { MotionBuilderDocument, StepperName } from "../types";
+import {
+  normalizeGroupInvert,
+  sampleGridFrames,
+  zeroLanes,
+} from "../document";
+import { averageLanesFromSurrounding, interpolateForwardPositions } from "../interpolate";
+import type {
+  ForwardTrajectory,
+  MotionBuilderDocument,
+  MotionKeyframe,
+  StepperName,
+  StepperPositions,
+} from "../types";
 import { EditError, ensureTimelineFits, keyAt, lastFrame, produce, round3 } from "./produce";
 
 /** Previous authored sample on `laneId` strictly before `frame` (0 if none). */
@@ -193,6 +205,77 @@ export const nudgeLane = (doc: MotionBuilderDocument, frames: number[], laneId: 
       }
     }
   });
+
+/** Grid step for Quantize (frames ending in 0: 0, 10, 20, …). */
+export const QUANTIZE_GRID_STEP = 10;
+
+/** Build one key from dense forward motion (preserves overrides when lockstep breaks). */
+export function keyframeFromForward(
+  doc: MotionBuilderDocument,
+  forward: ForwardTrajectory,
+  frame: number,
+): MotionKeyframe {
+  if (frame === 0) {
+    return { frame: 0, lanes: zeroLanes(doc.groups), steppers: {} };
+  }
+  const pos = Object.fromEntries(
+    ALL_STEPPERS.map((s) => [s, forward[s][frame] ?? 0]),
+  ) as StepperPositions;
+  const lanes: Record<string, number> = {};
+  const steppers: Partial<Record<StepperName, number>> = {};
+
+  for (const g of doc.groups) {
+    const members = g.steppers;
+    if (!members.length) continue;
+    const inverted = new Set(normalizeGroupInvert(g));
+    const ref = members.find((s) => !inverted.has(s)) ?? members[0]!;
+    let laneVal = pos[ref]!;
+    if (inverted.has(ref)) laneVal = -laneVal;
+
+    let lockstep = true;
+    for (const s of members) {
+      const expected = inverted.has(s) ? -laneVal : laneVal;
+      if (Math.abs(pos[s]! - expected) > 1e-3) {
+        lockstep = false;
+        break;
+      }
+    }
+    lanes[g.id] = round3(laneVal);
+    if (!lockstep) {
+      for (const s of members) {
+        const expected = inverted.has(s) ? -laneVal : laneVal;
+        if (Math.abs(pos[s]! - expected) > 1e-3) steppers[s] = round3(pos[s]!);
+      }
+    }
+  }
+
+  return {
+    frame,
+    lanes,
+    steppers: Object.keys(steppers).length ? steppers : {},
+  };
+}
+
+/**
+ * Reduce keys to every 10th frame (0, 10, 20, …) plus the timeline end when it
+ * is not on that grid. Samples motion from the current curve so shape is preserved.
+ */
+export function quantizeKeyframes(
+  doc: MotionBuilderDocument,
+  step = QUANTIZE_GRID_STEP,
+): MotionBuilderDocument {
+  const keep = sampleGridFrames(doc.frames_forward, step);
+  const keepSet = new Set(keep);
+  const hadExtra = doc.keyframes.some((k) => !keepSet.has(k.frame));
+  if (!hadExtra && doc.keyframes.length === keep.length) {
+    throw new EditError("Keyframes already on every 10 frames");
+  }
+  const forward = interpolateForwardPositions(doc);
+  return produce(doc, (d) => {
+    d.grid_step = step;
+    d.keyframes = keep.map((f) => keyframeFromForward(d, forward, f));
+  });
+}
 
 export function moveKeyframe(doc: MotionBuilderDocument, from: number, to: number): MotionBuilderDocument {
   const target = Math.max(1, Math.min(lastFrame(doc), Math.round(to)));

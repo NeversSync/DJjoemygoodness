@@ -8,6 +8,7 @@ One line per lane across the timeline. The **Edit lane** is bright and shows dra
 - **Drag a node** up or down to change its value. Turn on **Drag frames** (or hold Alt) to also move it in time.
 - **Drag on empty space** to box-select nodes.
 - **Add** inserts a key one grid step after the current key, averaged from its neighbours.
+- **Quantize** keeps only keys on every 10th frame (0, 10, 20, …) and the final frame when it is not on that grid. Motion is sampled from the current curve so the shape stays close.
 - **Delete** removes selected nodes on the Edit lane only (other lanes keep their keys at that frame). **Remove** deletes the whole key for every lane.
 - **Average** smooths selected Edit-lane keys from their neighbours.
 
@@ -22,6 +23,6 @@ One line per lane across the timeline. The **Edit lane** is bright and shows dra
 
 - **One finger**: tap/drag nodes to edit; drag empty space to box-select.
 - **Two fingers**: pinch to zoom (time + value); slide both fingers to pan.
-- Mouse wheel zooms toward the cursor. Use the **X／Y／Pan／Fit** buttons when you prefer discrete control.
+- **Ctrl+wheel** (⌘+wheel on Mac) zooms toward the cursor. Use the **X／Y／Pan／Fit** buttons when you prefer discrete control.
 - The shaded **hold** region after the last key keeps that pose to the end.
 - Red bands mark physics issues. Tap one to see the details.

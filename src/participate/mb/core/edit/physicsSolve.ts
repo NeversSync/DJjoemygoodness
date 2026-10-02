@@ -81,8 +81,8 @@ export function scaleRatioForViolation(doc: MotionBuilderDocument, v: PhysicsVio
       return speed > 1e-9 ? Math.min(1, cap / speed) : 1;
     }
     case "linear_accel_time": {
-      const tMin = trapezoidMinTimeS(dist, L.max_linear_speed, L.linear_accel);
-      return tMin > 1e-9 ? Math.min(1, sp.budget / tMin) : 1;
+      const maxDist = maxDistForTrapezoidBudget(sp.budget, L.max_linear_speed, L.linear_accel);
+      return dist > 1e-9 ? Math.min(1, maxDist / dist) : 1;
     }
     case "rotary_delta": {
       const perFrame = dist / sp.frameDelta;
@@ -94,8 +94,8 @@ export function scaleRatioForViolation(doc: MotionBuilderDocument, v: PhysicsVio
       return speed > 1e-9 ? Math.min(1, cap / speed) : 1;
     }
     case "rotary_accel_time": {
-      const tMin = trapezoidMinTimeS(dist, L.max_rotary_speed, L.rotary_accel);
-      return tMin > 1e-9 ? Math.min(1, sp.budget / tMin) : 1;
+      const maxDist = maxDistForTrapezoidBudget(sp.budget, L.max_rotary_speed, L.rotary_accel);
+      return dist > 1e-9 ? Math.min(1, maxDist / dist) : 1;
     }
     default:
       return 1;
@@ -260,6 +260,32 @@ function writeExistingOnly(
   return tryWriteStepperAt(doc, frame, stepper, value);
 }
 
+/** True when a solve actually changed authored values relevant to this violation. */
+function solveMadeChange(
+  before: MotionBuilderDocument,
+  after: MotionBuilderDocument,
+  v: PhysicsViolation,
+): boolean {
+  if (v.code === "pillar_collision" && v.stepper) {
+    const pair = collisionPair(v.stepper);
+    if (pair) {
+      const [rot, lin] = pair;
+      if (stepperValueFingerprint(after, lin) !== stepperValueFingerprint(before, lin)) return true;
+      if (stepperValueFingerprint(after, rot) !== stepperValueFingerprint(before, rot)) return true;
+    }
+    // Sibling tips in the same group may be rewritten too.
+    for (const [rot, lin] of COLLISION_BOX_PAIRS) {
+      if (stepperValueFingerprint(after, lin) !== stepperValueFingerprint(before, lin)) return true;
+      if (stepperValueFingerprint(after, rot) !== stepperValueFingerprint(before, rot)) return true;
+    }
+    return false;
+  }
+  if (v.stepper) {
+    return stepperValueFingerprint(after, v.stepper) !== stepperValueFingerprint(before, v.stepper);
+  }
+  return JSON.stringify(after.keyframes) !== JSON.stringify(before.keyframes);
+}
+
 /** Stable id for All-loop dedupe. */
 export function violationFingerprint(v: PhysicsViolation): string {
   return `${v.code}|${v.frame}|${v.prev_frame ?? ""}|${v.stepper ?? ""}`;
@@ -415,9 +441,12 @@ function scaleViolation(doc: MotionBuilderDocument, v: PhysicsViolation): Motion
     return writeStepperAt(doc, v.frame, s, clampLinearMm(sp.endVal, linearMaxMmForStepper(s, L), L.min_linear_mm ?? 0));
   }
 
-  const ratio = scaleRatioForViolation(doc, v);
-  if (ratio >= 0.999) throw new EditError("Nothing to scale — already within limits");
-  const next = round3(sp.prevVal + (sp.endVal - sp.prevVal) * ratio);
+  const maxDist = maxSpanDistForViolation(doc, v);
+  const dist = Math.abs(sp.endVal - sp.prevVal);
+  if (dist <= maxDist + 1e-6) throw new EditError("Nothing to scale — already within limits");
+  // Cap by the true span budget (binary-searched for trapezoid accel), not a
+  // linear time ratio — budget/tMin under-shrinks triangular profiles.
+  const next = round3(sp.prevVal + Math.sign(sp.endVal - sp.prevVal) * maxDist);
   return writeStepperAt(doc, v.frame, s, next);
 }
 
@@ -599,8 +628,9 @@ function chainPullTowardPeak(
     return spreadTakeoffFromAligned(doc, v);
   }
 
-  const peakFrame = sp.frame;
-  const peakVal = sp.endVal;
+  const peakAtEnd = Math.abs(sp.endVal) >= Math.abs(sp.prevVal) - 1e-9;
+  const peakFrame = peakAtEnd ? sp.frame : sp.prevFrame;
+  const peakVal = peakAtEnd ? sp.endVal : sp.prevVal;
   const all = existingDefiningFrames(doc, stepper);
   let peakIdx = all.indexOf(peakFrame);
   if (peakIdx < 0) {
@@ -608,6 +638,10 @@ function chainPullTowardPeak(
     if (peakIdx < 0) peakIdx = all.length - 1;
   }
   if (peakIdx < 0) throw new EditError("Spread could not locate peak frame");
+  // Deceleration into a low end: peak sits on prev — never treat Aligned as movable peak.
+  if (peakFrame <= 0) {
+    return spreadRelocatePeakForward(doc, v);
+  }
 
   // Wave along existing keys only (± a handful of authored samples).
   const WAVE_KEYS = 8;
@@ -635,6 +669,15 @@ function chainPullTowardPeak(
     if (gap <= cap + 1e-6) return false;
     const sign = Math.sign(b - a) || 1;
     let next = round3(b - sign * cap);
+    // Don't create an illegal span with the key to the left of fromIdx.
+    if (fromIdx > 0) {
+      const fLeft = frames[fromIdx - 1]!;
+      const leftVal = vals.get(fLeft)!;
+      const capLeft = maxDistAcrossSpan(doc, stepper, Math.max(1, Math.abs(fFrom - fLeft)));
+      if (Math.abs(next - leftVal) > capLeft + 1e-6) {
+        next = round3(leftVal + Math.sign(next - leftVal || 1) * capLeft);
+      }
+    }
     // Don't lift the first key after Aligned past what 0→thatFrame can carry.
     if (frames[0] === 0 || (fromIdx === 0 && all[0] === 0)) {
       const firstMovable = frames.find((f) => f > 0);
@@ -645,6 +688,7 @@ function chainPullTowardPeak(
         }
       }
     }
+    if (Math.abs(next - a) <= 1e-6) return false;
     vals.set(fFrom, next);
     return true;
   };
@@ -657,7 +701,7 @@ function chainPullTowardPeak(
     if (pullToward(i, i - 1)) moved = true;
   }
   if (!moved) {
-    throw new EditError("Spread needs a movable key beside this spike — try Scale");
+    return spreadRelocatePeakForward(doc, v);
   }
 
   let out = doc;
@@ -668,13 +712,99 @@ function chainPullTowardPeak(
   out = writeExistingOnly(out, stepper, peakFrame, peakVal);
 
   if (stepperValueFingerprint(out, stepper) === stepperValueFingerprint(doc, stepper)) {
+    return spreadRelocatePeakForward(doc, v);
+  }
+  // Neighbor-wave must clear this span; otherwise relocate the peak onto later keys.
+  const still = checkPhysics(out).violations.some(
+    (x) =>
+      x.stepper === stepper
+      && x.frame === sp.frame
+      && (x.prev_frame ?? 0) === sp.prevFrame
+      && canSpread(x.code),
+  );
+  if (still) {
+    try {
+      return spreadRelocatePeakForward(doc, v);
+    } catch (e) {
+      // Partial neighbor wave is still useful when there aren't enough later keys.
+      if (e instanceof EditError) return out;
+      throw e;
+    }
+  }
+  return out;
+}
+
+/**
+ * When neighbors cannot absorb the spike (e.g. first key pinned by Aligned),
+ * keep the peak magnitude and land it on a later *existing* key with a legal ramp.
+ */
+function spreadRelocatePeakForward(
+  doc: MotionBuilderDocument,
+  v: PhysicsViolation,
+): MotionBuilderDocument {
+  if (!v.stepper) throw new EditError("No stepper on this violation to spread");
+  const stepper = v.stepper;
+  const sp = spanNums(doc, v);
+  const peakVal = sp.endVal;
+  const startVal = sp.prevVal;
+  const need = Math.abs(peakVal - startVal);
+  if (need <= 1e-9) throw new EditError("Nothing to spread — already within limits");
+
+  const all = existingDefiningFrames(doc, stepper).filter((f) => f >= sp.prevFrame);
+  if (all.length < 2 || all[0] !== sp.prevFrame) {
+    throw new EditError("Spread needs existing keys beside this spike — try Scale");
+  }
+
+  let capacity = 0;
+  let landIdx = -1;
+  for (let i = 1; i < all.length; i++) {
+    const prevF = all[i - 1]!;
+    const f = all[i]!;
+    capacity += maxDistAcrossSpan(doc, stepper, Math.max(1, f - prevF));
+    if (capacity >= need - 1e-6) {
+      landIdx = i;
+      break;
+    }
+  }
+  if (landIdx < 0) {
+    throw new EditError("Not enough existing keys to spread this spike — try Scale");
+  }
+  const peakIdx = all.indexOf(sp.frame);
+  if (peakIdx > landIdx) landIdx = peakIdx;
+
+  const landFrame = all[landIdx]!;
+  let cur = startVal;
+  let out = doc;
+  for (let i = 1; i <= landIdx; i++) {
+    const prevF = all[i - 1]!;
+    const f = all[i]!;
+    const cap = maxDistAcrossSpan(doc, stepper, Math.max(1, f - prevF));
+    const remaining = peakVal - cur;
+    const step = Math.sign(remaining || 1) * Math.min(Math.abs(remaining), cap);
+    cur = round3(cur + step);
+    if (i === landIdx) cur = round3(peakVal);
+    if (f <= 0) continue;
+    out = writeExistingOnly(out, stepper, f, cur);
+  }
+  out = writeExistingOnly(out, stepper, landFrame, peakVal);
+
+  if (stepperValueFingerprint(out, stepper) === stepperValueFingerprint(doc, stepper)) {
     throw new EditError("Spread made no change — try Scale");
   }
   return out;
 }
 
 function spreadViolation(doc: MotionBuilderDocument, v: PhysicsViolation): MotionBuilderDocument {
-  if (v.code === "pillar_collision") return spreadPillarCollision(doc, v);
+  if (v.code === "pillar_collision") {
+    // Prefer pulling the paired linear back. Lattice tip-holds fight later rotary
+    // Spreads and flash-loop Scale/Spread All on long takes.
+    try {
+      return scalePillarCollision(doc, v);
+    } catch (e) {
+      if (e instanceof EditError) return spreadPillarCollision(doc, v);
+      throw e;
+    }
+  }
   if (
     v.code === "linear_above_max"
     || v.code === "linear_below_min"
@@ -717,9 +847,13 @@ export function solveNextPhysicsViolation(
     if (attempted?.has(fp)) continue;
     try {
       const next = solvePhysicsViolation(doc, v, mode);
-      if (v.stepper && stepperValueFingerprint(next, v.stepper) === stepperValueFingerprint(doc, v.stepper)) {
+      if (!solveMadeChange(doc, next, v)) {
         attempted?.add(fp);
         continue;
+      }
+      // Partial progress that leaves this fingerprint: apply once, don't flash-loop it.
+      if (checkPhysics(next).violations.some((x) => violationFingerprint(x) === fp)) {
+        attempted?.add(fp);
       }
       return { doc: next, violation: v };
     } catch (e) {

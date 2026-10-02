@@ -6,7 +6,7 @@ import { moveGroupToTop } from "../core/edit/groups";
 import { applyDeltaToLinkedLanes, linkedLanes, nudgeLanesLinked, setLaneValueLinked, setLaneValueThroughEnd } from "../core/edit/workingGroup";
 import type { MotionBuilderDocument, MotionGroup, MotionKeyframe } from "../core/types";
 import { useEditor } from "../state/EditorContext";
-import { addKey, averageSelection, copy, deleteSelection, paste, selectAll } from "../state/commands";
+import { addKey, averageSelection, copy, deleteSelection, paste, quantizeKeys, selectAll } from "../state/commands";
 import { Panel, Row, Check } from "./Panel";
 import { PrecisionEditModal, type PrecisionEditPayload } from "./PrecisionEditModal";
 
@@ -789,6 +789,8 @@ export function KeyframeGraph() {
   }, [doc, activeLane, selected, dispatch, draw, applyDragValues, armPrecisionPopup]);
 
   const onWheel = useCallback((e: React.WheelEvent) => {
+    // Require Ctrl (Windows/Linux) or ⌘ (Mac) so trackpad/wheel scroll doesn't zoom by accident.
+    if (!e.ctrlKey && !e.metaKey) return;
     e.preventDefault();
     const cvs = ref.current; if (!cvs) return;
     const L = layoutRef.current;
@@ -863,6 +865,7 @@ export function KeyframeGraph() {
         <button type="button" onClick={() => dispatch(deleteSelection(state, false))} title="Delete Edit-lane nodes at selected keys (Delete)">Delete</button>
         <button type="button" onClick={() => dispatch(deleteSelection(state, true))} title="Remove whole keys for every lane (Alt+Delete)">Remove</button>
         <button type="button" onClick={() => dispatch(averageSelection(state))} title="Average from neighbours">Average</button>
+        <button type="button" onClick={() => dispatch(quantizeKeys(state))} title="Keep keys every 10 frames (0, 10, 20, …) plus the final frame when needed">Quantize</button>
         <button type="button" onClick={() => dispatch(copy(state))} title="Copy (Ctrl+C)">Copy</button>
         <button type="button" onClick={() => dispatch(paste(state, "paste"))} title="Paste at playhead (Ctrl+V)">Paste</button>
         <button type="button" onClick={() => dispatch(paste(state, "after"))} title="Duplicate after selection (Ctrl+D)">Dup</button>
