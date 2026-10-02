@@ -18,7 +18,19 @@ const Bar = styled.div<{ $err: boolean }>`
   box-shadow: 0 -4px 16px rgba(0,0,0,0.35);
 `;
 
+const Label = styled.span`
+  margin-right: 0.4em;
+  color: ${({ theme }) => theme.accent};
+  white-space: nowrap;
+`;
+
 export function StatusBar() {
   const { state } = useEditor();
-  return <Bar $err={state.status.error} aria-label="Status">{state.status.text}</Bar>;
+  const text = state.status.text.trim();
+  return (
+    <Bar $err={state.status.error} aria-label="Last action">
+      <Label>Last action:</Label>
+      <span>{text || "—"}</span>
+    </Bar>
+  );
 }

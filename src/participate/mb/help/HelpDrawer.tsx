@@ -1,7 +1,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import Markdown, { type Components } from "react-markdown";
 import styled from "styled-components";
-import { bookingContactHref, isBookingContactHref } from "./contact";
+import { BOOKING_CONTACT_HREF, isBookingContactHref } from "./contact";
 import { useHelp } from "./HelpContext";
 import { HELP_TOPIC_IDS, HELP_TOPICS, helpMarkdown, parseHelpHref, slugify } from "./registry";
 
@@ -60,22 +60,25 @@ export function HelpDrawer() {
       if (link) {
         return <a href={href} onClick={(e) => { e.preventDefault(); open(link); }}>{children}</a>;
       }
+      // Prefer an explicit window.open so left-click matches "Open in new tab"
+      // (same-tab location.assign was cancelled in the Participate embed).
       if (isBookingContactHref(href)) {
-        const dest = bookingContactHref();
         return (
           <a
-            href={dest}
+            href={BOOKING_CONTACT_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={(e) => {
               e.preventDefault();
-              close();
-              window.location.assign(dest);
+              e.stopPropagation();
+              window.open(BOOKING_CONTACT_HREF, "_blank", "noopener,noreferrer");
             }}
           >
             {children}
           </a>
         );
       }
-      return <a href={href} target="_blank" rel="noreferrer">{children}</a>;
+      return <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>;
     },
   };
 

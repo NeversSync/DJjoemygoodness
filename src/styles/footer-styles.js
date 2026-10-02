@@ -12,7 +12,7 @@ const FooterContainer = styled.div`
 
   @media(min-width: 1200px) {
     padding: 2em;
-    grid-template-columns: 1fr 2fr .5fr;
+    grid-template-columns: auto 1fr auto;
     grid-template-rows: auto;
   }
 `;
@@ -84,15 +84,16 @@ const SocialIcon = styled.a`
 
 const FooterNav = styled.div`
   display: grid;
-  grid-template-columns: auto auto auto auto auto;
+  grid-template-columns: repeat(6, auto);
   grid-row: 2 / 3;
   grid-column: 1 / -1;
   justify-self: center;
 
   @media(min-width: 1200px) {
-    grid-template-columns: 100px 100px 100px 172px 111px;
+    grid-template-columns: repeat(6, auto);
     grid-row: 1 / 2;
     grid-column: 3 / 4;
+    justify-self: end;
   }
 `;
 
