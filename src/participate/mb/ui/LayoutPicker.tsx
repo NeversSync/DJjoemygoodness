@@ -11,15 +11,23 @@ const LAYOUTS: { id: TabletLayout; label: string; desc: string; icon: string }[]
   { id: "preview", label: "Preview focus", desc: "Half-screen Preview left; Physics under it; Transport + Graph + Lanes right", icon: "▀▀" },
 ];
 
-const Fab = styled.button`
+const FabStack = styled.div`
   position: fixed;
-  bottom: 14px; right: 14px;
+  bottom: 14px;
+  right: 14px;
   z-index: 15;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+`;
+const Fab = styled.button<{ $active?: boolean }>`
   width: 44px; height: 44px;
   border-radius: 50%;
   font-size: 1.2rem;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  border: 2px solid ${({ $active, theme }) => ($active ? theme.accent : "transparent")};
+  background: ${({ $active, theme }) => ($active ? "rgba(79,195,247,0.18)" : undefined)};
 `;
 const Overlay = styled.div`
   position: fixed; inset: 0; z-index: 16;
@@ -46,11 +54,43 @@ const Option = styled.button<{ $active: boolean }>`
   span:last-child { font-size: 0.85rem; color: ${({ theme }) => theme.muted}; }
 `;
 
-/** Layout presets for PC and tablet (≥768px). */
+type FullscreenDoc = Document & {
+  webkitFullscreenElement?: Element | null;
+  webkitExitFullscreen?: () => Promise<void> | void;
+};
+type FullscreenEl = HTMLElement & {
+  webkitRequestFullscreen?: () => Promise<void> | void;
+};
+
+function fullscreenElement(): Element | null {
+  const doc = document as FullscreenDoc;
+  return document.fullscreenElement ?? doc.webkitFullscreenElement ?? null;
+}
+
+function fullscreenSupported(): boolean {
+  const el = document.documentElement as FullscreenEl;
+  return typeof el.requestFullscreen === "function" || typeof el.webkitRequestFullscreen === "function";
+}
+
+async function enterFullscreen(): Promise<void> {
+  const el = document.documentElement as FullscreenEl;
+  if (typeof el.requestFullscreen === "function") await el.requestFullscreen();
+  else if (typeof el.webkitRequestFullscreen === "function") await el.webkitRequestFullscreen();
+}
+
+async function exitFullscreen(): Promise<void> {
+  const doc = document as FullscreenDoc;
+  if (typeof document.exitFullscreen === "function") await document.exitFullscreen();
+  else if (typeof doc.webkitExitFullscreen === "function") await doc.webkitExitFullscreen();
+}
+
+/** Layout presets for PC and tablet (≥768px), plus browser fullscreen toggle. */
 export function LayoutPicker() {
   const { state, dispatch } = useEditor();
   const [open, setOpen] = useState(false);
   const [wideEnough, setWideEnough] = useState(true);
+  const [fullscreen, setFullscreen] = useState(false);
+  const [canFullscreen, setCanFullscreen] = useState(true);
 
   useEffect(() => {
     const check = () => setWideEnough(window.innerWidth >= 768);
@@ -59,16 +99,53 @@ export function LayoutPicker() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
+  useEffect(() => {
+    setCanFullscreen(fullscreenSupported());
+    const sync = () => setFullscreen(!!fullscreenElement());
+    sync();
+    document.addEventListener("fullscreenchange", sync);
+    document.addEventListener("webkitfullscreenchange", sync as EventListener);
+    return () => {
+      document.removeEventListener("fullscreenchange", sync);
+      document.removeEventListener("webkitfullscreenchange", sync as EventListener);
+    };
+  }, []);
+
   const pick = useCallback((layout: TabletLayout) => {
     dispatch({ type: "prefs", patch: { tabletLayout: layout } });
     setOpen(false);
   }, [dispatch]);
 
-  if (!wideEnough) return null;
+  const toggleFullscreen = useCallback(async () => {
+    try {
+      if (fullscreenElement()) await exitFullscreen();
+      else await enterFullscreen();
+    } catch {
+      /* user cancelled or browser denied */
+    }
+  }, []);
+
+  if (!wideEnough && !canFullscreen) return null;
 
   return (
     <>
-      <Fab onClick={() => setOpen(true)} aria-label="Change layout" title="Change layout">⊞</Fab>
+      <FabStack>
+        {wideEnough && (
+          <Fab type="button" onClick={() => setOpen(true)} aria-label="Change layout" title="Change layout">⊞</Fab>
+        )}
+        {canFullscreen && (
+          <Fab
+            type="button"
+            $active={fullscreen}
+            onClick={() => { void toggleFullscreen(); }}
+            aria-label={fullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+            aria-pressed={fullscreen}
+            title={fullscreen ? "Exit fullscreen (show address bar)" : "Fullscreen (hide address bar)"}
+          >
+            {fullscreen ? "⊡" : "⛶"}
+          </Fab>
+        )}
+      </FabStack>
       {open && (
         <Overlay onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}>
           <Sheet>
