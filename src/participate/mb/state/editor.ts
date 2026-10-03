@@ -18,6 +18,8 @@ export type Prefs = {
   clipAllLanes: boolean;
   /** Stamp a single-node absolute edit onto every later key on the Edit lane. */
   duplicateUntilEnd: boolean;
+  /** Cap node-drag value change to the motor’s achievable rate over drag time. */
+  physicsDrag: boolean;
   scrubByKeyframe: boolean;
   allowFrameDrag: boolean;
   playRate: number;
@@ -31,7 +33,8 @@ export const MIN_PANEL = { left: 200, right: 200, center: 280 } as const;
 export const DEFAULT_PANEL_SIZES: PanelSizes = { left: 320, right: 560 };
 
 export const DEFAULT_PREFS: Prefs = {
-  clipAllLanes: false, duplicateUntilEnd: false, scrubByKeyframe: true, allowFrameDrag: false,
+  clipAllLanes: false, duplicateUntilEnd: false, physicsDrag: true,
+  scrubByKeyframe: true, allowFrameDrag: false,
   playRate: 1, graphOpen: true, tabletLayout: "auto",
   panelSizes: { ...DEFAULT_PANEL_SIZES },
 };

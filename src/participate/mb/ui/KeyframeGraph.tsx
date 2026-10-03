@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { normalizeGroupColor } from "../core/document";
-import { clampLinearMm, linearMaxMmForGroup } from "../core/constants";
+import { clampLinearMm, DEFAULT_LIMITS, linearMaxMmForGroup } from "../core/constants";
 import { moveGroupToTop } from "../core/edit/groups";
 import { applyDeltaToLinkedLanes, linkedLanes, nudgeLanesLinked, setLaneValueLinked, setLaneValueThroughEnd } from "../core/edit/workingGroup";
+import { trapezoidMaxDist } from "../core/physics";
 import type { MotionBuilderDocument, MotionGroup, MotionKeyframe } from "../core/types";
 import { useEditor } from "../state/EditorContext";
 import { addKey, averageSelection, copy, deleteSelection, paste, quantizeKeys, selectAll } from "../state/commands";
@@ -304,6 +305,8 @@ type DragState =
       startValsByLane: Record<string, Record<number, number>>;
       startY: number;
       startVal: number;
+      /** performance.now() at pointer-down — used by Physics Speed drag clamp. */
+      startTime: number;
       /** Last primary-node value from pointer move (avoids stale React doc on up). */
       lastVal: number;
       /** Y-axis range frozen at drag start so pointer→value stays stable while the draw range expands. */
@@ -664,6 +667,7 @@ export function KeyframeGraph() {
           startValsByLane,
           startY: cy,
           startVal,
+          startTime: performance.now(),
           lastVal: startVal,
           valueRange: { ...rangeRef.current },
           beforeDoc: doc,
@@ -712,6 +716,20 @@ export function KeyframeGraph() {
       if (!L) return;
       let newVal = round1(yToV(cy, L, drag.valueRange));
       const g = doc.groups.find((x) => x.id === activeLane);
+      if (prefs.physicsDrag !== false) {
+        const elapsedSec = (performance.now() - drag.startTime) / 1000;
+        const kind = g?.kind ?? "rotary";
+        const vmax = kind === "linear"
+          ? (doc.limits.max_linear_speed ?? DEFAULT_LIMITS.max_linear_speed)
+          : (doc.limits.max_rotary_speed ?? DEFAULT_LIMITS.max_rotary_speed);
+        const accel = kind === "linear"
+          ? (doc.limits.linear_accel ?? DEFAULT_LIMITS.linear_accel)
+          : (doc.limits.rotary_accel ?? DEFAULT_LIMITS.rotary_accel);
+        const maxReachable = trapezoidMaxDist(elapsedSec, vmax, accel);
+        const delta = newVal - drag.startVal;
+        const sign = delta >= 0 ? 1 : -1;
+        newVal = round1(drag.startVal + sign * Math.min(Math.abs(delta), maxReachable));
+      }
       if (g?.kind === "linear") {
         newVal = round1(clampLinearMm(newVal, linearMaxMmForGroup(g, doc.limits), doc.limits.min_linear_mm ?? 0));
       }
@@ -724,7 +742,7 @@ export function KeyframeGraph() {
       drag.x1 = cx; drag.y1 = cy;
       draw();
     }
-  }, [cssPos, activeLane, dispatch, draw, beginPinch, applyDragValues, doc]);
+  }, [cssPos, activeLane, dispatch, draw, beginPinch, applyDragValues, doc, prefs.physicsDrag]);
 
   const onPointerUp = useCallback((e: React.PointerEvent) => {
     const cvs = ref.current;
@@ -835,6 +853,11 @@ export function KeyframeGraph() {
           <input type="checkbox" checked={precisionEdit}
             onChange={(e) => setPrecisionEdit(e.target.checked)} />
           Precision Edit
+        </Check>
+        <Check title="Cap drag speed to what the motor can physically achieve">
+          <input type="checkbox" checked={prefs.physicsDrag !== false}
+            onChange={(e) => dispatch({ type: "prefs", patch: { physicsDrag: e.target.checked } })} />
+          Physics Speed
         </Check>
         <Check title="Stamp a single-node absolute edit onto every later key on this lane">
           <input type="checkbox" checked={prefs.duplicateUntilEnd}

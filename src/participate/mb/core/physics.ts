@@ -24,6 +24,22 @@ export function trapezoidMinTimeS(distance: number, vmax: number, accel: number)
   return dist <= 2 * dAcc ? 2 * Math.sqrt(dist / a) : 2 * (v / a) + (dist - 2 * dAcc) / v;
 }
 
+/** Max |distance| reachable in `timeSec` under vmax + symmetric accel/decel. */
+export function trapezoidMaxDist(timeSec: number, vmax: number, accel: number): number {
+  const t = Math.max(0, timeSec);
+  if (t < 1e-9) return 0;
+  const v = Math.max(vmax, 1e-6);
+  const a = Math.max(accel, 1e-6);
+  const tRamp = v / a;
+  // Triangle profile: accel then immediately decel (never reaches vmax).
+  if (t < 2 * tRamp) {
+    const half = t / 2;
+    return a * half * half;
+  }
+  // Trapezoid: accel to vmax, cruise, then decel.
+  return v * v / a + v * (t - 2 * tRamp);
+}
+
 const floorPct = (ratio: number) => Math.max(1, Math.floor((ratio * 100) / 5) * 5);
 const scaleOrSpread = (pct: number, noun: string, needed: number, frameDelta: number) =>
   `scale down to ~${pct}% ${noun}, or spread over ≥${needed} frames (now ${frameDelta})`;
