@@ -12,6 +12,8 @@
 - **Ctrl+wheel** (⌘+wheel on Mac): zoom the Keyframe Graph toward the cursor
 - **? or F1**: help
 
+On phone / tablet layouts (anything other than **Auto / Desktop**), tapping a number field opens a **resizable number pad** so the OS keyboard does not cover the value. Drag the title to move it; drag the bottom-right corner to resize. Size and position are remembered for this browser tab only.
+
 On a tablet (no keyboard), use the matching buttons:
 
 - **Toolbar**: Undo / Redo (also beside Save / Load)

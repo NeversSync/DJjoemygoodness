@@ -9,6 +9,8 @@ import { buildStart } from "./seeds";
 import { GroupsPanel } from "./ui/GroupsPanel";
 import { KeyframeGraph } from "./ui/KeyframeGraph";
 import { ColumnSplitters, LayoutPicker } from "./ui/LayoutPicker";
+import { GettingStarted } from "./ui/GettingStarted";
+import { NumberPadProvider } from "./ui/NumberPad";
 import { OutlinePreview } from "./ui/OutlinePreview";
 import { PhysicsPanel } from "./ui/PhysicsPanel";
 import { StatusBar } from "./ui/StatusBar";
@@ -348,8 +350,11 @@ function AppInner({ autoPlay }: { autoPlay?: boolean }) {
     dispatch({ type: "prefs", patch: { panelSizes: next } });
   }, [dispatch]);
 
+  // Custom number pad on phone/tablet layouts — Desktop (Auto) keeps the OS keyboard.
+  const touchNumPad = layout !== "auto";
+
   return (
-    <>
+    <NumberPadProvider enabled={touchNumPad}>
       <Shell $layout={layout} $left={sizes.left} $right={railWidth} data-layout={layout}>
         {fixedChrome ? (
           <>
@@ -389,7 +394,8 @@ function AppInner({ autoPlay }: { autoPlay?: boolean }) {
       </Shell>
       <LayoutPicker />
       <HelpDrawer />
-    </>
+      <GettingStarted />
+    </NumberPadProvider>
   );
 }
 

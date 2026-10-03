@@ -358,8 +358,7 @@ export function KeyframeGraph() {
       precisionTimerRef.current = null;
       const p = pendingPrecisionRef.current;
       if (!p) return;
-      // Multi-select always confirms Δ; single-node requires Precision Edit checked
-      if (p.frames.length === 1 && !precisionEditRef.current) return;
+      if (!precisionEditRef.current) return;
       setPrecisionModal({
         mode: p.frames.length > 1 ? "multi" : "single",
         unit: p.unit,
@@ -756,8 +755,7 @@ export function KeyframeGraph() {
           undoSnapshot: drag.beforeDoc,
           apply: () => applyDragValues(drag.beforeDoc, drag.frames, drag.startValsByLane, drag.startVal, finalVal),
         });
-        // Multi-select always gets Δ confirm; single needs Precision Edit checked
-        if (precisionEditRef.current || drag.frames.length > 1) {
+        if (precisionEditRef.current) {
           const kind = doc.groups.find((g) => g.id === activeLane)?.kind ?? "rotary";
           armPrecisionPopup({
             beforeDoc: drag.beforeDoc,

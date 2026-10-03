@@ -4,7 +4,7 @@ Design a kinetic animation for the **Equilateral Expedition** sculpture: seven t
 
 You author **keyframes**, the app checks them against the real motors' limits, and you save a small **JSON file**. **Our Team** reviews approved files and schedules them on the sculpture.
 
-- Start with [Workflows](#help:workflows) for the step-by-step path.
+- Start with the floating **Getting Started** video (or [watch on YouTube](https://youtu.be/R8Uw1rk1n9I)), then [Workflows](#help:workflows) for the step-by-step path.
 - Every panel has a **?** button that opens help for just that panel.
 - Your work lives in this browser tab only. **Save JSON** often; closing the tab clears it.
 

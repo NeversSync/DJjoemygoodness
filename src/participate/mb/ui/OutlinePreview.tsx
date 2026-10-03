@@ -42,10 +42,11 @@ function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
   if (max === min) return [0, 0, l];
   const d = max - min;
   const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-  let h = 0;
-  if (max === R) h = ((G - B) / d + (G < B ? 6 : 0)) / 6;
-  else if (max === G) h = ((B - R) / d + 2) / 6;
-  else h = ((R - G) / d + 4) / 6;
+  const h = max === R
+    ? ((G - B) / d + (G < B ? 6 : 0)) / 6
+    : max === G
+      ? ((B - R) / d + 2) / 6
+      : ((R - G) / d + 4) / 6;
   return [h, s, l];
 }
 
@@ -201,19 +202,28 @@ function drawBrokenTip(
   ctx.stroke();
 }
 
-const Stage = styled.div<{ $fill?: boolean }>`
-  width: ${({ $fill }) => ($fill ? "100%" : "min(100%, 220px)")};
+/** Desktop (Auto) preview can grow with the right column up to 2× the 280px base. */
+const DESKTOP_PREVIEW_MAX = 560;
+
+const Stage = styled.div<{ $fill?: boolean; $desktopGrow?: boolean }>`
+  width: ${({ $fill, $desktopGrow }) =>
+    ($fill ? "100%" : $desktopGrow ? `min(100%, ${DESKTOP_PREVIEW_MAX}px)` : "min(100%, 220px)")};
   aspect-ratio: 1 / 1;
   margin: 0 auto;
   flex: 0 0 auto;
   border-radius: 8px;
   overflow: hidden;
-  ${({ $fill }) => !$fill && `
+  ${({ $fill, $desktopGrow }) => !$fill && !$desktopGrow && `
     @media (min-width: 1281px) {
       width: min(100%, 280px);
     }
     @media (orientation: landscape) and (max-height: 850px) {
       width: min(100%, 168px);
+    }
+  `}
+  ${({ $desktopGrow }) => $desktopGrow && `
+    @media (min-width: 1281px) {
+      width: min(100%, ${DESKTOP_PREVIEW_MAX}px);
     }
   `}
 `;
@@ -228,6 +238,8 @@ export function OutlinePreview() {
   const ref = useRef<HTMLCanvasElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const fillStage = state.prefs.tabletLayout === "preview";
+  /** Desktop / Auto: fill widened rail up to 100% larger than the 280px base. */
+  const desktopGrow = state.prefs.tabletLayout === "auto";
   const doc = state.doc;
   const playFrame = state.playFrame;
 
@@ -377,7 +389,7 @@ export function OutlinePreview() {
 
   return (
     <Panel title="Preview" help="preview" area="preview">
-      <Stage ref={stageRef} className="preview-stage" $fill={fillStage}>
+      <Stage ref={stageRef} className="preview-stage" $fill={fillStage} $desktopGrow={desktopGrow}>
         <Canvas ref={ref} />
       </Stage>
     </Panel>
