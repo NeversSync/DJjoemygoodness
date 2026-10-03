@@ -4,7 +4,7 @@ import { HelpProvider } from "./help/HelpContext";
 import { HelpDrawer } from "./help/HelpDrawer";
 import { EditorProvider, useEditor } from "./state/EditorContext";
 import { PARTICIPATE_SESSION_KEY, defaultLayoutForWidth } from "./state/session";
-import type { TabletLayout } from "./state/editor";
+import { DEFAULT_PANEL_SIZES, type TabletLayout } from "./state/editor";
 import { buildStart } from "./seeds";
 import { GroupsPanel } from "./ui/GroupsPanel";
 import { KeyframeGraph } from "./ui/KeyframeGraph";
@@ -316,7 +316,7 @@ function useEffectiveLayout(pref: TabletLayout, width: number): TabletLayout {
 function AppInner({ autoPlay }: { autoPlay?: boolean }) {
   const { state, dispatch } = useEditor();
   const layout = state.prefs.tabletLayout;
-  const sizes = state.prefs.panelSizes ?? { left: 320, right: 320 };
+  const sizes = state.prefs.panelSizes ?? DEFAULT_PANEL_SIZES;
   const { w: width } = useWindowSize();
   const effective = useEffectiveLayout(layout, width);
   const canResize = effective === "auto" || effective === "graph";

@@ -27,7 +27,8 @@ export type Prefs = {
 };
 
 export const MIN_PANEL = { left: 200, right: 200, center: 280 } as const;
-export const DEFAULT_PANEL_SIZES: PanelSizes = { left: 320, right: 320 };
+/** Right rail sized for a 2× Preview stage (see OutlinePreview DESKTOP_PREVIEW_MAX). */
+export const DEFAULT_PANEL_SIZES: PanelSizes = { left: 320, right: 560 };
 
 export const DEFAULT_PREFS: Prefs = {
   clipAllLanes: false, duplicateUntilEnd: false, scrubByKeyframe: true, allowFrameDrag: false,

@@ -202,28 +202,27 @@ function drawBrokenTip(
   ctx.stroke();
 }
 
-/** Desktop (Auto) preview can grow with the right column up to 2× the 280px base. */
-const DESKTOP_PREVIEW_MAX = 560;
+/** Desktop / Graph-focus Preview can fill the right rail up to 2× the classic 280px stage. */
+export const DESKTOP_PREVIEW_MAX = 560;
 
 const Stage = styled.div<{ $fill?: boolean; $desktopGrow?: boolean }>`
   width: ${({ $fill, $desktopGrow }) =>
-    ($fill ? "100%" : $desktopGrow ? `min(100%, ${DESKTOP_PREVIEW_MAX}px)` : "min(100%, 220px)")};
+    ($fill || $desktopGrow ? "100%" : "min(100%, 220px)")};
+  max-width: ${({ $fill, $desktopGrow }) =>
+    ($fill ? "none" : $desktopGrow ? `${DESKTOP_PREVIEW_MAX}px` : "none")};
   aspect-ratio: 1 / 1;
   margin: 0 auto;
   flex: 0 0 auto;
+  align-self: center;
   border-radius: 8px;
   overflow: hidden;
+  box-sizing: border-box;
   ${({ $fill, $desktopGrow }) => !$fill && !$desktopGrow && `
     @media (min-width: 1281px) {
       width: min(100%, 280px);
     }
     @media (orientation: landscape) and (max-height: 850px) {
       width: min(100%, 168px);
-    }
-  `}
-  ${({ $desktopGrow }) => $desktopGrow && `
-    @media (min-width: 1281px) {
-      width: min(100%, ${DESKTOP_PREVIEW_MAX}px);
     }
   `}
 `;
@@ -238,8 +237,9 @@ export function OutlinePreview() {
   const ref = useRef<HTMLCanvasElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const fillStage = state.prefs.tabletLayout === "preview";
-  /** Desktop / Auto: fill widened rail up to 100% larger than the 280px base. */
-  const desktopGrow = state.prefs.tabletLayout === "auto";
+  /** Desktop / Graph focus: track the right rail (up to DESKTOP_PREVIEW_MAX). */
+  const desktopGrow =
+    state.prefs.tabletLayout === "auto" || state.prefs.tabletLayout === "graph";
   const doc = state.doc;
   const playFrame = state.playFrame;
 
