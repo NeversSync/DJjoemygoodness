@@ -288,7 +288,8 @@ const Shell = styled.div<{ $layout: TabletLayout; $left: number; $right: number 
     overflow: hidden;
   }
 
-  [aria-label="Preview"] {
+  /* Grid layouts only — do not override DesktopRail’s stretch (Preview would stay ~300px). */
+  & > [aria-label="Preview"] {
     align-self: start;
   }
 
