@@ -1,7 +1,31 @@
 import { stepperKind } from "../constants";
 import { normalizeGroupColor } from "../document";
 import type { MotionBuilderDocument, MotorKind, StepperName } from "../types";
-import { produce } from "./produce";
+import { produce, round3 } from "./produce";
+
+/** True when every authored sample of this lane is ~0 (or missing). */
+export function laneIsFlatZero(doc: MotionBuilderDocument, laneId: string): boolean {
+  for (const kf of doc.keyframes) {
+    const v = kf.lanes?.[laneId];
+    if (v != null && Math.abs(Number(v)) > 1e-9) return false;
+  }
+  return true;
+}
+
+/** Copy `fromId` lane samples onto `toId` (all keyframes). */
+export function copyLaneValues(
+  doc: MotionBuilderDocument,
+  fromId: string,
+  toId: string,
+): MotionBuilderDocument {
+  if (fromId === toId) return doc;
+  return produce(doc, (d) => {
+    for (const kf of d.keyframes) {
+      const v = kf.lanes?.[fromId];
+      kf.lanes[toId] = v == null ? 0 : round3(Number(v));
+    }
+  });
+}
 
 function uniqueGroupId(doc: MotionBuilderDocument, label: string): string {
   const base = label.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "").slice(0, 24) || "group";
@@ -50,17 +74,41 @@ export const moveGroupToTop = (doc: MotionBuilderDocument, id: string) => {
   return reorderGroup(doc, id, first);
 };
 
-/** Move a motor into a same-kind group, or make it solo (null). */
-export const assignMotor = (doc: MotionBuilderDocument, stepper: StepperName, groupId: string | null) =>
-  produce(doc, (d) => {
-    const target = d.groups.find((g) => g.id === groupId);
-    if (groupId && target?.kind !== stepperKind(stepper)) return;
+/**
+ * Move a motor into a same-kind group, or ungroup it (null).
+ * When joining a group whose lane is still flat zero, copy the source group's
+ * curve onto the target so consolidating Blank solos (or regrouping) keeps
+ * playback. Empty source groups are removed after the move.
+ */
+export const assignMotor = (doc: MotionBuilderDocument, stepper: StepperName, groupId: string | null) => {
+  const source = doc.groups.find((g) => g.steppers.includes(stepper));
+  const target = groupId ? doc.groups.find((g) => g.id === groupId) : undefined;
+  if (groupId && target?.kind !== stepperKind(stepper)) return doc;
+
+  let next = doc;
+  // Migrate motion before membership changes so expandKeyframePositions keeps playing.
+  if (source && target && source.id !== target.id && laneIsFlatZero(doc, target.id)) {
+    if (!laneIsFlatZero(doc, source.id)) {
+      next = copyLaneValues(next, source.id, target.id);
+    }
+  }
+
+  next = produce(next, (d) => {
+    const t = d.groups.find((g) => g.id === groupId);
     for (const g of d.groups) {
       g.steppers = g.steppers.filter((s) => s !== stepper);
       g.invert = (g.invert ?? []).filter((s) => s !== stepper);
     }
-    target?.steppers.push(stepper);
+    t?.steppers.push(stepper);
   });
+
+  // Drop emptied source shells (and their stale lanes) after consolidating.
+  if (source && source.id !== groupId) {
+    const src = next.groups.find((g) => g.id === source.id);
+    if (src && src.steppers.length === 0) next = deleteGroup(next, source.id);
+  }
+  return next;
+};
 
 export const setInvert = (doc: MotionBuilderDocument, stepper: StepperName, inverted: boolean) =>
   produce(doc, (d) => {

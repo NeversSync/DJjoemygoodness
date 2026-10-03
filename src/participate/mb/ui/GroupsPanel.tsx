@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { addGroup, assignMotor, deleteGroup, moveGroupToTop, renameGroup, reorderGroup, setGroupColor, setInvert } from "../core/edit/groups";
 import { setStepperOverride } from "../core/edit/keyframes";
 import {
-  clearWorkingGroup, nudgeLanesLinked, setLaneValueLinked, setLaneValueThroughEnd, toggleWorkingLane,
+  clearWorkingGroup, linkAllOfKind, nudgeLanesLinked, setLaneValueLinked, setLaneValueThroughEnd,
+  toggleWorkingLane,
 } from "../core/edit/workingGroup";
 import { stepperKind, BOX_LANES, ALL_STEPPERS, clampLinearMm, linearMaxMmForGroup, linearMaxMmForStepper } from "../core/constants";
 import { normalizeGroupInvert } from "../core/document";
@@ -185,10 +186,15 @@ export function GroupsPanel() {
     }
   }, [dispatch, selected, activeLane, workingGroup]);
 
-  const toggleLink = useCallback((laneId: string) => {
-    const r = toggleWorkingLane(doc, workingGroup, laneId);
+  const desktop = state.prefs.tabletLayout === "auto";
+
+  const toggleLink = useCallback((laneId: string, e?: { ctrlKey?: boolean; metaKey?: boolean }) => {
+    const modClick = !!(e?.ctrlKey || e?.metaKey);
+    const r = desktop && modClick
+      ? linkAllOfKind(doc, laneId)
+      : toggleWorkingLane(doc, workingGroup, laneId);
     dispatch({ type: "workingGroup", workingGroup: r.workingGroup, status: r.status, error: r.error });
-  }, [dispatch, doc, workingGroup]);
+  }, [dispatch, doc, workingGroup, desktop]);
 
   const setMotorValue = (stepper: StepperName, group: MotionGroup | undefined, value: number) => {
     const maxMm = group
@@ -305,9 +311,11 @@ export function GroupsPanel() {
             <LinkBtn type="button" $on={linked}
               title={linked
                 ? "Unlink from Working Group"
-                : "Link into Working Group (same kind; edits share delta)"}
+                : desktop
+                  ? "Link into Working Group (same kind). Ctrl/⌘+click: link all of this kind"
+                  : "Link into Working Group (same kind; edits share delta)"}
               aria-pressed={linked}
-              onClick={() => toggleLink(g.id)}>
+              onClick={(e) => toggleLink(g.id, e)}>
               {linked ? "Linked" : "Link"}
             </LinkBtn>
             <HeadActions>

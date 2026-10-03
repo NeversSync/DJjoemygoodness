@@ -61,6 +61,24 @@ export function clearWorkingGroup(): { workingGroup: string[]; status: string } 
   return { workingGroup: [], status: "Unlinked all Working Group lanes" };
 }
 
+/**
+ * Replace the Working Group with every lane of the same kind as `laneId`
+ * (all rotary or all linear). Desktop Ctrl/Cmd+click on Link uses this.
+ */
+export function linkAllOfKind(
+  doc: MotionBuilderDocument,
+  laneId: string,
+): { workingGroup: string[]; status: string; error?: boolean } {
+  const g = doc.groups.find((x) => x.id === laneId);
+  if (!g) return { workingGroup: [], status: "Unknown lane", error: true };
+  const next = doc.groups.filter((x) => x.kind === g.kind).map((x) => x.id);
+  if (!next.length) return { workingGroup: [], status: `No ${g.kind} lanes`, error: true };
+  return {
+    workingGroup: next,
+    status: `Linked all ${next.length} ${g.kind} lanes`,
+  };
+}
+
 /** Drop ids that no longer exist on the document. */
 export function pruneWorkingGroup(
   doc: MotionBuilderDocument,

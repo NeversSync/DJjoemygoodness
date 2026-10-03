@@ -1,5 +1,7 @@
 import {
+  ALL_LINEAR_STEPPERS,
   COLLISION_BOX_PAIRS,
+  UPPER_LINEAR_STEPPERS,
   clampLinearMm,
   DEFAULT_FPS,
   DEFAULT_LIMITS,
@@ -21,6 +23,7 @@ import type {
 } from "../types";
 import { EditError, keyAt, round3 } from "./produce";
 import { setLaneValue, setStepperOverride } from "./keyframes";
+import { linkedLanes, pruneWorkingGroup, setLaneValueLinked } from "./workingGroup";
 
 export type SolveMode = "scale" | "spread";
 
@@ -138,15 +141,45 @@ function writeStepperAt(
   value: number,
 ): MotionBuilderDocument {
   const gid = groupIdForStepper(doc, stepper);
-  if (gid) {
-    const g = doc.groups.find((x) => x.id === gid);
-    const kf = keyAt(doc, frame);
-    if (kf?.steppers?.[stepper] !== undefined || (g && g.steppers.length === 1)) {
-      return setStepperOverride(doc, frame, stepper, value);
-    }
+  if (!gid) return setStepperOverride(doc, frame, stepper, value);
+  const g = doc.groups.find((x) => x.id === gid);
+  const kf = keyAt(doc, frame);
+  // Solo lanes (Blank / one-motor groups): write the lane so Scale/Spread matches
+  // the graph and clears any stale steppers{} override. Previously solos always
+  // wrote overrides, leaving lanes at the illegal value — Spread takeoff then
+  // could not clear Aligned, and Scale All looked like a no-op in the UI.
+  if (g && g.steppers.length === 1) {
     return setLaneValue(doc, frame, gid, value);
   }
-  return setStepperOverride(doc, frame, stepper, value);
+  // Lockstep multi-motor: keep per-motor override when one already exists.
+  if (kf?.steppers?.[stepper] !== undefined) {
+    return setStepperOverride(doc, frame, stepper, value);
+  }
+  return setLaneValue(doc, frame, gid, value);
+}
+
+/**
+ * Relative motion write (speed/accel Scale & Spread). When the stepper's lane is
+ * in a Working Group, apply the same absolute delta to every linked peer so
+ * Scale/Spread All hits the group once instead of once per motor.
+ * Absolute tip/crash caps keep using writeStepperAt (per-box ceilings).
+ */
+function writeRelativeAt(
+  doc: MotionBuilderDocument,
+  frame: number,
+  stepper: StepperName,
+  value: number,
+  workingGroup: readonly string[] = [],
+): MotionBuilderDocument {
+  const gid = groupIdForStepper(doc, stepper);
+  if (gid && workingGroup.length >= 2 && workingGroup.includes(gid)) {
+    try {
+      return setLaneValueLinked(doc, frame, gid, value, workingGroup);
+    } catch (e) {
+      if (!(e instanceof EditError)) throw e;
+    }
+  }
+  return writeStepperAt(doc, frame, stepper, value);
 }
 
 function collisionPair(rot: StepperName) {
@@ -157,6 +190,27 @@ function collisionPair(rot: StepperName) {
 
 function safeLinearCapMm(lin: LinearStepper, L: MotionLimits): number {
   return round3(PILLAR_SAFE_FRAC * tierMaxMm(lin, L) - PILLAR_SAFE_MARGIN_MM);
+}
+
+function tipAngleDistDeg(rotDeg: number, phaseDeg: number): number {
+  const mod = pyMod(rotDeg - phaseDeg, 120);
+  return Math.min(mod, 120 - mod);
+}
+
+/**
+ * Angle-scaled linear ceiling for Scale tip clearance.
+ * Lattice-safe tips keep the usual ~85% band; tips aimed at the pillar
+ * (flat rotaries at phase midpoints) get a tighter limit down to ~70%.
+ */
+export function maxSafeLinearForTipMm(
+  rotDeg: number,
+  phaseDeg: number,
+  maxExt: number,
+): number {
+  const dist = tipAngleDistDeg(rotDeg, phaseDeg); // 0..60
+  const badness = Math.max(0, Math.min(1, (dist - 10) / 50));
+  const frac = PILLAR_SAFE_FRAC - badness * 0.15; // 0.85 → 0.70
+  return round3(Math.max(0, frac * maxExt - PILLAR_SAFE_MARGIN_MM));
 }
 
 function maxSafeDeg(linMm: number, maxExt: number): number {
@@ -234,10 +288,11 @@ function tryWriteStepperAt(
   frame: number,
   stepper: StepperName,
   value: number,
+  workingGroup: readonly string[] = [],
 ): MotionBuilderDocument {
   if (frame <= 0) return doc;
   try {
-    return writeStepperAt(doc, frame, stepper, value);
+    return writeRelativeAt(doc, frame, stepper, value, workingGroup);
   } catch (e) {
     if (e instanceof EditError) return doc;
     throw e;
@@ -254,10 +309,11 @@ function writeExistingOnly(
   stepper: StepperName,
   frame: number,
   value: number,
+  workingGroup: readonly string[] = [],
 ): MotionBuilderDocument {
   const kf = keyAt(doc, frame);
   if (!kf || !keyDefinesStepper(doc, kf, stepper)) return doc;
-  return tryWriteStepperAt(doc, frame, stepper, value);
+  return tryWriteStepperAt(doc, frame, stepper, value, workingGroup);
 }
 
 /** True when a solve actually changed authored values relevant to this violation. */
@@ -265,6 +321,7 @@ function solveMadeChange(
   before: MotionBuilderDocument,
   after: MotionBuilderDocument,
   v: PhysicsViolation,
+  workingGroup: readonly string[] = [],
 ): boolean {
   if (v.code === "pillar_collision" && v.stepper) {
     const pair = collisionPair(v.stepper);
@@ -281,9 +338,80 @@ function solveMadeChange(
     return false;
   }
   if (v.stepper) {
-    return stepperValueFingerprint(after, v.stepper) !== stepperValueFingerprint(before, v.stepper);
+    if (stepperValueFingerprint(after, v.stepper) !== stepperValueFingerprint(before, v.stepper)) {
+      return true;
+    }
+    // Linked Working Group peers may have moved via shared delta.
+    const gid = v.group_id ?? groupIdForStepper(before, v.stepper);
+    if (gid && workingGroup.length >= 2 && workingGroup.includes(gid)) {
+      for (const lane of linkedLanes(before, workingGroup, gid)) {
+        const g = before.groups.find((x) => x.id === lane);
+        if (!g) continue;
+        for (const s of g.steppers) {
+          if (stepperValueFingerprint(after, s) !== stepperValueFingerprint(before, s)) return true;
+        }
+      }
+    }
+    return false;
   }
   return JSON.stringify(after.keyframes) !== JSON.stringify(before.keyframes);
+}
+
+/**
+ * Higher = more urgent. Working Group solves prefer lower-tier boxes and the
+ * largest travel excess so one linked Scale clears the span.
+ */
+function stringencyScore(doc: MotionBuilderDocument, v: PhysicsViolation): number {
+  if (v.code === "crash_zone") return 10_000;
+  if (v.code === "pillar_collision") return 9_000;
+  if (!v.stepper) return 100;
+  const lowerTier =
+    stepperKind(v.stepper) === "linear" && !UPPER_LINEAR_STEPPERS.has(v.stepper) ? 80 : 0;
+  if (v.code === "linear_above_max" || v.code === "linear_below_min") {
+    // Prefer the tighter box (109mm lower tier) so a linked Scale uses that ceiling.
+    try {
+      const sp = spanNums(doc, v);
+      const L = limitsOf(doc);
+      const cap = v.code === "linear_above_max"
+        ? tierMaxMm(v.stepper as LinearStepper, L)
+        : (L.min_linear_mm ?? 0);
+      const overshoot = v.code === "linear_above_max"
+        ? Math.max(0, sp.endVal - cap)
+        : Math.max(0, cap - sp.endVal);
+      return 8_000 + lowerTier + overshoot;
+    } catch {
+      return 8_000 + lowerTier;
+    }
+  }
+  try {
+    const sp = spanNums(doc, v);
+    const maxD = maxSpanDistForViolation(doc, v);
+    const dist = Math.abs(sp.endVal - sp.prevVal);
+    const excess = dist > 1e-6 ? Math.max(0, dist - maxD) / dist : 0;
+    // Lower-tier linears (109mm) are the stringent boxes when linked with uppers.
+    return 1_000 + excess * 1_000 + lowerTier;
+  } catch {
+    return 100;
+  }
+}
+
+/** WG members first (when linked), then most stringent boxes, then frame order. */
+function orderViolationsForSolve(
+  doc: MotionBuilderDocument,
+  violations: readonly PhysicsViolation[],
+  workingGroup: readonly string[],
+): PhysicsViolation[] {
+  const wg = workingGroup.length >= 2 ? new Set(workingGroup) : null;
+  return [...violations].sort((a, b) => {
+    if (wg) {
+      const aw = a.group_id && wg.has(a.group_id) ? 0 : 1;
+      const bw = b.group_id && wg.has(b.group_id) ? 0 : 1;
+      if (aw !== bw) return aw - bw;
+    }
+    const ds = stringencyScore(doc, b) - stringencyScore(doc, a);
+    if (Math.abs(ds) > 1e-6) return ds;
+    return a.frame - b.frame || String(a.stepper ?? "").localeCompare(String(b.stepper ?? ""));
+  });
 }
 
 /** Stable id for All-loop dedupe. */
@@ -350,20 +478,76 @@ function capLinearKeys(
   return out;
 }
 
-/** Scale tip collision: pull the paired linear just under the safe extension. */
+/** Cap linear keys using the tip-angle-scaled ceiling at each key's pose. */
+function capLinearKeysForTip(
+  doc: MotionBuilderDocument,
+  rot: RotaryStepper,
+  lin: LinearStepper,
+  phase: number,
+  fromFrame: number,
+  toFrame: number,
+): MotionBuilderDocument {
+  const maxExt = tierMaxMm(lin, limitsOf(doc));
+  let out = doc;
+  for (const kf of doc.keyframes) {
+    if (kf.frame < fromFrame || kf.frame > toFrame || kf.frame <= 0) continue;
+    if (!keyDefinesStepper(out, kf, lin)) continue;
+    const pos = expandKeyframePositions(out, kf);
+    const cap = maxSafeLinearForTipMm(pos[rot], phase, maxExt);
+    if (pos[lin] > cap) out = writeStepperAt(out, kf.frame, lin, cap);
+  }
+  return out;
+}
+
+/**
+ * Scale tip collision: retract every at-risk tip's linear with an angle-scaled
+ * ceiling. Flat rotaries aimed at the pillar (e.g. Rot Two/Six/Ten at 0°) share
+ * the same bad phase — fixing only the reported pair leaves siblings colliding.
+ */
 function scalePillarCollision(doc: MotionBuilderDocument, v: PhysicsViolation): MotionBuilderDocument {
   if (!v.stepper) throw new EditError("No rotary on this tip collision");
-  const pair = collisionPair(v.stepper);
-  if (!pair) throw new EditError("Unknown tip / box pair for Scale");
-  const [, lin] = pair;
+  const seed = collisionPair(v.stepper);
+  if (!seed) throw new EditError("Unknown tip / box pair for Scale");
   const L = limitsOf(doc);
-  const cap = safeLinearCapMm(lin, L);
-  const hit = v.frame;
-  const { prev, next } = definingKeysAround(doc, hit, lin);
+  const ordered: readonly (readonly [RotaryStepper, LinearStepper, number])[] = [
+    seed,
+    ...COLLISION_BOX_PAIRS.filter(([rot]) => rot !== seed[0]),
+  ];
 
-  let out = capLinearKeys(doc, lin, cap, prev.frame, next.frame);
+  let out = doc;
+  const pullAtRisk = (full: boolean) => {
+    for (const [rot, lin, phase] of ordered) {
+      const forward = interpolateForwardPositions(out);
+      const maxExt = tierMaxMm(lin, L);
+      let lo = Infinity;
+      let hi = -Infinity;
+      for (let f = 0; f < forward[lin].length; f++) {
+        if (!isCollisionRisk(forward[rot][f]!, forward[lin][f]!, phase, maxExt)) continue;
+        lo = Math.min(lo, f);
+        hi = Math.max(hi, f);
+      }
+      const isSeed = rot === seed[0];
+      if (!Number.isFinite(lo) && !isSeed) continue;
+      if (full || !Number.isFinite(lo)) {
+        out = capLinearKeysForTip(out, rot, lin, phase, 0, lastAuthoredFrame(out));
+        continue;
+      }
+      const { prev } = definingKeysAround(out, lo, lin);
+      const { next } = definingKeysAround(out, hi, lin);
+      out = capLinearKeysForTip(out, rot, lin, phase, prev.frame, next.frame);
+    }
+  };
+
+  pullAtRisk(false);
   if (findPillarCollision(interpolateForwardPositions(out), L)) {
-    out = capLinearKeys(out, lin, cap, 0, lastAuthoredFrame(out));
+    pullAtRisk(true);
+  }
+  // Last resort: flat worst-angle tips may still sit on the band edge — force
+  // the seed pair (and any remaining risks) under the angle-scaled global cap.
+  if (findPillarCollision(interpolateForwardPositions(out), L)) {
+    for (const [rot, lin, phase] of ordered) {
+      out = capLinearKeysForTip(out, rot, lin, phase, 0, lastAuthoredFrame(out));
+    }
   }
   if (findPillarCollision(interpolateForwardPositions(out), L)) {
     throw new EditError("Scale could not clear tip collision — try Spread (rotate tip)");
@@ -422,10 +606,45 @@ function spreadPillarCollision(doc: MotionBuilderDocument, v: PhysicsViolation):
   return out;
 }
 
-function scaleViolation(doc: MotionBuilderDocument, v: PhysicsViolation): MotionBuilderDocument {
-  if (v.code === "crash_zone") {
-    throw new EditError("Scale cannot auto-fix crash zone — stagger or pull linears manually");
+/**
+ * Crash zone: ≥5 linears past ~85% of *their own* tier max at one frame.
+ * Pull every deep linear back under its per-tier safe cap (upper 136mm / lower 109mm).
+ */
+function scaleCrashZone(doc: MotionBuilderDocument, v: PhysicsViolation): MotionBuilderDocument {
+  const L = limitsOf(doc);
+  const frame = v.frame;
+  const forward = interpolateForwardPositions(doc);
+  const deep = ALL_LINEAR_STEPPERS.filter(
+    (s) => (forward[s][frame] ?? 0) > tierMaxMm(s, L) * PILLAR_SAFE_FRAC,
+  );
+  if (deep.length < 5) {
+    throw new EditError("Nothing to scale — fewer than 5 linears in the crash band");
   }
+
+  let out = doc;
+  for (const lin of deep) {
+    const cap = safeLinearCapMm(lin, L);
+    const { prev, next } = definingKeysAround(out, frame, lin);
+    out = capLinearKeys(out, lin, cap, prev.frame, Math.max(next.frame, frame));
+  }
+  if (checkPhysics(out).violations.some((x) => x.code === "crash_zone" && x.frame === frame)) {
+    for (const lin of deep) {
+      out = capLinearKeys(out, lin, safeLinearCapMm(lin, L), 0, lastAuthoredFrame(out));
+    }
+  }
+  if (checkPhysics(out).violations.some((x) => x.code === "crash_zone" && x.frame === frame)) {
+    throw new EditError("Scale could not clear crash zone — stagger deep moves manually");
+  }
+  return out;
+}
+
+function scaleViolation(
+  doc: MotionBuilderDocument,
+  v: PhysicsViolation,
+  workingGroup: readonly string[] = [],
+): MotionBuilderDocument {
+  // Absolute caps (per-box ceilings) — do not share Working Group deltas.
+  if (v.code === "crash_zone") return scaleCrashZone(doc, v);
   if (v.code === "pillar_collision") return scalePillarCollision(doc, v);
   if (!v.stepper) throw new EditError("No stepper on this violation to scale");
 
@@ -435,10 +654,16 @@ function scaleViolation(doc: MotionBuilderDocument, v: PhysicsViolation): Motion
 
   if (v.code === "linear_above_max") {
     const maxMm = tierMaxMm(s as Parameters<typeof tierMaxMm>[0], L);
-    return writeStepperAt(doc, v.frame, s, clampLinearMm(sp.endVal, maxMm, L.min_linear_mm ?? 0));
+    return writeRelativeAt(
+      doc, v.frame, s, clampLinearMm(sp.endVal, maxMm, L.min_linear_mm ?? 0), workingGroup,
+    );
   }
   if (v.code === "linear_below_min") {
-    return writeStepperAt(doc, v.frame, s, clampLinearMm(sp.endVal, linearMaxMmForStepper(s, L), L.min_linear_mm ?? 0));
+    return writeRelativeAt(
+      doc, v.frame, s,
+      clampLinearMm(sp.endVal, linearMaxMmForStepper(s, L), L.min_linear_mm ?? 0),
+      workingGroup,
+    );
   }
 
   const maxDist = maxSpanDistForViolation(doc, v);
@@ -447,7 +672,7 @@ function scaleViolation(doc: MotionBuilderDocument, v: PhysicsViolation): Motion
   // Cap by the true span budget (binary-searched for trapezoid accel), not a
   // linear time ratio — budget/tMin under-shrinks triangular profiles.
   const next = round3(sp.prevVal + Math.sign(sp.endVal - sp.prevVal) * maxDist);
-  return writeStepperAt(doc, v.frame, s, next);
+  return writeRelativeAt(doc, v.frame, s, next, workingGroup);
 }
 
 /** Next grid-aligned frame at least `prev + needed` away (preserves GCode grid). */
@@ -554,6 +779,7 @@ function valueAtStepper(doc: MotionBuilderDocument, frame: number, stepper: Step
 function spreadTakeoffFromAligned(
   doc: MotionBuilderDocument,
   v: PhysicsViolation,
+  workingGroup: readonly string[] = [],
 ): MotionBuilderDocument {
   if (!v.stepper) throw new EditError("No stepper on this violation to spread");
   const stepper = v.stepper;
@@ -570,12 +796,15 @@ function spreadTakeoffFromAligned(
   if (!frames.length) throw new EditError("Spread needs existing keys after Aligned — try Scale");
 
   // Walk existing spans from 0 until cumulative travel capacity can hold |peakVal|.
+  const caps: number[] = [];
   let capacity = 0;
   let landIdx = -1;
   let prevF = 0;
   for (let i = 0; i < frames.length; i++) {
     const f = frames[i]!;
-    capacity += maxDistAcrossSpan(doc, stepper, Math.max(1, f - prevF));
+    const cap = maxDistAcrossSpan(doc, stepper, Math.max(1, f - prevF));
+    caps.push(cap);
+    capacity += cap;
     if (capacity >= Math.abs(peakVal) - 1e-6) {
       landIdx = i;
       break;
@@ -587,16 +816,33 @@ function spreadTakeoffFromAligned(
   }
   // Prefer landing at/after the original peak frame when capacity allows.
   const peakIdx = frames.indexOf(sp.frame);
-  if (peakIdx > landIdx) landIdx = peakIdx;
+  if (peakIdx > landIdx) {
+    // Extend caps out to the original peak so we can land there.
+    prevF = frames[landIdx]!;
+    for (let i = landIdx + 1; i <= peakIdx; i++) {
+      const f = frames[i]!;
+      const cap = maxDistAcrossSpan(doc, stepper, Math.max(1, f - prevF));
+      caps.push(cap);
+      capacity += cap;
+      prevF = f;
+    }
+    landIdx = peakIdx;
+  }
 
   const landFrame = frames[landIdx]!;
+  const sign = Math.sign(peakVal) || 1;
+  const totalCap = caps.slice(0, landIdx + 1).reduce((a, b) => a + b, 0);
+  // Capacity-weighted ramp (not f/landFrame): a linear-in-frame ramp front-loads
+  // short early spans and re-breaks Aligned accel/speed.
   let out = doc;
+  let cum = 0;
   for (let i = 0; i <= landIdx; i++) {
-    const f = frames[i]!;
-    const t = f / landFrame;
-    out = writeExistingOnly(out, stepper, f, round3(peakVal * t));
+    cum += caps[i]!;
+    const t = Math.min(1, cum / Math.max(totalCap, 1e-9));
+    const val = i === landIdx ? peakVal : round3(sign * Math.abs(peakVal) * t);
+    out = writeExistingOnly(out, stepper, frames[i]!, val, workingGroup);
   }
-  out = writeExistingOnly(out, stepper, landFrame, peakVal);
+  out = writeExistingOnly(out, stepper, landFrame, peakVal, workingGroup);
 
   const still = checkPhysics(out).violations.find(
     (x) => x.stepper === stepper && (x.prev_frame ?? 0) <= 0 && canSpread(x.code),
@@ -614,6 +860,7 @@ function spreadTakeoffFromAligned(
 function chainPullTowardPeak(
   doc: MotionBuilderDocument,
   v: PhysicsViolation,
+  workingGroup: readonly string[] = [],
 ): MotionBuilderDocument {
   if (!v.stepper) throw new EditError("No stepper on this violation to spread");
   const stepper = v.stepper;
@@ -625,7 +872,7 @@ function chainPullTowardPeak(
   }
 
   if (sp.prevFrame <= 0) {
-    return spreadTakeoffFromAligned(doc, v);
+    return spreadTakeoffFromAligned(doc, v, workingGroup);
   }
 
   const peakAtEnd = Math.abs(sp.endVal) >= Math.abs(sp.prevVal) - 1e-9;
@@ -640,7 +887,7 @@ function chainPullTowardPeak(
   if (peakIdx < 0) throw new EditError("Spread could not locate peak frame");
   // Deceleration into a low end: peak sits on prev — never treat Aligned as movable peak.
   if (peakFrame <= 0) {
-    return spreadRelocatePeakForward(doc, v);
+    return spreadRelocatePeakForward(doc, v, workingGroup);
   }
 
   // Wave along existing keys only (± a handful of authored samples).
@@ -701,18 +948,18 @@ function chainPullTowardPeak(
     if (pullToward(i, i - 1)) moved = true;
   }
   if (!moved) {
-    return spreadRelocatePeakForward(doc, v);
+    return spreadRelocatePeakForward(doc, v, workingGroup);
   }
 
   let out = doc;
   for (const f of frames) {
     if (f <= 0) continue;
-    out = writeExistingOnly(out, stepper, f, vals.get(f)!);
+    out = writeExistingOnly(out, stepper, f, vals.get(f)!, workingGroup);
   }
-  out = writeExistingOnly(out, stepper, peakFrame, peakVal);
+  out = writeExistingOnly(out, stepper, peakFrame, peakVal, workingGroup);
 
   if (stepperValueFingerprint(out, stepper) === stepperValueFingerprint(doc, stepper)) {
-    return spreadRelocatePeakForward(doc, v);
+    return spreadRelocatePeakForward(doc, v, workingGroup);
   }
   // Neighbor-wave must clear this span; otherwise relocate the peak onto later keys.
   const still = checkPhysics(out).violations.some(
@@ -724,7 +971,7 @@ function chainPullTowardPeak(
   );
   if (still) {
     try {
-      return spreadRelocatePeakForward(doc, v);
+      return spreadRelocatePeakForward(doc, v, workingGroup);
     } catch (e) {
       // Partial neighbor wave is still useful when there aren't enough later keys.
       if (e instanceof EditError) return out;
@@ -741,6 +988,7 @@ function chainPullTowardPeak(
 function spreadRelocatePeakForward(
   doc: MotionBuilderDocument,
   v: PhysicsViolation,
+  workingGroup: readonly string[] = [],
 ): MotionBuilderDocument {
   if (!v.stepper) throw new EditError("No stepper on this violation to spread");
   const stepper = v.stepper;
@@ -784,9 +1032,9 @@ function spreadRelocatePeakForward(
     cur = round3(cur + step);
     if (i === landIdx) cur = round3(peakVal);
     if (f <= 0) continue;
-    out = writeExistingOnly(out, stepper, f, cur);
+    out = writeExistingOnly(out, stepper, f, cur, workingGroup);
   }
-  out = writeExistingOnly(out, stepper, landFrame, peakVal);
+  out = writeExistingOnly(out, stepper, landFrame, peakVal, workingGroup);
 
   if (stepperValueFingerprint(out, stepper) === stepperValueFingerprint(doc, stepper)) {
     throw new EditError("Spread made no change — try Scale");
@@ -794,7 +1042,11 @@ function spreadRelocatePeakForward(
   return out;
 }
 
-function spreadViolation(doc: MotionBuilderDocument, v: PhysicsViolation): MotionBuilderDocument {
+function spreadViolation(
+  doc: MotionBuilderDocument,
+  v: PhysicsViolation,
+  workingGroup: readonly string[] = [],
+): MotionBuilderDocument {
   if (v.code === "pillar_collision") {
     // Prefer pulling the paired linear back. Lattice tip-holds fight later rotary
     // Spreads and flash-loop Scale/Spread All on long takes.
@@ -813,41 +1065,48 @@ function spreadViolation(doc: MotionBuilderDocument, v: PhysicsViolation): Motio
     throw new EditError("Spread cannot fix absolute travel / crash — use Scale or edit values");
   }
   if (!v.stepper) throw new EditError("No stepper on this violation to spread");
-  return chainPullTowardPeak(doc, v);
+  return chainPullTowardPeak(doc, v, workingGroup);
 }
 
 /**
  * Apply Scale or Spread for one physics violation. Throws EditError when
  * the mode cannot help — callers map that to a status message (Undo-safe: no partial edit).
+ * Pass `workingGroup` so relative Scale/Spread applies a shared delta across linked lanes.
  */
 export function solvePhysicsViolation(
   doc: MotionBuilderDocument,
   v: PhysicsViolation,
   mode: SolveMode,
+  workingGroup: readonly string[] = [],
 ): MotionBuilderDocument {
-  return mode === "scale" ? scaleViolation(doc, v) : spreadViolation(doc, v);
+  const wg = pruneWorkingGroup(doc, workingGroup);
+  return mode === "scale" ? scaleViolation(doc, v, wg) : spreadViolation(doc, v, wg);
 }
 
 /**
  * Apply Scale/Spread to the first solvable violation. Returns null when
  * physics is already ok, or when no remaining hit can be fixed with `mode`.
  * Pass `attempted` to skip fingerprints already tried in a Spread/Scale All run.
+ * With a Working Group (≥2 linked lanes), prefers those lanes and the most
+ * stringent box first so one linked step can clear the whole span.
  */
 export function solveNextPhysicsViolation(
   doc: MotionBuilderDocument,
   mode: SolveMode,
   attempted?: Set<string>,
+  workingGroup: readonly string[] = [],
 ): { doc: MotionBuilderDocument; violation: PhysicsViolation } | null {
+  const wg = pruneWorkingGroup(doc, workingGroup);
   const phys = checkPhysics(doc);
   if (phys.ok) return null;
-  for (const v of phys.violations) {
+  for (const v of orderViolationsForSolve(doc, phys.violations, wg)) {
     if (mode === "scale" && !canScale(v.code)) continue;
     if (mode === "spread" && !canSpread(v.code)) continue;
     const fp = violationFingerprint(v);
     if (attempted?.has(fp)) continue;
     try {
-      const next = solvePhysicsViolation(doc, v, mode);
-      if (!solveMadeChange(doc, next, v)) {
+      const next = solvePhysicsViolation(doc, v, mode, wg);
+      if (!solveMadeChange(doc, next, v, wg)) {
         attempted?.add(fp);
         continue;
       }
@@ -868,8 +1127,8 @@ export function solveNextPhysicsViolation(
 }
 
 /** True when Scale is a sensible option for this code. */
-export function canScale(code: PhysicsViolation["code"]): boolean {
-  return code !== "crash_zone";
+export function canScale(_code: PhysicsViolation["code"]): boolean {
+  return true;
 }
 
 /** True when Spread is a sensible option for this code. */

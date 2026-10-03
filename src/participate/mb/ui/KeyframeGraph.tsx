@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import { normalizeGroupColor } from "../core/document";
 import { clampLinearMm, DEFAULT_LIMITS, linearMaxMmForGroup } from "../core/constants";
 import { moveGroupToTop } from "../core/edit/groups";
@@ -13,6 +13,20 @@ import { PrecisionEditModal, type PrecisionEditPayload } from "./PrecisionEditMo
 
 const PRECISION_IDLE_MS = 2000;
 const round1 = (n: number) => Math.round(n * 10) / 10;
+
+const quantizeGlow = keyframes`
+  0%, 100% { box-shadow: 0 0 0 1px rgba(79, 195, 247, 0.55); }
+  50% { box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.85); }
+`;
+const QuantizeBtn = styled.button<{ $lit?: boolean }>`
+  ${({ $lit, theme }) => $lit && css`
+    color: ${theme.bg};
+    background: ${theme.accent};
+    border-color: ${theme.accent};
+    font-weight: 700;
+    animation: ${quantizeGlow} 1.2s ease-in-out infinite;
+  `}
+`;
 
 /** Canvas fills leftover panel height; chrome above/below stays put.
  *  `$tall` ≈ 2× plot area for Graph focus (buttons unchanged). */
@@ -886,7 +900,21 @@ export function KeyframeGraph() {
         <button type="button" onClick={() => dispatch(deleteSelection(state, false))} title="Delete Edit-lane nodes at selected keys (Delete)">Delete</button>
         <button type="button" onClick={() => dispatch(deleteSelection(state, true))} title="Remove whole keys for every lane (Alt+Delete)">Remove</button>
         <button type="button" onClick={() => dispatch(averageSelection(state))} title="Average from neighbours">Average</button>
-        <button type="button" onClick={() => dispatch(quantizeKeys(state))} title="Keep keys every 10 frames (0, 10, 20, …) plus the final frame when needed">Quantize</button>
+        <QuantizeBtn
+          type="button"
+          $lit={prefs.suggestQuantize}
+          onClick={() => {
+            dispatch(quantizeKeys(state));
+            if (prefs.suggestQuantize) {
+              dispatch({ type: "prefs", patch: { suggestQuantize: false } });
+            }
+          }}
+          title={prefs.suggestQuantize
+            ? "Quantize first — dense 1-frame keys make Scale/Spread All slow"
+            : "Keep keys every 10 frames (0, 10, 20, …) plus the final frame when needed"}
+        >
+          Quantize
+        </QuantizeBtn>
         <button type="button" onClick={() => dispatch(copy(state))} title="Copy (Ctrl+C)">Copy</button>
         <button type="button" onClick={() => dispatch(paste(state, "paste"))} title="Paste at playhead (Ctrl+V)">Paste</button>
         <button type="button" onClick={() => dispatch(paste(state, "after"))} title="Duplicate after selection (Ctrl+D)">Dup</button>

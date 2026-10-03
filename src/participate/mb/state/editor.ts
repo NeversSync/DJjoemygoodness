@@ -20,6 +20,8 @@ export type Prefs = {
   duplicateUntilEnd: boolean;
   /** Cap node-drag value change to the motor’s achievable rate over drag time. */
   physicsDrag: boolean;
+  /** UI nudge: highlight Quantize while a long Scale/Spread All is running. */
+  suggestQuantize: boolean;
   scrubByKeyframe: boolean;
   allowFrameDrag: boolean;
   playRate: number;
@@ -34,6 +36,7 @@ export const DEFAULT_PANEL_SIZES: PanelSizes = { left: 320, right: 560 };
 
 export const DEFAULT_PREFS: Prefs = {
   clipAllLanes: false, duplicateUntilEnd: false, physicsDrag: true,
+  suggestQuantize: false,
   scrubByKeyframe: true, allowFrameDrag: false,
   playRate: 1, graphOpen: true, tabletLayout: "auto",
   panelSizes: { ...DEFAULT_PANEL_SIZES },

@@ -137,6 +137,78 @@ export function expandKeyframePositions(doc: MotionBuilderDocument, kf: MotionKe
   return out;
 }
 
+function laneFlatZero(keyframes: readonly MotionKeyframe[], laneId: string): boolean {
+  for (const kf of keyframes) {
+    const v = kf.lanes?.[laneId];
+    if (v != null && Math.abs(Number(v)) > 1e-9) return false;
+  }
+  return true;
+}
+
+/**
+ * After motors are consolidated into new groups, animation can remain on empty
+ * orphan solo lanes while the new group lanes stay 0 — playback looks frozen.
+ * Copy donor curves onto flat targets and drop orphan solo shells.
+ */
+export function repairOrphanedGroupLanes(doc: MotionBuilderDocument): MotionBuilderDocument {
+  const groups = doc.groups.map((g) => ({
+    ...g, steppers: [...g.steppers], invert: [...(g.invert ?? [])],
+  }));
+  const keyframes = doc.keyframes.map((kf) => ({
+    ...kf,
+    lanes: { ...(kf.lanes ?? {}) },
+    steppers: { ...(kf.steppers ?? {}) },
+  }));
+  const donors = new Set<string>();
+
+  for (const g of groups) {
+    if (!g.steppers.length || !laneFlatZero(keyframes, g.id)) continue;
+    let donor: string | null = null;
+    for (const s of g.steppers) {
+      const orphan = groups.find((x) => x.id === s && x.steppers.length === 0);
+      if (orphan && !laneFlatZero(keyframes, orphan.id)) {
+        donor = orphan.id;
+        break;
+      }
+    }
+    if (!donor) {
+      for (const x of groups) {
+        if (x.steppers.length || x.kind !== g.kind || x.id === g.id) continue;
+        if (!laneFlatZero(keyframes, x.id)) {
+          donor = x.id;
+          break;
+        }
+      }
+    }
+    if (!donor) continue;
+    for (const kf of keyframes) {
+      kf.lanes[g.id] = Number(kf.lanes[donor] ?? 0);
+    }
+    donors.add(donor);
+  }
+
+  const nextGroups = groups.filter((g) => {
+    if (donors.has(g.id)) return false;
+    // Drop emptied solo shells left behind after regrouping (id == stepper name).
+    if (g.steppers.length === 0 && isStepperName(g.id)) return false;
+    return true;
+  });
+  const keep = new Set(nextGroups.map((g) => g.id));
+  for (const kf of keyframes) {
+    for (const id of Object.keys(kf.lanes)) {
+      if (!keep.has(id)) delete kf.lanes[id];
+    }
+  }
+  if (
+    nextGroups.length === doc.groups.length
+    && nextGroups.every((g, i) => g.id === doc.groups[i]?.id && g.steppers.length === doc.groups[i]!.steppers.length)
+    && donors.size === 0
+  ) {
+    return doc;
+  }
+  return { ...doc, groups: nextGroups, keyframes };
+}
+
 export function groupIdForStepper(doc: MotionBuilderDocument, stepper: StepperName | null): string | null {
   if (!stepper) return null;
   return doc.groups.find((g) => g.steppers.includes(stepper))?.id ?? null;
@@ -190,5 +262,5 @@ export function parseDocument(text: string, { maxBytes = MAX_DOCUMENT_BYTES }: S
   const merged = { ...base, ...(data as Partial<MotionBuilderDocument>) };
   merged.limits = { ...base.limits, ...merged.limits };
   if (!Array.isArray(merged.keyframes)) merged.keyframes = [];
-  return ensureAlignedFrame0(normalizeDocumentGroups(merged));
+  return repairOrphanedGroupLanes(ensureAlignedFrame0(normalizeDocumentGroups(merged)));
 }
