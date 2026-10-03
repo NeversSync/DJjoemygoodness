@@ -52,14 +52,18 @@ export function Toolbar() {
     }
   }, [doc, dispatch]);
 
-  const onInterpolate = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const interpolate = e.target.checked;
-    dispatch({ type: "edit", label: interpolate ? "Blend on" : "Blend off", apply: (d) => ({ ...d, interpolate }) });
+  const onInterpolate = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    const interpolate = e.target.value === "smooth";
+    dispatch({
+      type: "edit",
+      label: interpolate ? "Smooth Animation" : "Keyframe Poses",
+      apply: (d) => ({ ...d, interpolate }),
+    });
   }, [dispatch]);
 
   const onSpeed = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const speed_scale = Number(e.target.value) / 100;
-    dispatch({ type: "edit", label: `Machine ${Math.round(speed_scale * 100)}%`,
+    dispatch({ type: "edit", label: `Global Motor Speed ${Math.round(speed_scale * 100)}%`,
       apply: (d) => ({ ...d, speed_scale }), undo: false });
   }, [dispatch]);
 
@@ -101,14 +105,21 @@ export function Toolbar() {
       </Row>
       <Row>
         <label style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-          <input type="checkbox" checked={doc.interpolate !== false} onChange={onInterpolate} /> Blend
+          <select
+            aria-label="Motion between keyframes"
+            value={doc.interpolate !== false ? "smooth" : "poses"}
+            onChange={onInterpolate}
+          >
+            <option value="smooth">Smooth Animation</option>
+            <option value="poses">Keyframe Poses</option>
+          </select>
         </label>
         <label style={{ display: "inline-flex", alignItems: "center", gap: 6, flex: "0 1 33%", maxWidth: "33%", minWidth: 120 }}>
-          Machine %
+          Global Motor Speed %
           <input type="range" min={10} max={100} step={5}
-            value={Math.round((doc.speed_scale ?? 0.5) * 100)} onChange={onSpeed}
+            value={Math.round((doc.speed_scale ?? 1) * 100)} onChange={onSpeed}
             style={{ flex: 1, minWidth: 0, width: "100%" }} />
-          <Pct>{Math.round((doc.speed_scale ?? 0.5) * 100)}%</Pct>
+          <Pct>{Math.round((doc.speed_scale ?? 1) * 100)}%</Pct>
         </label>
       </Row>
     </Panel>

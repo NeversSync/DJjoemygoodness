@@ -67,7 +67,7 @@ export function clampRotaryJump(
 /** Keeps files email-attachable after Base64 overhead. */
 export const MAX_DOCUMENT_BYTES = 9 * 1024 * 1024;
 
-export const DEFAULT_SPEED_SCALE = 0.5;
+export const DEFAULT_SPEED_SCALE = 1.0;
 export const MIN_SPEED_SCALE = 0.1;
 export const MAX_SPEED_SCALE = 1;
 

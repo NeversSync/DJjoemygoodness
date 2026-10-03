@@ -74,7 +74,7 @@ export type MotionBuilderDocument = {
   peak_resync_end_frames?: number[];
   /** true = linear blend between keys; false = hold until next key. */
   interpolate?: boolean;
-  /** Machine SPEED multiplier (0.1–1.0) used by the admin render. */
+  /** Global motor speed multiplier (0.1–1.0) used by the admin render. */
   speed_scale?: number;
   groups: MotionGroup[];
   keyframes: MotionKeyframe[];

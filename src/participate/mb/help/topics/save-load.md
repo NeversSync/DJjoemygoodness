@@ -9,5 +9,5 @@ Nothing is uploaded: files stay on your device until you email them.
 
 ## Settings in the file
 
-- **Blend** (interpolate): on = smooth transitions between keys; off = jump and hold.
-- **Machine %**: the speed Our Team will run it at on the sculpture. Physics always checks full speed.
+- **Smooth Animation** / **Keyframe Poses**: smooth transitions between keys, or hold each pose until the next key.
+- **Global Motor Speed %**: the speed Our Team will run it at on the sculpture. Physics always checks full speed.

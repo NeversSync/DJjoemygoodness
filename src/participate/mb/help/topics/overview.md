@@ -11,7 +11,7 @@ You author **keyframes**, the app checks them against the real motors' limits, a
 ## Glossary
 
 - **Frame**: one tick of the timeline (24 per second by default).
-- **Keyframe**: a frame where you set motor values; frames in between blend when **Blend** is on.
+- **Keyframe**: a frame where you set motor values; frames in between ease under **Smooth Animation**, or hold under **Keyframe Poses**.
 - **Lane / lockstep group**: motors that move together from one shared value.
 - **Aligned**: every motor at 0. Frame 0 is always Aligned and cannot be edited.
 - **Rotary (°)** / **Linear (mm)**: spin vs slide-toward-center.
