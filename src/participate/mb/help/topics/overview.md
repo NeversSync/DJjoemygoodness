@@ -19,7 +19,7 @@ You author **keyframes**, the app checks them against the real motors' limits, a
 - **Scale**: shrink an offending move toward safer neighbors (or pull a tip linear under safe depth).
 - **Spread**: keep a spike's magnitude and ease neighbors toward it (or expand takeoff when blocked by Aligned).
 - **Our Team**: the Equilateral Expedition operators who review and run shows on the sculpture.
-- **Working Group**: a temporary multi-lane selection for editing together.
+- **Working Group**: a temporary multi-lane selection for editing together. **Group Linked** turns those links into a permanent rotary or linear lockstep group (first linked lane’s curve is kept).
 
 ## Contribute
 

@@ -1,6 +1,9 @@
 import { useCallback } from "react";
 import styled from "styled-components";
-import { addGroup, assignMotor, deleteGroup, moveGroupToTop, renameGroup, reorderGroup, setGroupColor, setInvert } from "../core/edit/groups";
+import {
+  addGroup, assignMotor, deleteGroup, groupLinkedLanes, moveGroupToTop, renameGroup, reorderGroup,
+  setGroupColor, setInvert,
+} from "../core/edit/groups";
 import { setStepperOverride } from "../core/edit/keyframes";
 import {
   clearWorkingGroup, linkAllOfKind, nudgeLanesLinked, setLaneValueLinked, setLaneValueThroughEnd,
@@ -290,6 +293,30 @@ export function GroupsPanel() {
             <span>
               {workingGroup.length} linked · {doc.groups.find((g) => g.id === workingGroup[0])?.kind ?? "?"}
             </span>
+            {workingGroup.length >= 2 && (
+              <button
+                type="button"
+                title="Create a permanent lockstep group from these linked lanes"
+                onClick={() => {
+                  let newId = "";
+                  let status = "Grouped linked lanes";
+                  dispatch({
+                    type: "edit",
+                    label: "Group Linked",
+                    apply: (d) => {
+                      const r = groupLinkedLanes(d, workingGroup);
+                      newId = r.id;
+                      status = r.status;
+                      return r.doc;
+                    },
+                  });
+                  dispatch({ type: "workingGroup", workingGroup: [], status });
+                  if (newId) dispatch({ type: "lane", id: newId });
+                }}
+              >
+                Group Linked
+              </button>
+            )}
             <button type="button" title="Release every lane from the Working Group"
               onClick={() => {
                 const r = clearWorkingGroup();

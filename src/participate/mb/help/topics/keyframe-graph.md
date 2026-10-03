@@ -2,12 +2,20 @@
 
 One line per lane across the timeline. The **Edit lane** is bright and shows draggable nodes.
 
+## Tools
+
+Pick a cursor on the graph toolbar (shortcuts **V** / **B** / **E**):
+
+- **Pointer** — select, box-select, and drag nodes (default).
+- **Pencil** — drag across the plot to draw a wave of keys on the Edit lane (Working Group peers get the same absolute delta). Fast strokes fill in-between frames; use **Quantize** afterward if you want a 10-frame grid.
+- **Eraser** — drag over nodes to delete them on the Edit lane (linked lanes erase together).
+
 ## Editing
 
-- **Tap / click a node** to select it and move the playhead there. Shift-click adds to the selection.
+- **Tap / click a node** (Pointer) to select it and move the playhead there. Shift-click adds to the selection.
 - **Drag a node** up or down to change its value. Turn on **Drag frames** (or hold Alt) to also move it in time.
 - **Physics Speed** (checkbox): when on, dragging a node is capped to the speed and acceleration the motor can actually achieve. A large fast drag hits max acceleration; small gentle movements stay proportionally small. Uncheck to drag freely.
-- **Drag on empty space** to box-select nodes.
+- **Drag on empty space** (Pointer) to box-select nodes.
 - **Add** inserts a key one grid step after the current key, averaged from its neighbours.
 - **Quantize** keeps only keys on every 10th frame (0, 10, 20, …) and the final frame when it is not on that grid. Motion is sampled from the current curve so the shape stays close.
 - **Delete** removes selected nodes on the Edit lane only (other lanes keep their keys at that frame). **Remove** deletes the whole key for every lane.

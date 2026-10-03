@@ -14,6 +14,9 @@ export type PanelSizes = {
   right: number;
 };
 
+/** Keyframe graph cursor: select/drag, freehand draw, or erase nodes. */
+export type GraphTool = "pointer" | "pencil" | "eraser";
+
 export type Prefs = {
   clipAllLanes: boolean;
   /** Stamp a single-node absolute edit onto every later key on the Edit lane. */
@@ -22,6 +25,8 @@ export type Prefs = {
   physicsDrag: boolean;
   /** UI nudge: highlight Quantize while a long Scale/Spread All is running. */
   suggestQuantize: boolean;
+  /** Active Keyframe Graph tool (Pointer / Pencil / Eraser). */
+  graphTool: GraphTool;
   scrubByKeyframe: boolean;
   allowFrameDrag: boolean;
   playRate: number;
@@ -37,6 +42,7 @@ export const DEFAULT_PANEL_SIZES: PanelSizes = { left: 320, right: 560 };
 export const DEFAULT_PREFS: Prefs = {
   clipAllLanes: false, duplicateUntilEnd: false, physicsDrag: true,
   suggestQuantize: false,
+  graphTool: "pointer",
   scrubByKeyframe: true, allowFrameDrag: false,
   playRate: 1, graphOpen: true, tabletLayout: "auto",
   panelSizes: { ...DEFAULT_PANEL_SIZES },

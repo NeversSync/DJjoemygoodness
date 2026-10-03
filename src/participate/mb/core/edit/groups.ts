@@ -1,7 +1,8 @@
 import { stepperKind } from "../constants";
 import { normalizeGroupColor } from "../document";
 import type { MotionBuilderDocument, MotorKind, StepperName } from "../types";
-import { produce, round3 } from "./produce";
+import { EditError, produce, round3 } from "./produce";
+import { pruneWorkingGroup } from "./workingGroup";
 
 /** True when every authored sample of this lane is ~0 (or missing). */
 export function laneIsFlatZero(doc: MotionBuilderDocument, laneId: string): boolean {
@@ -125,3 +126,58 @@ export const setGroupColor = (doc: MotionBuilderDocument, id: string, color: str
     const i = d.groups.findIndex((g) => g.id === id);
     if (i >= 0) d.groups[i]!.color = normalizeGroupColor(color, i);
   });
+
+/**
+ * Turn the temporary Working Group into a permanent lockstep group: create a
+ * new same-kind group, move every linked lane's motors into it (first linked
+ * lane's curve becomes the shared lane), and drop emptied sources.
+ */
+export function groupLinkedLanes(
+  doc: MotionBuilderDocument,
+  workingGroup: readonly string[],
+): { doc: MotionBuilderDocument; id: string; status: string } {
+  const lanes = pruneWorkingGroup(doc, workingGroup);
+  if (lanes.length < 2) {
+    throw new EditError("Link at least 2 same-kind lanes, then Group Linked");
+  }
+  const kind = doc.groups.find((g) => g.id === lanes[0])?.kind;
+  if (!kind) throw new EditError("Unknown linked lane");
+  for (const id of lanes) {
+    const g = doc.groups.find((x) => x.id === id);
+    if (!g) throw new EditError("Linked lane no longer exists");
+    if (g.kind !== kind) throw new EditError("Working Group must be all rotary or all linear");
+  }
+
+  const moved: { stepper: StepperName; inverted: boolean }[] = [];
+  for (const id of lanes) {
+    const g = doc.groups.find((x) => x.id === id)!;
+    const inv = new Set(g.invert ?? []);
+    for (const s of g.steppers) moved.push({ stepper: s, inverted: inv.has(s) });
+  }
+  if (!moved.length) throw new EditError("Linked lanes have no motors to group");
+
+  const label = kind === "linear" ? "Linked Linear" : "Linked Rotary";
+  let { doc: next, id } = addGroup(doc, kind);
+  next = renameGroup(next, id, label);
+
+  // Canonical curve = first linked lane (Working Group order).
+  const primary = lanes[0]!;
+  if (!laneIsFlatZero(doc, primary)) {
+    next = copyLaneValues(next, primary, id);
+  }
+
+  for (const { stepper } of moved) {
+    next = assignMotor(next, stepper, id);
+  }
+  for (const { stepper, inverted } of moved) {
+    if (inverted) next = setInvert(next, stepper, true);
+  }
+  next = moveGroupToTop(next, id);
+
+  const g = next.groups.find((x) => x.id === id)!;
+  return {
+    doc: next,
+    id,
+    status: `Grouped ${g.steppers.length} ${kind} motors into “${g.label}”`,
+  };
+}

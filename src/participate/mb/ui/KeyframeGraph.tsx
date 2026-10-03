@@ -3,10 +3,14 @@ import styled, { css, keyframes } from "styled-components";
 import { normalizeGroupColor } from "../core/document";
 import { clampLinearMm, DEFAULT_LIMITS, linearMaxMmForGroup } from "../core/constants";
 import { moveGroupToTop } from "../core/edit/groups";
-import { applyDeltaToLinkedLanes, linkedLanes, nudgeLanesLinked, setLaneValueLinked, setLaneValueThroughEnd } from "../core/edit/workingGroup";
+import {
+  applyDeltaToLinkedLanes, deleteLanesLinked, linkedLanes, nudgeLanesLinked, setLaneValueLinked,
+  setLaneValueThroughEnd,
+} from "../core/edit/workingGroup";
 import { trapezoidMaxDist } from "../core/physics";
 import type { MotionBuilderDocument, MotionGroup, MotionKeyframe } from "../core/types";
 import { useEditor } from "../state/EditorContext";
+import type { GraphTool } from "../state/editor";
 import { addKey, averageSelection, copy, deleteSelection, paste, quantizeKeys, selectAll } from "../state/commands";
 import { Panel, Row, Check } from "./Panel";
 import { PrecisionEditModal, type PrecisionEditPayload } from "./PrecisionEditModal";
@@ -57,12 +61,35 @@ const HintRow = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
-const Canvas = styled.canvas`
+const Canvas = styled.canvas<{ $cursor?: string }>`
   display: block;
   width: 100%;
   height: 100%;
   touch-action: none;
-  cursor: crosshair;
+  cursor: ${({ $cursor }) => $cursor ?? "default"};
+  outline: none;
+  &:focus-visible { box-shadow: inset 0 0 0 2px rgba(79, 195, 247, 0.45); }
+`;
+const ToolPick = styled.div`
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid ${({ theme }) => theme.border};
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+`;
+const ToolBtn = styled.button<{ $on?: boolean }>`
+  min-height: 32px !important;
+  min-width: 0 !important;
+  padding: 0 8px !important;
+  font-size: 0.75rem !important;
+  font-weight: ${({ $on }) => ($on ? 700 : 500)};
+  border: none !important;
+  border-radius: 0 !important;
+  border-right: 1px solid ${({ theme }) => theme.border} !important;
+  color: ${({ $on, theme }) => ($on ? "#000" : theme.muted)};
+  background: ${({ $on, theme }) => ($on ? theme.accent : "transparent")};
+  &:last-child { border-right: none !important; }
 `;
 
 const Swatch = styled.span<{ $color: string }>`
@@ -299,6 +326,8 @@ function makeLayout(w: number, h: number, ff: number, z: Zoom) {
 type Layout = ReturnType<typeof makeLayout>;
 
 const fToX = (f: number, L: Layout) => PAD.l + ((f - L.vf0) / Math.max(1e-6, L.vf1 - L.vf0)) * L.plotW;
+const xToF = (x: number, L: Layout) =>
+  L.vf0 + ((x - PAD.l) / Math.max(1, L.plotW)) * (L.vf1 - L.vf0);
 const vToY = (v: number, L: Layout, r: { lo: number; hi: number }) => {
   const v0 = r.lo + (r.hi - r.lo) * L.vy0, v1 = r.lo + (r.hi - r.lo) * L.vy1;
   return PAD.t + (1 - (v - v0) / Math.max(1e-6, v1 - v0)) * L.plotH;
@@ -307,6 +336,102 @@ const yToV = (y: number, L: Layout, r: { lo: number; hi: number }) => {
   const v0 = r.lo + (r.hi - r.lo) * L.vy0, v1 = r.lo + (r.hi - r.lo) * L.vy1;
   return v0 + (1 - (y - PAD.t) / Math.max(1, L.plotH)) * (v1 - v0);
 };
+
+/** CSS cursor from inline SVG (hotspot + system fallback). */
+function svgCursor(svg: string, hx: number, hy: number, fallback: string): string {
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}") ${hx} ${hy}, ${fallback}`;
+}
+
+const CURSOR_POINTER = svgCursor(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+    <path fill="#fff" stroke="#111" stroke-width="1.25"
+      d="M4 3l1 22 6.2-6.2 4.3 10.2 3.2-1.4-4.4-10.3L22 14z"/>
+  </svg>`,
+  4, 3, "default",
+);
+
+const CURSOR_PENCIL = svgCursor(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+    <path fill="#ffd54f" stroke="#111" stroke-width="1.2"
+      d="M26.5 8.2l-3.7-3.7a1.6 1.6 0 0 0-2.3 0L6.2 18.8l-.8 5.6 5.6-.8L26.5 10.5a1.6 1.6 0 0 0 0-2.3z"/>
+    <path fill="#8d6e63" stroke="#111" stroke-width="1" d="M6.2 18.8l-.8 5.6 5.6-.8"/>
+    <path fill="#fff3e0" stroke="#111" stroke-width="1" d="M20.5 6.5l4 4"/>
+  </svg>`,
+  5, 27, "crosshair",
+);
+
+const CURSOR_ERASER = svgCursor(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+    <path fill="#f48fb1" stroke="#111" stroke-width="1.2"
+      d="M12 6.5l10.5 10.5-7.2 7.2H8.2L4.5 20.7z"/>
+    <path fill="#fce4ec" stroke="#111" stroke-width="1"
+      d="M12 6.5l3.8 3.8-10.5 10.4L4.5 20.7z"/>
+    <path stroke="#111" stroke-width="1.5" stroke-linecap="round" d="M4 28h18"/>
+  </svg>`,
+  8, 26, "cell",
+);
+
+const GRAPH_TOOLS: { id: GraphTool; label: string; title: string; cursor: string }[] = [
+  { id: "pointer", label: "Pointer", title: "Select and drag nodes (V)", cursor: CURSOR_POINTER },
+  { id: "pencil", label: "Pencil", title: "Draw keyframe waves on the Edit lane (B)", cursor: CURSOR_PENCIL },
+  { id: "eraser", label: "Eraser", title: "Delete Edit-lane nodes under the cursor (E)", cursor: CURSOR_ERASER },
+];
+
+/** True when keystrokes should go to a text field, not graph shortcuts. */
+function isTypingTarget(t: EventTarget | null): boolean {
+  if (!(t instanceof HTMLElement)) return false;
+  if (t instanceof HTMLInputElement || t instanceof HTMLTextAreaElement || t instanceof HTMLSelectElement) {
+    return true;
+  }
+  if (t.isContentEditable) return true;
+  return !!t.closest("input, textarea, select, [contenteditable='true']");
+}
+
+function graphToolFromKey(e: KeyboardEvent): GraphTool | null {
+  // Prefer e.code so layout / caps-lock quirks don't break V/B/E.
+  const code = e.code;
+  if (code === "KeyV") return "pointer";
+  if (code === "KeyB") return "pencil";
+  if (code === "KeyE") return "eraser";
+  const key = e.key.toLowerCase();
+  if (key === "v") return "pointer";
+  if (key === "b") return "pencil";
+  if (key === "e") return "eraser";
+  return null;
+}
+
+/** Fill samples along a stroke segment (dense for short spans, grid-step for long). */
+function addPencilSegment(
+  samples: Map<number, number>,
+  prevFrame: number | null,
+  prevVal: number | null,
+  frame: number,
+  value: number,
+  gridStep: number,
+) {
+  const f1 = Math.round(frame);
+  if (f1 <= 0) return;
+  const v1 = round1(value);
+  if (prevFrame == null || prevVal == null) {
+    samples.set(f1, v1);
+    return;
+  }
+  const f0 = Math.round(prevFrame);
+  if (f0 === f1) {
+    samples.set(f1, v1);
+    return;
+  }
+  const lo = Math.min(f0, f1);
+  const hi = Math.max(f0, f1);
+  const span = hi - lo;
+  const step = span > 60 ? Math.max(1, gridStep) : 1;
+  for (let f = lo; f <= hi; f += step) {
+    if (f <= 0) continue;
+    const t = (f - f0) / (f1 - f0);
+    samples.set(f, round1(prevVal + (v1 - prevVal) * t));
+  }
+  samples.set(f1, v1);
+}
 
 type DragState =
   | {
@@ -328,6 +453,19 @@ type DragState =
       beforeDoc: MotionBuilderDocument;
     }
   | { kind: "box"; x0: number; y0: number; x1: number; y1: number }
+  | {
+      kind: "pencil";
+      beforeDoc: MotionBuilderDocument;
+      samples: Map<number, number>;
+      lastFrame: number | null;
+      lastVal: number | null;
+      valueRange: { lo: number; hi: number };
+    }
+  | {
+      kind: "eraser";
+      beforeDoc: MotionBuilderDocument;
+      erased: Set<number>;
+    }
   | null;
 
 type PendingPrecision = {
@@ -595,13 +733,13 @@ export function KeyframeGraph() {
     };
   }, []);
 
-  /** Cancel a one-finger drag/box so pinch can take over (revert live node edits). */
+  /** Cancel a one-finger drag/box/stroke so pinch can take over (revert live edits). */
   const cancelOneFinger = useCallback(() => {
     const drag = dragRef.current;
     dragRef.current = null;
-    if (drag?.kind === "drag") {
+    if (drag?.kind === "drag" || drag?.kind === "pencil" || drag?.kind === "eraser") {
       dispatch({
-        type: "edit", label: "Cancel drag", undo: false,
+        type: "edit", label: "Cancel stroke", undo: false,
         apply: () => drag.beforeDoc,
       });
     }
@@ -623,16 +761,94 @@ export function KeyframeGraph() {
     );
   }, [activeLane, workingGroup, prefs.duplicateUntilEnd]);
 
+  const applyPencilSamples = useCallback((
+    beforeDoc: MotionBuilderDocument,
+    samples: Map<number, number>,
+  ) => {
+    let next = beforeDoc;
+    const sorted = [...samples.entries()].sort((a, b) => a[0] - b[0]);
+    for (const [frame, value] of sorted) {
+      try {
+        next = setLaneValueLinked(next, frame, activeLane, value, workingGroup);
+      } catch {
+        /* frame 0 / edit errors — skip */
+      }
+    }
+    return next;
+  }, [activeLane, workingGroup]);
+
+  const applyEraserFrames = useCallback((
+    beforeDoc: MotionBuilderDocument,
+    erased: Set<number>,
+  ) => {
+    if (!erased.size) return beforeDoc;
+    return deleteLanesLinked(beforeDoc, [...erased], activeLane, workingGroup);
+  }, [activeLane, workingGroup]);
+
+  const focusGraph = useCallback(() => {
+    const cvs = ref.current;
+    if (!cvs) return;
+    try { cvs.focus({ preventScroll: true }); } catch { cvs.focus(); }
+  }, []);
+
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     const cvs = ref.current; if (!cvs) return;
     const [cx, cy] = cssPos(e);
     pointersRef.current.set(e.pointerId, { x: cx, y: cy });
     cvs.setPointerCapture(e.pointerId);
+    // Pull focus off Groups/Transport inputs so V/B/E tool keys work after drawing.
+    focusGraph();
 
     // Second finger → pinch/pan; abort any node edit or box select
     if (pointersRef.current.size >= 2) {
       cancelOneFinger();
       beginPinch();
+      return;
+    }
+
+    const tool = prefs.graphTool ?? "pointer";
+    const L = layoutRef.current;
+
+    if (tool === "pencil" && L) {
+      if (precisionEdit) {
+        clearPrecisionTimer();
+        pendingPrecisionRef.current = null;
+        setPrecisionModal(null);
+      }
+      const samples = new Map<number, number>();
+      const frame = xToF(cx, L);
+      const value = yToV(cy, L, rangeRef.current);
+      addPencilSegment(samples, null, null, frame, value, doc.grid_step || 10);
+      const f = Math.round(frame);
+      dragRef.current = {
+        kind: "pencil",
+        beforeDoc: doc,
+        samples,
+        lastFrame: f > 0 ? f : null,
+        lastVal: f > 0 ? round1(value) : null,
+        valueRange: { ...rangeRef.current },
+      };
+      if (samples.size) {
+        dispatch({
+          type: "edit", label: `Draw ${activeLane}`, undo: false,
+          apply: () => applyPencilSamples(doc, samples),
+        });
+        if (f > 0) dispatch({ type: "select", frames: [f], playFrame: f });
+      }
+      return;
+    }
+
+    if (tool === "eraser") {
+      const erased = new Set<number>();
+      const hit = hitNode(cx, cy, { radius: NODE_HIT * 2 });
+      if (hit != null && hit > 0) erased.add(hit);
+      dragRef.current = { kind: "eraser", beforeDoc: doc, erased };
+      if (erased.size) {
+        dispatch({
+          type: "edit", label: `Erase ${activeLane}`, undo: false,
+          apply: () => applyEraserFrames(doc, erased),
+        });
+      }
       return;
     }
 
@@ -691,7 +907,11 @@ export function KeyframeGraph() {
       dragRef.current = { kind: "box", x0: cx, y0: cy, x1: cx, y1: cy };
       if (!e.shiftKey) dispatch({ type: "select", frames: [] });
     }
-  }, [cssPos, hitNode, selected, doc, activeLane, workingGroup, dispatch, cancelOneFinger, beginPinch, precisionEdit, clearPrecisionTimer]);
+  }, [
+    cssPos, hitNode, selected, doc, activeLane, workingGroup, dispatch, cancelOneFinger, beginPinch,
+    precisionEdit, clearPrecisionTimer, prefs.graphTool, applyPencilSamples, applyEraserFrames,
+    focusGraph,
+  ]);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     if (!pointersRef.current.has(e.pointerId)) return;
@@ -752,11 +972,40 @@ export function KeyframeGraph() {
         type: "edit", label: `Drag ${activeLane}`, undo: false,
         apply: () => applyDragValues(drag.beforeDoc, drag.frames, drag.startValsByLane, drag.startVal, newVal),
       });
+    } else if (drag.kind === "pencil") {
+      const L = layoutRef.current;
+      if (!L) return;
+      const frame = xToF(cx, L);
+      const value = yToV(cy, L, drag.valueRange);
+      addPencilSegment(
+        drag.samples, drag.lastFrame, drag.lastVal, frame, value, doc.grid_step || 10,
+      );
+      const f = Math.round(frame);
+      if (f > 0) {
+        drag.lastFrame = f;
+        drag.lastVal = round1(value);
+      }
+      dispatch({
+        type: "edit", label: `Draw ${activeLane}`, undo: false,
+        apply: () => applyPencilSamples(drag.beforeDoc, drag.samples),
+      });
+    } else if (drag.kind === "eraser") {
+      const hit = hitNode(cx, cy, { radius: NODE_HIT * 2 });
+      if (hit != null && hit > 0 && !drag.erased.has(hit)) {
+        drag.erased.add(hit);
+        dispatch({
+          type: "edit", label: `Erase ${activeLane}`, undo: false,
+          apply: () => applyEraserFrames(drag.beforeDoc, drag.erased),
+        });
+      }
     } else {
       drag.x1 = cx; drag.y1 = cy;
       draw();
     }
-  }, [cssPos, activeLane, dispatch, draw, beginPinch, applyDragValues, doc, prefs.physicsDrag]);
+  }, [
+    cssPos, activeLane, dispatch, draw, beginPinch, applyDragValues, applyPencilSamples,
+    applyEraserFrames, hitNode, doc, prefs.physicsDrag,
+  ]);
 
   const onPointerUp = useCallback((e: React.PointerEvent) => {
     const cvs = ref.current;
@@ -800,6 +1049,29 @@ export function KeyframeGraph() {
           });
         }
       }
+    } else if (drag?.kind === "pencil") {
+      if (drag.samples.size) {
+        const n = drag.samples.size;
+        dispatch({
+          type: "edit",
+          label: `Drew ${n} key${n === 1 ? "" : "s"} on ${activeLane}`,
+          undoSnapshot: drag.beforeDoc,
+          apply: () => applyPencilSamples(drag.beforeDoc, drag.samples),
+        });
+        const frames = [...drag.samples.keys()].sort((a, b) => a - b);
+        dispatch({ type: "select", frames, playFrame: frames.at(-1) });
+      }
+    } else if (drag?.kind === "eraser") {
+      if (drag.erased.size) {
+        const n = drag.erased.size;
+        dispatch({
+          type: "edit",
+          label: `Erased ${n} key${n === 1 ? "" : "s"} on ${activeLane}`,
+          undoSnapshot: drag.beforeDoc,
+          apply: () => applyEraserFrames(drag.beforeDoc, drag.erased),
+        });
+        dispatch({ type: "select", frames: [] });
+      }
     } else if (drag?.kind === "box") {
       const L = layoutRef.current;
       if (!L) return;
@@ -816,7 +1088,10 @@ export function KeyframeGraph() {
       }
       draw();
     }
-  }, [doc, activeLane, selected, dispatch, draw, applyDragValues, armPrecisionPopup]);
+  }, [
+    doc, activeLane, selected, dispatch, draw, applyDragValues, applyPencilSamples,
+    applyEraserFrames, armPrecisionPopup,
+  ]);
 
   const onWheel = useCallback((e: React.WheelEvent) => {
     // Require Ctrl (Windows/Linux) or ⌘ (Mac) so trackpad/wheel scroll doesn't zoom by accident.
@@ -834,7 +1109,7 @@ export function KeyframeGraph() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return;
+      if (isTypingTarget(e.target)) return;
       const ctrl = e.ctrlKey || e.metaKey;
       const key = e.key.toLowerCase();
       if (key === " ") { e.preventDefault(); return; }
@@ -845,9 +1120,26 @@ export function KeyframeGraph() {
       if (ctrl && key === "v" && prefs.graphOpen) { e.preventDefault(); dispatch(paste(state, "paste")); return; }
       if (ctrl && key === "d" && prefs.graphOpen) { e.preventDefault(); dispatch(e.shiftKey ? paste(state, "mirror") : paste(state, "after")); return; }
       if ((key === "delete" || key === "backspace") && prefs.graphOpen) { e.preventDefault(); dispatch(deleteSelection(state, e.altKey)); return; }
+      // Tool keys: ignore when Ctrl/⌘/Alt held (paste etc.), and when graph is hidden.
+      if (!ctrl && !e.altKey && prefs.graphOpen) {
+        const tool = graphToolFromKey(e);
+        if (tool) {
+          e.preventDefault();
+          e.stopPropagation();
+          dispatch({ type: "prefs", patch: { graphTool: tool } });
+          // Focus plot so the next stroke isn't lost to a leftover Groups input.
+          requestAnimationFrame(() => {
+            const cvs = ref.current;
+            if (cvs) {
+              try { cvs.focus({ preventScroll: true }); } catch { cvs.focus(); }
+            }
+          });
+        }
+      }
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    // Capture phase so tool keys win over focused buttons / radio groups.
+    window.addEventListener("keydown", onKey, true);
+    return () => window.removeEventListener("keydown", onKey, true);
   }, [dispatch, state, prefs.graphOpen]);
 
   if (!prefs.graphOpen) {
@@ -863,6 +1155,24 @@ export function KeyframeGraph() {
     <Panel title="Keyframe Graph" help="keyframe-graph" area="graph"
       actions={<button type="button" onClick={() => dispatch({ type: "prefs", patch: { graphOpen: false } })}>Hide</button>}>
       <Row>
+        <ToolPick role="radiogroup" aria-label="Graph tool">
+          {GRAPH_TOOLS.map((t) => (
+            <ToolBtn
+              key={t.id}
+              type="button"
+              role="radio"
+              aria-checked={(prefs.graphTool ?? "pointer") === t.id}
+              $on={(prefs.graphTool ?? "pointer") === t.id}
+              title={t.title}
+              onClick={() => {
+                dispatch({ type: "prefs", patch: { graphTool: t.id } });
+                focusGraph();
+              }}
+            >
+              {t.label}
+            </ToolBtn>
+          ))}
+        </ToolPick>
         <Check title="After dropping a node, refine the value numerically">
           <input type="checkbox" checked={precisionEdit}
             onChange={(e) => setPrecisionEdit(e.target.checked)} />
@@ -937,6 +1247,9 @@ export function KeyframeGraph() {
       <Wrap ref={wrapRef} $tall={tallPlot}>
         <Canvas
           ref={ref}
+          tabIndex={0}
+          aria-label="Keyframe graph"
+          $cursor={GRAPH_TOOLS.find((t) => t.id === (prefs.graphTool ?? "pointer"))?.cursor}
           onWheel={onWheel}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
@@ -945,9 +1258,13 @@ export function KeyframeGraph() {
         />
       </Wrap>
       <HintRow>
-        {selected.length
-          ? `${selected.length} key(s) selected: frames ${[...selected].sort((a, b) => a - b).join(", ")} — drag vertically to edit`
-          : "1-finger: edit / box-select · 2-finger: pinch / pan"}
+        {(prefs.graphTool ?? "pointer") === "pencil"
+          ? "Pencil: drag to draw a wave on the Edit lane · 2-finger: pinch / pan · V/B/E switch tools"
+          : (prefs.graphTool ?? "pointer") === "eraser"
+            ? "Eraser: drag over nodes to delete them on the Edit lane · V/B/E switch tools"
+            : selected.length
+              ? `${selected.length} key(s) selected: frames ${[...selected].sort((a, b) => a - b).join(", ")} — drag vertically to edit`
+              : "Pointer: edit / box-select · Pencil draws waves · Eraser deletes nodes · 2-finger: pinch / pan"}
       </HintRow>
       {precisionModal && (
         <PrecisionEditModal
