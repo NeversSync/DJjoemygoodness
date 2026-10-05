@@ -7,6 +7,7 @@ import {
   applyDeltaToLinkedLanes, deleteLanesLinked, linkedLanes, nudgeLanesLinked, setLaneValueLinked,
   setLaneValueThroughEnd,
 } from "../core/edit/workingGroup";
+import { laneValueFromSurrounding } from "../core/interpolate";
 import { trapezoidMaxDist } from "../core/physics";
 import type { MotionBuilderDocument, MotionGroup, MotionKeyframe } from "../core/types";
 import { useEditor } from "../state/EditorContext";
@@ -314,6 +315,78 @@ function zoomToward(z: Zoom, ax: number, ay: number, fac: number): Zoom {
     x0: cx - a * sx, x1: cx - a * sx + sx,
     y0: cy - b * sy, y1: cy - b * sy + sy,
   });
+}
+
+/** Absolute 0–1 document coords (time + value within the lane's unzoomed range). */
+type AbsFocus = { nx: number; ny: number | null };
+
+function laneHasSamples(doc: MotionBuilderDocument, laneId: string): boolean {
+  return doc.keyframes.some((kf) => kf.lanes?.[laneId] !== undefined);
+}
+
+function absFocusAtFrame(
+  doc: MotionBuilderDocument,
+  laneId: string,
+  frame: number,
+  range: { lo: number; hi: number },
+): AbsFocus {
+  const ff = Math.max(2, doc.frames_forward);
+  const nx = Math.max(0, Math.min(1, frame / Math.max(1, ff - 1)));
+  if (!laneHasSamples(doc, laneId)) return { nx, ny: null };
+  const span = Math.max(1e-6, range.hi - range.lo);
+  const v = laneValueFromSurrounding(doc, frame, laneId);
+  const ny = Math.max(0, Math.min(1, (v - range.lo) / span));
+  return { nx, ny };
+}
+
+/** Centroid of selected Edit-lane nodes, or playhead when nothing usable is selected. */
+function absFocusForZoom(
+  doc: MotionBuilderDocument,
+  laneId: string,
+  selected: readonly number[],
+  playFrame: number,
+  range: { lo: number; hi: number },
+): AbsFocus {
+  const ff = Math.max(2, doc.frames_forward);
+  let sx = 0, sy = 0, n = 0, nY = 0;
+  for (const frame of selected) {
+    const kf = doc.keyframes.find((k) => k.frame === frame);
+    if (!kf || kf.lanes?.[laneId] === undefined) continue;
+    sx += frame / Math.max(1, ff - 1);
+    n += 1;
+    if (laneHasSamples(doc, laneId)) {
+      const span = Math.max(1e-6, range.hi - range.lo);
+      sy += Math.max(0, Math.min(1, (Number(kf.lanes[laneId]) - range.lo) / span));
+      nY += 1;
+    }
+  }
+  if (n > 0) {
+    return { nx: sx / n, ny: nY > 0 ? sy / nY : null };
+  }
+  return absFocusAtFrame(doc, laneId, playFrame, range);
+}
+
+/** Window-relative (0–1) focus for zoomToward from absolute document coords. */
+function windowFocus(z: Zoom, abs: AbsFocus): { ax: number; ay: number } {
+  const sx = Math.max(1e-6, z.x1 - z.x0);
+  const sy = Math.max(1e-6, z.y1 - z.y0);
+  const ax = (abs.nx - z.x0) / sx;
+  const ay = abs.ny == null ? 0.5 : (abs.ny - z.y0) / sy;
+  return { ax, ay };
+}
+
+/** Pan so absolute point sits near the view center; keeps current zoom span. */
+function panToAbsolute(z: Zoom, abs: AbsFocus): Zoom {
+  const sx = z.x1 - z.x0;
+  const sy = z.y1 - z.y0;
+  let x0 = abs.nx - sx / 2;
+  x0 = Math.max(0, Math.min(1 - sx, x0));
+  let y0 = z.y0;
+  if (abs.ny != null) {
+    y0 = abs.ny - sy / 2;
+    y0 = Math.max(0, Math.min(1 - sy, y0));
+  }
+  return { x0, x1: x0 + sx, y0, y1: y0 + sy };
 }
 
 function makeLayout(w: number, h: number, ff: number, z: Zoom) {
@@ -791,6 +864,15 @@ export function KeyframeGraph() {
     try { cvs.focus({ preventScroll: true }); } catch { cvs.focus(); }
   }, []);
 
+  const stopFollow = useCallback(() => {
+    if (prefs.graphFollow) dispatch({ type: "prefs", patch: { graphFollow: false } });
+  }, [prefs.graphFollow, dispatch]);
+
+  const focusAbs = useCallback(() => {
+    const range = laneRange(doc.keyframes, activeLane);
+    return absFocusForZoom(doc, activeLane, selected, playFrame, range);
+  }, [doc, activeLane, selected, playFrame]);
+
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     const cvs = ref.current; if (!cvs) return;
     const [cx, cy] = cssPos(e);
@@ -933,6 +1015,7 @@ export function KeyframeGraph() {
       const ay = (midY - PAD.t) / Math.max(1, L.plotH);
       const panX = (midX - pinch.midX) / Math.max(1, L.plotW);
       const panY = (midY - pinch.midY) / Math.max(1, L.plotH);
+      stopFollow();
       setZoom((z) => {
         let next = zoomToward(z, ax, ay, fac);
         // Content follows fingers (same direction as two-finger pan)
@@ -1004,7 +1087,7 @@ export function KeyframeGraph() {
     }
   }, [
     cssPos, activeLane, dispatch, draw, beginPinch, applyDragValues, applyPencilSamples,
-    applyEraserFrames, hitNode, doc, prefs.physicsDrag,
+    applyEraserFrames, hitNode, doc, prefs.physicsDrag, stopFollow,
   ]);
 
   const onPointerUp = useCallback((e: React.PointerEvent) => {
@@ -1097,22 +1180,29 @@ export function KeyframeGraph() {
     // Require Shift so trackpad/wheel scroll (and Ctrl/⌘ browser zoom) don't steal the gesture.
     if (!e.shiftKey) return;
     e.preventDefault();
-    const cvs = ref.current; if (!cvs) return;
-    const L = layoutRef.current;
-    const rect = cvs.getBoundingClientRect();
-    const cx = e.clientX - rect.left, cy = e.clientY - rect.top;
-    const ax = L ? (cx - PAD.l) / Math.max(1, L.plotW) : 0.5;
-    const ay = L ? (cy - PAD.t) / Math.max(1, L.plotH) : 0.5;
+    stopFollow();
+    const abs = focusAbs();
     const fac = e.deltaY < 0 ? 0.85 : 1.18;
-    setZoom((z) => zoomToward(z, ax, ay, fac));
-  }, []);
+    setZoom((z) => {
+      const { ax, ay } = windowFocus(z, abs);
+      return zoomToward(z, ax, ay, fac);
+    });
+  }, [stopFollow, focusAbs]);
+
+  // Keep playhead (and Edit-lane curve Y) centered while Follow is on — works on sparse lanes.
+  useEffect(() => {
+    if (!prefs.graphFollow) return;
+    const range = laneRange(doc.keyframes, activeLane);
+    const abs = absFocusAtFrame(doc, activeLane, playFrame, range);
+    setZoom((z) => panToAbsolute(z, abs));
+  }, [prefs.graphFollow, playFrame, doc, activeLane]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (isTypingTarget(e.target)) return;
       const ctrl = e.ctrlKey || e.metaKey;
       const key = e.key.toLowerCase();
-      if (key === " ") { e.preventDefault(); return; }
+      // Space → Transport handles play/stop globally
       if (ctrl && key === "z") { e.preventDefault(); dispatch({ type: e.shiftKey ? "redo" : "undo" }); return; }
       if (ctrl && key === "y") { e.preventDefault(); dispatch({ type: "redo" }); return; }
       if (ctrl && key === "a" && prefs.graphOpen) { e.preventDefault(); dispatch(selectAll(state)); return; }
@@ -1238,11 +1328,20 @@ export function KeyframeGraph() {
         <button type="button" onClick={() => setZoom((z) => zoomAxis(z, "y", true))} title="Zoom in on value (Y)">Y＋</button>
         <button type="button" onClick={() => setZoom((z) => zoomAxis(z, "y", false))} title="Zoom out on value (Y)">Y−</button>
         <span>Pan</span>
-        <button type="button" onClick={() => setZoom((z) => panZoom(z, -0.25, 0))} title="Pan left (earlier)">←</button>
-        <button type="button" onClick={() => setZoom((z) => panZoom(z, 0.25, 0))} title="Pan right (later)">→</button>
-        <button type="button" onClick={() => setZoom((z) => panZoom(z, 0, -0.25))} title="Pan up (higher values)">↑</button>
-        <button type="button" onClick={() => setZoom((z) => panZoom(z, 0, 0.25))} title="Pan down (lower values)">↓</button>
-        <button type="button" onClick={() => setZoom(ZOOM0)} title="Fit all">Fit</button>
+        <button type="button" onClick={() => { stopFollow(); setZoom((z) => panZoom(z, -0.25, 0)); }} title="Pan left (earlier)">←</button>
+        <button type="button" onClick={() => { stopFollow(); setZoom((z) => panZoom(z, 0.25, 0)); }} title="Pan right (later)">→</button>
+        <button type="button" onClick={() => { stopFollow(); setZoom((z) => panZoom(z, 0, -0.25)); }} title="Pan up (higher values)">↑</button>
+        <button type="button" onClick={() => { stopFollow(); setZoom((z) => panZoom(z, 0, 0.25)); }} title="Pan down (lower values)">↓</button>
+        <button type="button" onClick={() => { stopFollow(); setZoom(ZOOM0); }} title="Fit all">Fit</button>
+        <button
+          type="button"
+          aria-pressed={prefs.graphFollow}
+          onClick={() => dispatch({ type: "prefs", patch: { graphFollow: !prefs.graphFollow } })}
+          title="Keep playhead in view during playback / scrub (along the Edit-lane curve, even where keys were deleted)"
+          style={prefs.graphFollow ? { background: "#00e676", color: "#000", fontWeight: 700 } : undefined}
+        >
+          Follow
+        </button>
       </ZoomBar>
       <Wrap ref={wrapRef} $tall={tallPlot}>
         <Canvas

@@ -27,6 +27,8 @@ export type Prefs = {
   suggestQuantize: boolean;
   /** Active Keyframe Graph tool (Pointer / Pencil / Eraser). */
   graphTool: GraphTool;
+  /** Pan the Keyframe Graph so the playhead stays centered during scrub/play. */
+  graphFollow: boolean;
   scrubByKeyframe: boolean;
   allowFrameDrag: boolean;
   playRate: number;
@@ -43,6 +45,7 @@ export const DEFAULT_PREFS: Prefs = {
   clipAllLanes: false, duplicateUntilEnd: false, physicsDrag: true,
   suggestQuantize: false,
   graphTool: "pointer",
+  graphFollow: false,
   scrubByKeyframe: true, allowFrameDrag: false,
   playRate: 1, graphOpen: true, tabletLayout: "auto",
   panelSizes: { ...DEFAULT_PANEL_SIZES },

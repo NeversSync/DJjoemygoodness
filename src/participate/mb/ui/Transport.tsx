@@ -52,6 +52,22 @@ export function Transport({ autoPlay = false }: { autoPlay?: boolean } = {}) {
     startPlay(1);
   }, [autoPlay, startPlay]);
 
+  // Space toggles forward play / stop (matches shortcuts help). Skip when typing in inputs.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== " " && e.code !== "Space") return;
+      const t = e.target as HTMLElement | null;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable)) {
+        return;
+      }
+      e.preventDefault();
+      if (playing) setPlaying(false);
+      else startPlay(1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [playing, startPlay]);
+
   useEffect(() => {
     if (!playing) return;
     accum.current = 0;

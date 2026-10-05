@@ -32,6 +32,7 @@ Pick a cursor on the graph toolbar (shortcuts **V** / **B** / **E**):
 
 - **One finger**: tap/drag nodes to edit; drag empty space to box-select.
 - **Two fingers**: pinch to zoom (time + value); slide both fingers to pan.
-- **Shift+wheel** zooms toward the cursor. Use the **X／Y／Pan／Fit** buttons when you prefer discrete control.
+- **Shift+wheel** zooms toward the **selection centroid** (average of selected Edit-lane nodes). With nothing selected, it zooms toward the playhead on the Edit-lane curve. Use the **X／Y／Pan／Fit** buttons when you prefer discrete control.
+- **Follow** (Zoom bar): keeps the playhead centered while you play or scrub. It tracks the Edit-lane curve at true frame pace — including stretches where keys were deleted. Manual pan, Fit, Shift+wheel, or pinch turns Follow off.
 - The shaded **hold** region after the last key keeps that pose to the end.
 - Red bands mark physics issues. Tap one to see the details.
