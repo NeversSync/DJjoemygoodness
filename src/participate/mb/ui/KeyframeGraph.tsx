@@ -1094,8 +1094,8 @@ export function KeyframeGraph() {
   ]);
 
   const onWheel = useCallback((e: React.WheelEvent) => {
-    // Require Ctrl (Windows/Linux) or ⌘ (Mac) so trackpad/wheel scroll doesn't zoom by accident.
-    if (!e.ctrlKey && !e.metaKey) return;
+    // Require Shift so trackpad/wheel scroll (and Ctrl/⌘ browser zoom) don't steal the gesture.
+    if (!e.shiftKey) return;
     e.preventDefault();
     const cvs = ref.current; if (!cvs) return;
     const L = layoutRef.current;

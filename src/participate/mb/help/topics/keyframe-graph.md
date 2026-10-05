@@ -32,6 +32,6 @@ Pick a cursor on the graph toolbar (shortcuts **V** / **B** / **E**):
 
 - **One finger**: tap/drag nodes to edit; drag empty space to box-select.
 - **Two fingers**: pinch to zoom (time + value); slide both fingers to pan.
-- **Ctrl+wheel** (⌘+wheel on Mac) zooms toward the cursor. Use the **X／Y／Pan／Fit** buttons when you prefer discrete control.
+- **Shift+wheel** zooms toward the cursor. Use the **X／Y／Pan／Fit** buttons when you prefer discrete control.
 - The shaded **hold** region after the last key keeps that pose to the end.
 - Red bands mark physics issues. Tap one to see the details.
